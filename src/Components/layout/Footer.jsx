@@ -208,6 +208,17 @@ const Footer = () => {
               gap: 3,
             }}
           >
+                        <Link
+              component={RouterLink}
+              to="/disclaimer"
+              color="text.secondary"
+              sx={{
+                textDecoration: 'none',
+                '&:hover': { color: 'primary.main' },
+              }}
+            >
+              Disclaimer
+            </Link>
             <Link
               component={RouterLink}
               to="/privacy-policy"

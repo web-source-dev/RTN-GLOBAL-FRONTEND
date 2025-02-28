@@ -173,13 +173,13 @@ const Hero = () => {
             >
               <Box
                 component="img"
-                src="/images/hero-illustration.png"
+                src="/images/hero-illustration.jpg"
                 alt="Digital Marketing"
                 sx={{
                   width: '100%',
                   height: 'auto',
                   position: 'relative',
-                  animation: 'float 6s ease-in-out infinite',
+                  borderRadius: '20px',
                 }}
               />
             </Box>

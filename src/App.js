@@ -29,45 +29,80 @@ import LoginForm from './Components/auth/LoginForm';
 import RegisterForm from './Components/auth/RegisterForm';
 import ForgotPasswordForm from './Components/auth/ForgotPasswordForm';
 import ResetPasswordForm from './Components/auth/ResetPasswordForm';
+import MemberPage from './Components/member/MemberPage';
+import CreateBlog from './Components/blog/CreateBlog';
+import ManageBlog from './Components/blog/ManageBlog';
+import { AuthProvider } from './contexts/AuthContext';
+import { ProtectedRoute } from './Components/common/ProtectedRoute';
+import AboutPage from './Components/about/AboutPage';
+import TermsOfService from './Components/legal/TermsOfService';
+import PrivacyPolicy from './Components/legal/PrivacyPolicy';
+import Disclaimer from './Components/legal/Disclaimer';
 
 function App() {
   return (
-    <ThemeProvider>
-      <CssBaseline />
-      <Router>
-        <Layout>
+    <AuthProvider>
+      <ThemeProvider>
+        <CssBaseline />
+        <Router>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/services" element={<ServicesPage />} />
-            <Route path="/case-studies" element={<CaseStudiesPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/blog/post" element={<BlogPost />} />
-            <Route path="/team" element={<TeamPage />} />
-            <Route path="/careers" element={<CareersPage />} />
-            <Route path="/news" element={<NewsPage />} />
-            <Route path="/marketing-guide" element={<MarketingGuidePage />} />
-            <Route path="/digital-tools" element={<DigitalToolsPage />} />
-            <Route path="/roi-calculator" element={<RoiCalculatorPage />} />
-            <Route path="/faq" element={<FaqPage />} />
-            <Route path="/support" element={<SupportPage />} />
-            <Route path="//services/digital-strategy" element={<DigitalStrategy />} />
-            <Route path="/services/seo-optimization" element={<SeoOptimization />} />
-            <Route path="/services/content-marketing" element={<ContentMarketing />} />
-            <Route path="/services/social-media" element={<SocialMedia/>} />
-            <Route path="/services/ppc-management" element={<PpcManagement />} />
-            <Route path="/services/email-marketing" element={<EmailMarketing />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/news/letter/form" element={<NewsletterForm />} />
-            <Route path="/job/application/form" element={<JobApplicationForm />} />
-            <Route path="/support/form" element={<SupportForm />} />
-            <Route path="/auth/login" element={<LoginForm />} />
-            <Route path="/auth/register" element={<RegisterForm />} />
-            <Route path="/auth/forgot-password" element={<ForgotPasswordForm />} />
-            <Route path="/auth/reset-password" element={<ResetPasswordForm />} />
+            <Route path="/profile" element={<MemberPage />} />
+            <Route path="/*" element={
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/case-studies" element={<CaseStudiesPage />} />
+                  <Route path="/blog" element={<BlogPage />} />
+                  <Route path="/blog/post/:id" element={<BlogPost />} />
+                  <Route path="/blog/create" element={
+                    <ProtectedRoute adminOnly>
+                      <CreateBlog />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/blog/edit/:id" element={
+                    <ProtectedRoute adminOnly>
+                      <CreateBlog />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/blog/manage" element={
+                    <ProtectedRoute adminOnly>
+                      <ManageBlog />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/team" element={<TeamPage />} />
+                  <Route path="/careers" element={<CareersPage />} />
+                  <Route path="/news" element={<NewsPage />} />
+                  <Route path="/marketing-guide" element={<MarketingGuidePage />} />
+                  <Route path="/digital-tools" element={<DigitalToolsPage />} />
+                  <Route path="/roi-calculator" element={<RoiCalculatorPage />} />
+                  <Route path="/faq" element={<FaqPage />} />
+                  <Route path="/support" element={<SupportPage />} />
+                  <Route path="/services/digital-strategy" element={<DigitalStrategy />} />
+                  <Route path="/services/seo-optimization" element={<SeoOptimization />} />
+                  <Route path="/services/content-marketing" element={<ContentMarketing />} />
+                  <Route path="/services/social-media" element={<SocialMedia/>} />
+                  <Route path="/services/ppc-management" element={<PpcManagement />} />
+                  <Route path="/services/email-marketing" element={<EmailMarketing />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/news/letter/form" element={<NewsletterForm />} />
+                  <Route path="/job/application/form" element={<JobApplicationForm />} />
+                  <Route path="/support/form" element={<SupportForm />} />
+                  <Route path="/auth/login" element={<LoginForm />} />
+                  <Route path="/auth/register" element={<RegisterForm />} />
+                  <Route path="/auth/forgot-password" element={<ForgotPasswordForm />} />
+                  <Route path="/auth/reset-password" element={<ResetPasswordForm />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/terms-of-service" element={<TermsOfService />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/disclaimer" element={<Disclaimer />} />
+                </Routes>
+              </Layout>
+            } />
           </Routes>
-        </Layout>
-      </Router>
-    </ThemeProvider>
+        </Router>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

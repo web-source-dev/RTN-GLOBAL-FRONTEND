@@ -44,11 +44,17 @@ const ResetPasswordForm = () => {
     const validateToken = async (token) => {
       try {
         setLoading(true);
-        // TODO: Replace with actual API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        if (!token || token.length < 32) {
-          throw new Error('Invalid token format');
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/validate-reset-token/${token}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Invalid token');
         }
         
         setTokenValid(true);
@@ -66,7 +72,13 @@ const ResetPasswordForm = () => {
 
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
-    validateToken(token);
+    console.log(token);
+    if (token) {
+      validateToken(token);
+    } else {
+      setTokenValid(false);
+      setLoading(false);
+    }
   }, [location]);
 
   const validateForm = () => {
@@ -99,8 +111,24 @@ const ResetPasswordForm = () => {
           severity: 'info',
         });
 
-        // TODO: Replace with actual API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        const params = new URLSearchParams(location.search);
+        const token = params.get('token');
+
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/reset-password/${token}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            password: formData.password,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to reset password');
+        }
 
         setSnackbar({
           open: true,
@@ -268,7 +296,7 @@ const ResetPasswordForm = () => {
               }}
             >
               <img
-                src="/images/auth/login.png"
+                src="/images/auth/forget.svg"
                 alt="Reset Password"
                 style={{ maxWidth: '100%', height: 'auto' }}
               />

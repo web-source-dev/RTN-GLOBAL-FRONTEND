@@ -43,15 +43,25 @@ const ForgotPasswordForm = () => {
     if (validateForm()) {
       try {
         setError('');
-        // Show loading state
         setSnackbar({
           open: true,
           message: 'Sending reset instructions...',
           severity: 'info',
         });
 
-        // TODO: Replace with actual API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/forgot-password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to send reset instructions');
+        }
 
         setSnackbar({
           open: true,
@@ -120,7 +130,7 @@ const ForgotPasswordForm = () => {
               }}
             >
               <img
-                src="/images/auth/forget.jpg"
+                src="/images/auth/forget.svg"
                 alt="Forgot Password"
                 style={{ maxWidth: '100%', height: 'auto' ,mixBlendMode: 'multiply' }}
               />

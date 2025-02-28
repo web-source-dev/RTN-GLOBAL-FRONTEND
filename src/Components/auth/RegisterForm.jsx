@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import {
   Box,
   Container,
@@ -85,22 +86,47 @@ const RegisterForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
+      setIsLoading(true);
       try {
-        // TODO: Implement registration logic here
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+          company: formData.company,
+          phone: formData.phone
+        });
+
+        const { data } = response;
+
+        // Store the token and user data
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
         setSnackbar({
           open: true,
-          message: 'Registration successful! Please check your email to verify your account.',
+          message: 'Registration successful! Welcome to RTN Global.',
           severity: 'success',
         });
+
+        // Redirect to dashboard
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
       } catch (error) {
+        const errorMessage = error.response?.data?.message || error.message || 'Registration failed. Please try again.';
         setSnackbar({
           open: true,
-          message: error.message || 'Registration failed. Please try again.',
+          message: errorMessage,
           severity: 'error',
         });
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -409,13 +435,14 @@ const RegisterForm = () => {
                       variant="contained"
                       fullWidth
                       size="large"
+                      disabled={isLoading}
                       sx={{
                         borderRadius: 2,
                         textTransform: 'none',
                         fontSize: '1rem',
                       }}
                     >
-                      Create Account
+                      {isLoading ? 'Creating Account...' : 'Create Account'}
                     </Button>
 
                     <Box sx={{ mt: 2, textAlign: 'center' }}>

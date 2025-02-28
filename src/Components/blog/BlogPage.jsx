@@ -1,356 +1,421 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Box,
   Container,
-  Typography,
   Grid,
   Card,
   CardContent,
   CardMedia,
-  Chip,
+  Typography,
   Button,
-  TextField,
-  InputAdornment,
+  Box,
+  Divider,
+  CircularProgress,
+  CardActions,
+  Chip,
+  Avatar,
   useTheme,
+  Pagination
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PersonIcon from '@mui/icons-material/Person';
-import { Link as RouterLink } from 'react-router-dom';
-
-const blogPosts = [
-  {
-    id: 1,
-    title: 'The Future of Digital Marketing in 2024',
-    excerpt: 'Explore emerging trends and technologies shaping the digital marketing landscape',
-    category: 'Digital Strategy',
-    author: 'Sarah Johnson',
-    date: 'March 15, 2024',
-    image: '/images/blog/digital-marketing-future.jpg',
-    readTime: '5 min read',
-    featured: true
-  },
-  {
-    id: 2,
-    title: 'Mastering SEO: A Complete Guide',
-    excerpt: 'Learn the latest SEO techniques to improve your website\'s search engine rankings',
-    category: 'SEO',
-    author: 'Mike Anderson',
-    date: 'March 12, 2024',
-    image: '/images/blog/seo-guide.jpg',
-    readTime: '8 min read',
-    featured: true
-  },
-  {
-    id: 3,
-    title: 'Social Media Marketing Strategies',
-    excerpt: 'Effective strategies to boost your social media presence and engagement',
-    category: 'Social Media',
-    author: 'Emily Chen',
-    date: 'March 10, 2024',
-    image: '/images/blog/social-media-strategy.jpg',
-    readTime: '6 min read',
-    featured: false
-  },
-  {
-    id: 4,
-    title: 'Content Marketing Best Practices',
-    excerpt: 'Create compelling content that resonates with your target audience',
-    category: 'Content',
-    author: 'David Wilson',
-    date: 'March 8, 2024',
-    image: '/images/blog/content-marketing.jpg',
-    readTime: '7 min read',
-    featured: false
-  },
-  {
-    id: 5,
-    title: 'Email Marketing Automation Tips',
-    excerpt: 'Streamline your email marketing campaigns with automation',
-    category: 'Email Marketing',
-    author: 'Lisa Brown',
-    date: 'March 5, 2024',
-    image: '/images/blog/email-marketing.jpg',
-    readTime: '4 min read',
-    featured: false
-  },
-  {
-    id: 6,
-    title: 'Analytics and Data-Driven Marketing',
-    excerpt: 'Leverage data analytics to improve your marketing decisions',
-    category: 'Analytics',
-    author: 'Tom Parker',
-    date: 'March 3, 2024',
-    image: '/images/blog/analytics.jpg',
-    readTime: '6 min read',
-    featured: false
-  }
-];
-
-const categories = [
-  'All',
-  'Digital Strategy',
-  'SEO',
-  'Social Media',
-  'Content',
-  'Email Marketing',
-  'Analytics'
-];
+import { useNavigate } from 'react-router-dom';
+import { Visibility, ThumbUp, Comment } from '@mui/icons-material';
 
 const BlogPage = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [page, setPage] = useState(1);
+  const blogsPerPage = 6;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchBlogs = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/blogs`);
+      if (!response.ok) throw new Error('Failed to fetch blogs');
+      const data = await response.json();
+      setBlogs(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const truncateText = (text, maxLength) => {
+    // Remove HTML tags for preview
+    const strippedText = text.replace(/<[^>]+>/g, '');
+    if (strippedText.length <= maxLength) return strippedText;
+    return strippedText.substr(0, maxLength) + '...';
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const theme = useTheme();
-  const isDark = theme.palette.mode === 'dark';
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  // Calculate pagination values
+  const indexOfLastBlog = page * blogsPerPage;
+  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+  const currentBlogs = blogs.slice(1).slice(indexOfFirstBlog, indexOfLastBlog);
+  const pageCount = Math.ceil((blogs.length - 1) / blogsPerPage);
 
-  const filteredPosts = blogPosts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const featuredPosts = blogPosts.filter(post => post.featured);
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        pt: 15,
-        pb: 8,
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
-      }}
-    >
-      <Container maxWidth="xl">
-        {/* Header */}
-        <Typography
-          variant="h2"
-          textAlign="center"
-          sx={{
-            fontWeight: 800,
-            mb: 3,
-            background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-            backgroundClip: 'text',
-            textFillColor: 'transparent',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
-          Blog & Insights
-        </Typography>
-        <Typography
-          variant="h5"
-          color="text.secondary"
-          textAlign="center"
-          sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
-        >
-          Stay updated with the latest trends and insights in digital marketing
-        </Typography>
-
-        {/* Featured Posts */}
-        <Box sx={{ mb: 8 }}>
-          <Typography variant="h4" sx={{ mb: 4, fontWeight: 700 }}>
-            Featured Articles
-          </Typography>
-          <Grid container spacing={4}>
-            {featuredPosts.map((post) => (
-              <Grid item xs={12} md={6} key={post.id}>
-                <Card
-                  sx={{
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    transition: 'all 0.3s ease',
-                    '&:hover': {
-                      transform: 'translateY(-8px)',
-                      boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                    },
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="300"
-                    image={post.image}
-                    alt={post.title}
-                  />
-                  <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                    <Chip
-                      label={post.category}
-                      size="small"
-                      sx={{
-                        mb: 2,
-                        bgcolor: theme.palette.primary.main + '15',
-                        color: theme.palette.primary.main,
-                      }}
-                    />
-                    <Typography variant="h5" gutterBottom sx={{ fontWeight: 700 }}>
-                      {post.title}
-                    </Typography>
-                    <Typography color="text.secondary" paragraph>
-                      {post.excerpt}
-                    </Typography>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 3,
-                        mt: 2,
-                      }}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <PersonIcon fontSize="small" color="action" />
-                        <Typography variant="body2" color="text.secondary">
-                          {post.author}
-                        </Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <AccessTimeIcon fontSize="small" color="action" />
-                        <Typography variant="body2" color="text.secondary">
-                          {post.readTime}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
-        {/* Search and Filters */}
-        <Box sx={{ mb: 6 }}>
-          <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                placeholder="Search articles..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    bgcolor: isDark ? 'rgba(255,255,255,0.05)' : 'white',
-                    borderRadius: 2,
-                  }
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                {categories.map((category) => (
-                  <Chip
-                    key={category}
-                    label={category}
-                    onClick={() => setSelectedCategory(category)}
-                    sx={{
-                      bgcolor: selectedCategory === category
-                        ? theme.palette.primary.main
-                        : isDark ? 'rgba(255,255,255,0.05)' : 'white',
-                      color: selectedCategory === category
-                        ? 'white'
-                        : 'text.primary',
-                      '&:hover': {
-                        bgcolor: selectedCategory === category
-                          ? theme.palette.primary.dark
-                          : isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-                      },
-                    }}
-                  />
-                ))}
-              </Box>
-            </Grid>
-          </Grid>
-        </Box>
-
-        {/* All Posts Grid */}
-        <Grid container spacing={4}>
-          {filteredPosts.map((post) => (
-            <Grid item xs={12} sm={6} md={4} key={post.id}>
-              <Card
-                sx={{
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                  },
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={post.image}
-                  alt={post.title}
-                />
-                <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                  <Chip
-                    label={post.category}
-                    size="small"
-                    sx={{
-                      mb: 2,
-                      bgcolor: theme.palette.primary.main + '15',
-                      color: theme.palette.primary.main,
-                    }}
-                  />
-                  <Typography variant="h6" gutterBottom sx={{ fontWeight: 700 }}>
-                    {post.title}
-                  </Typography>
-                  <Typography color="text.secondary" paragraph>
-                    {post.excerpt}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 3,
-                      mt: 2,
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <PersonIcon fontSize="small" color="action" />
-                      <Typography variant="body2" color="text.secondary">
-                        {post.author}
-                      </Typography>
-                    </Box>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <AccessTimeIcon fontSize="small" color="action" />
-                      <Typography variant="body2" color="text.secondary">
-                        {post.readTime}
-                      </Typography>
-                    </Box>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-
-        {/* Load More Button */}
-        <Box sx={{ mt: 6, textAlign: 'center' }}>
-          <Button
-            variant="outlined"
-            size="large"
-            sx={{
+    <Container maxWidth="lg" sx={{ py: 6 }}>
+      {/* Featured Blog */}
+      {blogs.length > 0 && (
+        <Box mb={8}>
+          <Card 
+            sx={{ 
+              display: { md: 'flex' }, 
+              mb: 4,
               borderRadius: 2,
-              px: 4,
-              py: 1,
+              overflow: 'hidden',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+              transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+              '&:hover': {
+                transform: 'translateY(-8px)',
+                boxShadow: '0 8px 30px rgba(0,0,0,0.15)'
+              }
             }}
           >
-            Load More Articles
-          </Button>
+            <CardMedia
+              component="img"
+              sx={{
+                width: { md: '45%' },
+                height: { xs: 280, md: 450 },
+                objectFit: 'cover',
+                transition: 'transform 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.05)'
+                }
+              }}
+              image={blogs[0].image ? `${process.env.REACT_APP_API_URL}${blogs[0].image}` : '/default-blog.jpg'}
+              alt={blogs[0].title}
+            />
+            <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, bgcolor: 'background.paper' }}>
+              <CardContent sx={{ flex: '1 0 auto', p: 4 }}>
+                <Typography 
+                  component="h1" 
+                  variant="h3" 
+                  gutterBottom
+                  sx={{ 
+                    fontWeight: 800,
+                    color: 'text.primary',
+                    mb: 2,
+                    fontSize: { xs: '2rem', md: '2.5rem' },
+                    lineHeight: 1.2
+                  }}
+                >
+                  {blogs[0].title}
+                </Typography>
+                <Box
+                  sx={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2,
+                    mb: 3
+                  }}
+                >
+                  <Avatar
+                    src={blogs[0].author?.avatar}
+                    alt={blogs[0].author ? `${blogs[0].author.firstName} ${blogs[0].author.lastName}` : 'Anonymous'}
+                    sx={{ 
+                      width: 40, 
+                      height: 40,
+                      border: '2px solid',
+                      borderColor: 'primary.main'
+                    }}
+                  />
+                  <Box>
+                    <Typography 
+                      variant="subtitle1"
+                      sx={{ 
+                        fontWeight: 600,
+                        color: 'text.primary'
+                      }}
+                    >
+                      {blogs[0].author ? `${blogs[0].author.firstName} ${blogs[0].author.lastName}` : 'Anonymous'}
+                    </Typography>
+                    <Typography 
+                      variant="body2"
+                      sx={{ color: 'text.secondary' }}
+                    >
+                      {new Date(blogs[0].createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Typography 
+                  variant="body1" 
+                  paragraph
+                  sx={{ 
+                    color: 'text.secondary',
+                    fontSize: '1.1rem',
+                    lineHeight: 1.7,
+                    mb: 4
+                  }}
+                >
+                  {truncateText(blogs[0].content, 350)}
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                  <Chip 
+                    icon={<ThumbUp sx={{ color: 'primary.main' }} />} 
+                    label={blogs[0].likes?.length || 0}
+                    sx={{ 
+                      borderRadius: '20px',
+                      px: 2,
+                      py: 0.5,
+                      bgcolor: 'primary.soft',
+                      color: 'primary.main',
+                      fontWeight: 600,
+                      '& .MuiChip-icon': {
+                        color: 'inherit'
+                      }
+                    }} 
+                  />
+                  <Chip 
+                    icon={<Comment sx={{ color: 'secondary.main' }} />} 
+                    label={`${blogs[0].comments?.length || 0} Comments`}
+                    sx={{ 
+                      borderRadius: '20px',
+                      px: 2,
+                      py: 0.5,
+                      bgcolor: 'secondary.soft',
+                      color: 'secondary.main',
+                      fontWeight: 600,
+                      '& .MuiChip-icon': {
+                        color: 'inherit'
+                      }
+                    }} 
+                  />
+                </Box>
+              </CardContent>
+              <CardActions sx={{ p: 4, pt: 0 }}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  endIcon={<Visibility />}
+                  onClick={() => navigate(`/blog/post/${blogs[0]._id}`)}
+                  sx={{
+                    borderRadius: '30px',
+                    px: 4,
+                    py: 1.5,
+                    textTransform: 'none',
+                    fontSize: '1.1rem',
+                    fontWeight: 600,
+                    background: 'linear-gradient(45deg, primary.main, primary.dark)',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 6px 20px rgba(0,0,0,0.15)'
+                    }
+                  }}
+                >
+                  Read More
+                </Button>
+              </CardActions>
+            </Box>
+          </Card>
         </Box>
-      </Container>
-    </Box>
+      )}
+
+      <Divider sx={{ mb: 8 }} />
+
+      {/* Recent Blogs Grid */}
+      <Typography 
+        variant="h4" 
+        gutterBottom 
+        sx={{ 
+          mb: 6,
+          fontWeight: 700,
+          color: theme.palette.text.primary
+        }}
+      >
+        Recent Posts
+      </Typography>
+
+      <Grid container spacing={4}>
+        {currentBlogs.map((blog) => (
+          <Grid item xs={12} sm={6} md={4} key={blog._id}>
+            <Card 
+              sx={{ 
+                height: '100%', 
+                display: 'flex', 
+                flexDirection: 'column',
+                borderRadius: 2,
+                overflow: 'hidden',
+                boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+                transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.12)'
+                }
+              }}
+            >
+              <CardMedia
+                component="img"
+                height="200"
+                sx={{ 
+                  objectFit: 'cover',
+                  transition: 'transform 0.3s ease-in-out',
+                  '&:hover': {
+                    transform: 'scale(1.05)'
+                  }
+                }}
+                image={blog.image ? `${process.env.REACT_APP_API_URL}${blog.image}` : '/default-blog.jpg'}
+                alt={blog.title}
+              />
+              <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                <Typography 
+                  gutterBottom 
+                  variant="h5" 
+                  component="h2"
+                  sx={{
+                    fontWeight: 700,
+                    mb: 2,
+                    fontSize: '1.5rem',
+                    lineHeight: 1.3
+                  }}
+                >
+                  {blog.title}
+                </Typography>
+                <Box 
+                  sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    mb: 2,
+                    gap: 1
+                  }}
+                >
+                  <Avatar
+                    src={blog.author?.avatar}
+                    alt={blog.author ? `${blog.author.firstName} ${blog.author.lastName}` : 'Anonymous'}
+                    sx={{ 
+                      width: 32, 
+                      height: 32,
+                      border: '2px solid',
+                      borderColor: 'primary.light'
+                    }}
+                  />
+                  <Box>
+                    <Typography 
+                      variant="subtitle2" 
+                      sx={{ 
+                        fontWeight: 600,
+                        color: 'text.primary'
+                      }}
+                    >
+                      {blog.author ? `${blog.author.firstName} ${blog.author.lastName}` : 'Anonymous'}
+                    </Typography>
+                    <Typography 
+                      variant="caption" 
+                      sx={{ color: 'text.secondary' }}
+                    >
+                      {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    color: 'text.secondary',
+                    mb: 3,
+                    lineHeight: 1.6
+                  }}
+                >
+                  {truncateText(blog.content, 150)}
+                </Typography>
+              </CardContent>
+              <CardActions 
+                sx={{ 
+                  justifyContent: 'space-between', 
+                  px: 3, 
+                  pb: 3,
+                  pt: 0
+                }}
+              >
+                <Box sx={{ display: 'flex', gap: 1 }}>
+                  <Chip 
+                    icon={<ThumbUp sx={{ fontSize: '0.9rem' }} />} 
+                    label={blog.likes?.length || 0} 
+                    size="small" 
+                    sx={{ 
+                      borderRadius: '15px',
+                      bgcolor: 'primary.soft',
+                      color: 'primary.main',
+                      '& .MuiChip-icon': {
+                        color: 'inherit'
+                      }
+                    }} 
+                  />
+                  <Chip 
+                    icon={<Comment sx={{ fontSize: '0.9rem' }} />} 
+                    label={blog.comments?.length || 0} 
+                    size="small" 
+                    sx={{ 
+                      borderRadius: '15px',
+                      bgcolor: 'secondary.soft',
+                      color: 'secondary.main',
+                      '& .MuiChip-icon': {
+                        color: 'inherit'
+                      }
+                    }} 
+                  />
+                </Box>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  endIcon={<Visibility />}
+                  onClick={() => navigate(`/blog/post/${blog._id}`)}
+                  sx={{
+                    borderRadius: '20px',
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    '&:hover': {
+                      transform: 'translateY(-2px)'
+                    }
+                  }}
+                >
+                  Read More
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Add Pagination */}
+      {pageCount > 1 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <Pagination 
+            count={pageCount} 
+            page={page} 
+            onChange={handlePageChange} 
+            color="primary"
+            size="large"
+          />
+        </Box>
+      )}
+    </Container>
   );
 };
 

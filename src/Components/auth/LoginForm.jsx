@@ -56,12 +56,34 @@ const LoginForm = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        // TODO: Implement login logic here
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Login failed');
+        }
+
+        // Store the token in localStorage
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
         setSnackbar({
           open: true,
           message: 'Login successful!',
           severity: 'success',
         });
+
+        // Redirect to dashboard or home page after successful login
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
       } catch (error) {
         setSnackbar({
           open: true,
