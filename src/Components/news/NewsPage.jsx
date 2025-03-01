@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Fade } from '@mui/material';
 import Hero from './Hero';
 import LatestNews from './LatestNews';
 import PressReleases from './PressReleases';
@@ -8,15 +8,23 @@ import Newsletter from './Newsletter';
 import CTA from '../home/CTA';
 
 const NewsPage = () => {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(true);
+  }, []);
+
   return (
-    <Box>
-      <Hero />
-      <LatestNews />
-      <PressReleases />
-      <MediaCoverage />
-      <Newsletter />
-      <CTA />
-    </Box>
+    <Fade in={loaded} timeout={1000}>
+      <Box>
+        <Hero />
+        <LatestNews />
+        <PressReleases />
+        <MediaCoverage />
+        <Newsletter />
+        <CTA />
+      </Box>
+    </Fade>
   );
 };
 

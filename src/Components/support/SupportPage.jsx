@@ -3,9 +3,9 @@ import { Box } from '@mui/material';
 import Hero from './Hero';
 import SupportOptions from './SupportOptions';
 import KnowledgeBase from './KnowledgeBase';
-import ContactForm from './ContactForm';
-import LiveChat from './LiveChat';
 import CTA from '../home/CTA';
+import Contact from '../home/Contact';
+import LiveChatSection from './LiveChatSection';
 
 const SupportPage = () => {
   return (
@@ -13,8 +13,8 @@ const SupportPage = () => {
       <Hero />
       <SupportOptions />
       <KnowledgeBase />
-      <ContactForm />
-      <LiveChat />
+      <Contact />
+      <LiveChatSection />
       <CTA />
     </Box>
   );

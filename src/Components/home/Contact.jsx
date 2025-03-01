@@ -59,22 +59,44 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
-    setSnackbar({
-      open: true,
-      message: 'Thank you! We\'ll get back to you shortly.',
-      severity: 'success',
-    });
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      service: '',
-      message: '',
-    });
+    try {
+      const response = await fetch('http://localhost:5000/api/forms/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong');
+      }
+
+      setSnackbar({
+        open: true,
+        message: 'Thank you! We\'ll get back to you shortly.',
+        severity: 'success',
+      });
+
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        service: '',
+        message: '',
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message || 'Failed to submit contact form',
+        severity: 'error',
+      });
+    }
   };
 
   const handleCloseSnackbar = () => {

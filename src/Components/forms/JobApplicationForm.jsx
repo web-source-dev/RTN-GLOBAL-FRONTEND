@@ -82,32 +82,59 @@ const JobApplicationForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // TODO: Implement job application submission logic
-      const applicationId = `APP-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-      setSnackbar({
-        open: true,
-        message: `Application ${applicationId} submitted successfully! We'll review your application and get back to you soon.`,
-        severity: 'success'
-      });
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        department: '',
-        position: '',
-        experienceLevel: '',
-        currentCompany: '',
-        linkedInProfile: '',
-        portfolioUrl: '',
-        coverLetter: '',
-        resume: null,
-        willingToRelocate: false,
-        agreeToTerms: false
-      });
+      try {
+        const formDataToSend = new FormData();
+        Object.keys(formData).forEach(key => {
+          if (key === 'resume' && formData[key]) {
+            formDataToSend.append('resume', formData[key]);
+          } else {
+            formDataToSend.append(key, formData[key]);
+          }
+        });
+
+        const response = await fetch('http://localhost:5000/api/forms/job-application', {
+          method: 'POST',
+          body: formDataToSend,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Something went wrong');
+        }
+
+        setSnackbar({
+          open: true,
+          message: `Application ${data.applicationId} submitted successfully! We'll review your application and get back to you soon.`,
+          severity: 'success'
+        });
+
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          department: '',
+          position: '',
+          experienceLevel: '',
+          currentCompany: '',
+          linkedInProfile: '',
+          portfolioUrl: '',
+          coverLetter: '',
+          resume: null,
+          willingToRelocate: false,
+          agreeToTerms: false
+        });
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: error.message || 'Failed to submit job application',
+          severity: 'error'
+        });
+      }
     }
   };
 

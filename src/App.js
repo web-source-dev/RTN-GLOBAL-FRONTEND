@@ -38,6 +38,12 @@ import AboutPage from './Components/about/AboutPage';
 import TermsOfService from './Components/legal/TermsOfService';
 import PrivacyPolicy from './Components/legal/PrivacyPolicy';
 import Disclaimer from './Components/legal/Disclaimer';
+import UserProfile from './Components/profile/UserProfile';
+import UserSettings from './Components/profile/UserSettings';
+import { useState, useEffect } from 'react';
+import ChatDashboard from './Components/admin/ChatDashboard';
+import LiveChat from './Components/support/LiveChat';
+import GlobalLiveChat from './Components/support/GlobalLiveChat';
 
 function App() {
   return (
@@ -46,7 +52,16 @@ function App() {
         <CssBaseline />
         <Router>
           <Routes>
-            <Route path="/profile" element={<MemberPage />} />
+
+            {/* <Route path="/profile" element={<MemberPage />} /> */}
+            <Route path="/admin/chat" element={
+                    <ProtectedRoute adminOnly>
+                      <ChatDashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/livechat" element={<LiveChat />} />
+                  <Route path="/Community" element={<GlobalLiveChat />} />
+
             <Route path="/*" element={
               <Layout>
                 <Routes>
@@ -77,6 +92,8 @@ function App() {
                   <Route path="/digital-tools" element={<DigitalToolsPage />} />
                   <Route path="/roi-calculator" element={<RoiCalculatorPage />} />
                   <Route path="/faq" element={<FaqPage />} />
+                  <Route path="/profile" element={<UserProfile />} />
+                  <Route path="/settings" element={<UserSettings />} />
                   <Route path="/support" element={<SupportPage />} />
                   <Route path="/services/digital-strategy" element={<DigitalStrategy />} />
                   <Route path="/services/seo-optimization" element={<SeoOptimization />} />

@@ -59,24 +59,46 @@ const NewsletterForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // TODO: Implement newsletter subscription logic
-      setSnackbar({
-        open: true,
-        message: 'Thank you for subscribing! Please check your email to confirm your subscription.',
-        severity: 'success'
-      });
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        company: '',
-        jobTitle: '',
-        preferences: [],
-        agreeToTerms: false
-      });
+      try {
+        const response = await fetch('http://localhost:5000/api/forms/newsletter', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Something went wrong');
+        }
+
+        setSnackbar({
+          open: true,
+          message: 'Thank you for subscribing! Please check your email to confirm your subscription.',
+          severity: 'success'
+        });
+
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          company: '',
+          jobTitle: '',
+          preferences: [],
+          agreeToTerms: false
+        });
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: error.message || 'Failed to subscribe to newsletter',
+          severity: 'error'
+        });
+      }
     }
   };
 

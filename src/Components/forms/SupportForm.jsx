@@ -69,26 +69,53 @@ const SupportForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // TODO: Implement form submission logic
-      const ticketNumber = `TKT-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
-      setSnackbar({
-        open: true,
-        message: `Support ticket ${ticketNumber} has been created. We'll get back to you soon!`,
-        severity: 'success'
-      });
-      setFormData({
-        name: '',
-        email: '',
-        issueCategory: '',
-        priority: '',
-        subject: '',
-        description: '',
-        attachments: null,
-        subscribeToUpdates: true
-      });
+      try {
+        const formDataToSend = new FormData();
+        Object.keys(formData).forEach(key => {
+          if (key === 'attachments' && formData[key]) {
+            formDataToSend.append('attachments', formData[key]);
+          } else {
+            formDataToSend.append(key, formData[key]);
+          }
+        });
+
+        const response = await fetch('http://localhost:5000/api/forms/support', {
+          method: 'POST',
+          body: formDataToSend,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Something went wrong');
+        }
+
+        setSnackbar({
+          open: true,
+          message: `Support ticket ${data.ticketNumber} has been created. We'll get back to you soon!`,
+          severity: 'success'
+        });
+
+        setFormData({
+          name: '',
+          email: '',
+          issueCategory: '',
+          priority: '',
+          subject: '',
+          description: '',
+          attachments: null,
+          subscribeToUpdates: true
+        });
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: error.message || 'Failed to submit support ticket',
+          severity: 'error'
+        });
+      }
     }
   };
 
