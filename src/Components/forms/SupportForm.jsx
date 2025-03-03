@@ -12,7 +12,9 @@ import {
   useTheme,
   FormControlLabel,
   Checkbox,
+  Link,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const PRIORITY_LEVELS = [
   'Low',
@@ -20,6 +22,7 @@ const PRIORITY_LEVELS = [
   'High',
   'Critical'
 ];
+
 
 const ISSUE_CATEGORIES = [
   'Technical Issue',
@@ -34,6 +37,7 @@ const SupportForm = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
 
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -82,7 +86,7 @@ const SupportForm = () => {
           }
         });
 
-        const response = await fetch('http://localhost:5000/api/forms/support', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/forms/support`, {
           method: 'POST',
           body: formDataToSend,
         });
@@ -304,23 +308,26 @@ const SupportForm = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                size="large"
-                fullWidth
-                sx={{
-                  mt: 2,
-                  height: 56,
-                  borderRadius: 2,
-                  background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                  '&:hover': {
-                    background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
-                  },
-                }}
-              >
-                Submit Support Ticket
-              </Button>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  size="large"
+                  sx={{
+                    height: 56,
+                    borderRadius: 2,
+                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
+                    },
+                    flex: 1,
+                    mr: 2
+                  }}
+                >
+                  Submit Support Ticket
+                </Button>
+               
+              </Box>
             </Grid>
           </Grid>
         </Box>

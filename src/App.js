@@ -44,6 +44,15 @@ import { useState, useEffect } from 'react';
 import ChatDashboard from './Components/admin/ChatDashboard';
 import LiveChat from './Components/support/LiveChat';
 import GlobalLiveChat from './Components/support/GlobalLiveChat';
+import AdminDashboard from './Components/admin/AdminDashboard';
+import AdminOverview from './Components/admin/Overview';
+import AdminUsers from './Components/admin/Users';
+import AdminBlogs from './Components/admin/Blogs';
+import AdminJobs from './Components/admin/Jobs';
+import AdminNewsletter from './Components/admin/Newsletter';
+import AdminSupport from './Components/admin/Support';
+import AdminSettings from './Components/admin/Settings';
+import TicketStatus from './Components/forms/TicketStatus';
 
 function App() {
   return (
@@ -52,13 +61,7 @@ function App() {
         <CssBaseline />
         <Router>
           <Routes>
-
             {/* <Route path="/profile" element={<MemberPage />} /> */}
-            <Route path="/admin/chat" element={
-                    <ProtectedRoute adminOnly>
-                      <ChatDashboard />
-                    </ProtectedRoute>
-                  } />
                   <Route path="/livechat" element={<LiveChat />} />
                   <Route path="/Community" element={<GlobalLiveChat />} />
 
@@ -113,9 +116,31 @@ function App() {
                   <Route path="/terms-of-service" element={<TermsOfService />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/disclaimer" element={<Disclaimer />} />
+                  <Route path="/check-ticket" element={<TicketStatus />} />
+                  
+
                 </Routes>
               </Layout>
             } />
+
+            {/* Admin Routes */}
+            <Route
+              path="/admin/*"
+              element={
+                <ProtectedRoute adminOnly>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<AdminOverview />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="blogs" element={<AdminBlogs />} />
+              <Route path="jobs" element={<AdminJobs />} />
+              <Route path="newsletter" element={<AdminNewsletter />} />
+              <Route path="chat" element={<ChatDashboard />} />
+              <Route path="support" element={<AdminSupport />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
           </Routes>
         </Router>
       </ThemeProvider>

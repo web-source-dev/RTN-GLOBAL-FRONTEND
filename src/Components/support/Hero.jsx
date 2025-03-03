@@ -8,6 +8,8 @@ import {
   useTheme,
 } from '@mui/material';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import CheckCircle from '@mui/icons-material/CheckCircle';
+import { Link as RouterLink } from 'react-router-dom';
 
 const Hero = () => {
   const theme = useTheme();
@@ -46,10 +48,29 @@ const Hero = () => {
               <Button
                 variant="contained"
                 size="large"
+                component={RouterLink}
+            to="/support/form"
                 startIcon={<SupportAgentIcon />}
                 sx={{ borderRadius: 2 }}
               >
                 Contact Support
+              </Button>
+              <Button
+                variant="contained"
+                  component={RouterLink}
+            to="/check-ticket"
+                fullWidth
+                startIcon={<CheckCircle  />}
+                sx={{
+                  width:'150px',
+                  height: '56px',
+                  background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                  '&:hover': {
+                    background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
+                  },
+                }}
+              >
+                Check Status
               </Button>
             </Box>
           </Grid>

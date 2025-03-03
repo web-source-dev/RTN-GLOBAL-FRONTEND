@@ -12,15 +12,9 @@ import {
   useTheme,
   FormControlLabel,
   Checkbox,
+  Link,
 } from '@mui/material';
 
-const SUBSCRIPTION_PREFERENCES = [
-  'Company Updates',
-  'Industry News',
-  'Product Announcements',
-  'Events & Webinars',
-  'Tips & Tutorials'
-];
 
 const NewsletterForm = () => {
   const theme = useTheme();
@@ -30,9 +24,9 @@ const NewsletterForm = () => {
     firstName: '',
     lastName: '',
     email: '',
-    company: '',
-    jobTitle: '',
-    preferences: [],
+    company: 'defualt',
+    jobTitle: 'defualt',
+    preferences: [null],
     agreeToTerms: false
   });
 
@@ -135,163 +129,140 @@ const NewsletterForm = () => {
           : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
       }}
     >
-      <Container maxWidth="md">
-        <Typography
-          variant="h3"
-          textAlign="center"
-          sx={{
-            fontWeight: 800,
-            mb: 3,
-            background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-            backgroundClip: 'text',
-            textFillColor: 'transparent',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-          }}
-        >
-          Subscribe to Our Newsletter
-        </Typography>
-        <Typography
-          color="text.secondary"
-          textAlign="center"
-          sx={{ mb: 6, maxWidth: '600px', mx: 'auto' }}
-        >
-          Stay up-to-date with our latest news, industry insights, and exclusive content
-          tailored to your interests.
-        </Typography>
+      <Container maxWidth="lg">
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{
-            backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'white',
-            p: 4,
-            borderRadius: 2,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-          }}
-        >
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="First Name"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                error={!!errors.firstName}
-                helperText={errors.firstName}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Last Name"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                error={!!errors.lastName}
-                helperText={errors.lastName}
-                required
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                error={!!errors.email}
-                helperText={errors.email}
-                required
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Company"
-                name="company"
-                value={formData.company}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Job Title"
-                name="jobTitle"
-                value={formData.jobTitle}
-                onChange={handleChange}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom>
-                Subscription Preferences*
-              </Typography>
-              <Grid container spacing={2}>
-                {SUBSCRIPTION_PREFERENCES.map((preference) => (
-                  <Grid item xs={12} sm={6} key={preference}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={formData.preferences.includes(preference)}
-                          onChange={handleChange}
-                          name="preferences"
-                          value={preference}
-                        />
-                      }
-                      label={preference}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-              {errors.preferences && (
-                <Typography color="error" variant="caption">
-                  {errors.preferences}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={formData.agreeToTerms}
-                    onChange={handleChange}
-                    name="agreeToTerms"
-                    color="primary"
-                  />
-                }
-                label="I agree to receive marketing communications and accept the privacy policy"
-              />
-              {errors.agreeToTerms && (
-                <Typography color="error" variant="caption" display="block">
-                  {errors.agreeToTerms}
-                </Typography>
-              )}
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                type="submit"
-                variant="contained"
-                size="large"
-                fullWidth
-                sx={{
-                  mt: 2,
-                  height: 56,
-                  borderRadius: 2,
-                  background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                  '&:hover': {
-                    background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
-                  },
-                }}
-              >
-                Subscribe Now
-              </Button>
-            </Grid>
+        <Grid container spacing={5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+          <Grid item xs={12} sm={6}>
+            <Typography
+              variant="h3"
+              textAlign="center"
+              sx={{
+                fontWeight: 800,
+                mb: 3,
+                background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                backgroundClip: 'text',
+                textFillColor: 'transparent',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              }}
+            >
+              Subscribe to Our NewsLetter
+            </Typography>
+            <Typography
+              color="text.secondary"
+              textAlign="center"
+              sx={{ mb: 6, maxWidth: '600px', mx: 'auto' }}
+            >
+              Get the latest digital marketing strategies, growth hacks, and insider tips
+              delivered straight to your inbox. Stay ahead of trends, master SEO, social media,
+              paid ads, and more with expert insights that drive real results.
+              <br />
+              <br />
+              Join thousands of marketers, entrepreneurs, and business owners who are scaling
+              their brands with data-driven strategies. No spam—just actionable insights to help
+              you grow faster!
+            </Typography>
+
           </Grid>
-        </Box>
+          <Grid item xs={12} sm={6}>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              sx={{
+                backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'white',
+                p: 4,
+                borderRadius: 2,
+                boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+              }}
+            >
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="First Name"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    error={!!errors.firstName}
+                    helperText={errors.firstName}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="Last Name"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    error={!!errors.lastName}
+                    helperText={errors.lastName}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    error={!!errors.email}
+                    helperText={errors.email}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={formData.agreeToTerms}
+                        onChange={handleChange}
+                        name="agreeToTerms"
+                        color="primary"
+                      />
+                    }
+                    label={
+                      <>
+                        I agree to receive marketing communications, updates, and accept the{" "}
+                        <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer">
+                          Privacy Policy
+                        </Link>
+                      </>
+                    }
+                  />
+
+                  {errors.agreeToTerms && (
+                    <Typography color="error" variant="caption" display="block">
+                      {errors.agreeToTerms}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    fullWidth
+                    sx={{
+                      mt: 2,
+                      height: 56,
+                      borderRadius: 2,
+                      background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                      '&:hover': {
+                        background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
+                      },
+                    }}
+                  >
+                    Subscribe Now
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+        </Grid>
 
         <Snackbar
           open={snackbar.open}

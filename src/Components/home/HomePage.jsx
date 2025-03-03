@@ -11,7 +11,7 @@ import Testimonials from './Testimonials';
 import Blog from './Blog';
 import CTA from './CTA';
 import Contact from './Contact';
-
+import NewsLetter from '../forms/NewsletterForm'
 const HomePage = () => {
   return (
     <Box>
@@ -26,6 +26,7 @@ const HomePage = () => {
       <Blog />
       <CTA />
       <Contact />
+      <NewsLetter />
     </Box>
   );
 };
