@@ -1,7 +1,14 @@
 import React from 'react';
 import { Box, Container, Typography, Button, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const CTA = () => {
+  const navigate = useNavigate();
+
+  const handleConsultationClick = () => {
+    navigate('/free-consultation');
+  };
+
   return (
     <Box py={8} bgcolor="primary.main">
       <Container>
@@ -25,6 +32,7 @@ const CTA = () => {
             variant="contained"
             color="secondary"
             size="large"
+            onClick={handleConsultationClick}
             sx={{ px: 4, py: 1.5 }}
           >
             Schedule Your Free Consultation

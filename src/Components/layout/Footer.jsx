@@ -18,6 +18,22 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 const Footer = () => {
   const theme = useTheme();
 
+  // Function to handle scroll to top before navigation
+  const handleLinkClick = (event) => {
+    event.preventDefault();
+    const href = event.currentTarget.getAttribute('href');
+    
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    
+    // Navigate after a short delay to allow smooth scrolling
+    setTimeout(() => {
+      window.location.href = href;
+    }, 500);
+  };
+
   const services = [
     { name: 'Digital Strategy', path: '/services/digital-strategy' },
     { name: 'SEO Optimization', path: '/services/seo-optimization' },
@@ -75,16 +91,40 @@ const Footer = () => {
               Transform your online presence and drive growth with our expert strategies.
             </Typography>
             <Box sx={{ mt: 3 }}>
-              <IconButton color="primary" aria-label="facebook">
+              <IconButton 
+                color="primary" 
+                aria-label="facebook"
+                component="a"
+                href="https://facebook.com"
+                onClick={handleLinkClick}
+              >
                 <FacebookIcon />
               </IconButton>
-              <IconButton color="primary" aria-label="twitter">
+              <IconButton 
+                color="primary" 
+                aria-label="twitter"
+                component="a"
+                href="https://twitter.com"
+                onClick={handleLinkClick}
+              >
                 <TwitterIcon />
               </IconButton>
-              <IconButton color="primary" aria-label="linkedin">
+              <IconButton 
+                color="primary" 
+                aria-label="linkedin"
+                component="a"
+                href="https://linkedin.com"
+                onClick={handleLinkClick}
+              >
                 <LinkedInIcon />
               </IconButton>
-              <IconButton color="primary" aria-label="instagram">
+              <IconButton 
+                color="primary" 
+                aria-label="instagram"
+                component="a"
+                href="https://instagram.com"
+                onClick={handleLinkClick}
+              >
                 <InstagramIcon />
               </IconButton>
             </Box>
@@ -101,6 +141,12 @@ const Footer = () => {
                   <Link
                     component={RouterLink}
                     to={item.path}
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                      });
+                    }}
                     sx={{
                       color: 'text.secondary',
                       textDecoration: 'none',
@@ -127,6 +173,12 @@ const Footer = () => {
                   <Link
                     component={RouterLink}
                     to={item.path}
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                      });
+                    }}
                     sx={{
                       color: 'text.secondary',
                       textDecoration: 'none',
@@ -153,6 +205,12 @@ const Footer = () => {
                   <Link
                     component={RouterLink}
                     to={item.path}
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                      });
+                    }}
                     sx={{
                       color: 'text.secondary',
                       textDecoration: 'none',
@@ -208,9 +266,15 @@ const Footer = () => {
               gap: 3,
             }}
           >
-                        <Link
+            <Link
               component={RouterLink}
               to="/disclaimer"
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth'
+                });
+              }}
               color="text.secondary"
               sx={{
                 textDecoration: 'none',
@@ -222,6 +286,12 @@ const Footer = () => {
             <Link
               component={RouterLink}
               to="/privacy-policy"
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth'
+                });
+              }}
               color="text.secondary"
               sx={{
                 textDecoration: 'none',
@@ -233,6 +303,12 @@ const Footer = () => {
             <Link
               component={RouterLink}
               to="/terms-of-service"
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth'
+                });
+              }}
               color="text.secondary"
               sx={{
                 textDecoration: 'none',

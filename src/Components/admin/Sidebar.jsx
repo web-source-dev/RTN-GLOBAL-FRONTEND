@@ -30,7 +30,9 @@ const menuItems = [
   { text: 'Newsletter', icon: MailIcon, path: '/admin/newsletter' },
   { text: 'Live Chat', icon: ChatIcon, path: '/admin/chat' },
   { text: 'Support Tickets', icon: SupportIcon, path: '/admin/support' },
+  { text: 'Consultation Request', icon: SupportIcon, path: '/admin/consultation' },
   { text: 'Settings', icon: SettingsIcon, path: '/admin/settings' },
+
 ];
 
 const Sidebar = () => {

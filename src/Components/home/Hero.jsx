@@ -2,8 +2,20 @@ import React from 'react';
 import { Box, Container, Typography, Button, Stack, Grid } from '@mui/material';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import { useNavigate } from 'react-router-dom';
 
 const Hero = () => {
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    navigate('/free-consultation');
+  };
+
+  const handleWatchDemo = () => {
+    // For now, navigate to services page where demo content would typically be
+    navigate('/services');
+  };
+
   return (
     <Box
       sx={{
@@ -91,6 +103,7 @@ const Hero = () => {
                   size="large"
                   color="secondary"
                   startIcon={<RocketLaunchIcon />}
+                  onClick={handleGetStarted}
                   sx={{
                     py: 1.5,
                     px: 4,
@@ -111,6 +124,7 @@ const Hero = () => {
                   variant="outlined"
                   size="large"
                   startIcon={<PlayArrowIcon />}
+                  onClick={handleWatchDemo}
                   sx={{
                     py: 1.5,
                     px: 4,

@@ -1,6 +1,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from './contexts/ThemeContext';
+import Sitemap from './Components/sitemap/Sitemap';
+import ServerError from './Components/error/ServerError';
+import NotFound from './Components/error/NotFound';
+import Pricing from './Components/pricing/Pricing';
 import Layout from './Components/layout/Layout';
 import HomePage from './Components/home/HomePage';
 import ServicesPage from './Components/services/ServicesPage';
@@ -53,6 +57,8 @@ import AdminNewsletter from './Components/admin/Newsletter';
 import AdminSupport from './Components/admin/Support';
 import AdminSettings from './Components/admin/Settings';
 import TicketStatus from './Components/forms/TicketStatus';
+import FreeConsultationForm from './Components/forms/FreeConsultationForm';
+import ManageConsultation from './Components/admin/ManageConsultation';
 
 function App() {
   return (
@@ -117,8 +123,11 @@ function App() {
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                   <Route path="/disclaimer" element={<Disclaimer />} />
                   <Route path="/check-ticket" element={<TicketStatus />} />
-                  
-
+                  <Route path="/free-consultation" element={<FreeConsultationForm />} />
+                  <Route path="/sitemap" element={<Sitemap />} />
+                  <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/500" element={<ServerError />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>
             } />
@@ -140,6 +149,7 @@ function App() {
               <Route path="chat" element={<ChatDashboard />} />
               <Route path="support" element={<AdminSupport />} />
               <Route path="settings" element={<AdminSettings />} />
+              <Route path="consultation" element={<ManageConsultation />} />
             </Route>
           </Routes>
         </Router>
