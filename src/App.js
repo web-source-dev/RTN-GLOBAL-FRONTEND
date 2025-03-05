@@ -1,4 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import UserDashboard from './Components/User/UserDashboard';
+import UserSupportTickets from './Components/User/UserSupportTickets';
+import UserJobApplications from './Components/User/UserJobApplications';
+import UserConsultations from './Components/User/UserConsultations';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Sitemap from './Components/sitemap/Sitemap';
@@ -42,9 +46,7 @@ import AboutPage from './Components/about/AboutPage';
 import TermsOfService from './Components/legal/TermsOfService';
 import PrivacyPolicy from './Components/legal/PrivacyPolicy';
 import Disclaimer from './Components/legal/Disclaimer';
-import UserProfile from './Components/profile/UserProfile';
 import UserSettings from './Components/profile/UserSettings';
-import { useState, useEffect } from 'react';
 import ChatDashboard from './Components/admin/ChatDashboard';
 import LiveChat from './Components/support/LiveChat';
 import GlobalLiveChat from './Components/support/GlobalLiveChat';
@@ -59,6 +61,7 @@ import AdminSettings from './Components/admin/Settings';
 import TicketStatus from './Components/forms/TicketStatus';
 import FreeConsultationForm from './Components/forms/FreeConsultationForm';
 import ManageConsultation from './Components/admin/ManageConsultation';
+import UserProfile from './Components/profile/UserProfile';
 
 function App() {
   return (
@@ -67,9 +70,17 @@ function App() {
         <CssBaseline />
         <Router>
           <Routes>
-            {/* <Route path="/profile" element={<MemberPage />} /> */}
-                  <Route path="/livechat" element={<LiveChat />} />
-                  <Route path="/Community" element={<GlobalLiveChat />} />
+            {/* User Dashboard Routes */}
+            <Route path="/user" element={<UserDashboard />}>
+              <Route path="support" element={<UserSupportTickets />} />
+              <Route path="applications" element={<UserJobApplications />} />
+              <Route path="consultations" element={<UserConsultations />} />
+                  <Route path="profile" element={<UserProfile />} />
+                  <Route path="" element={<UserJobApplications />} />
+
+            </Route>
+            <Route path="/livechat" element={<LiveChat />} />
+            <Route path="/Community" element={<GlobalLiveChat />} />
 
             <Route path="/*" element={
               <Layout>
@@ -101,7 +112,6 @@ function App() {
                   <Route path="/digital-tools" element={<DigitalToolsPage />} />
                   <Route path="/roi-calculator" element={<RoiCalculatorPage />} />
                   <Route path="/faq" element={<FaqPage />} />
-                  <Route path="/profile" element={<UserProfile />} />
                   <Route path="/settings" element={<UserSettings />} />
                   <Route path="/support" element={<SupportPage />} />
                   <Route path="/services/digital-strategy" element={<DigitalStrategy />} />

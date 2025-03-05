@@ -18,6 +18,7 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import ThemeSwitcher from '../ThemeSwitcher';
+import { Link } from 'react-router-dom';
 
 const pages = [
   { title: 'Services', path: '/services' },
@@ -142,9 +143,12 @@ const Header = () => {
                       color="primary"
                       fullWidth
                       sx={{ borderRadius: '50px' }}
+                      component="a"
+                      href="/contact"
                     >
                       Get Started
                     </Button>
+
                   </ListItem>
                 </List>
               </Drawer>

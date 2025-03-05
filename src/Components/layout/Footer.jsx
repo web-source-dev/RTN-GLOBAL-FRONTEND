@@ -23,10 +23,31 @@ const Footer = () => {
     event.preventDefault();
     const href = event.currentTarget.getAttribute('href');
     
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    function smoothScrollToTop() {
+      const startPosition = window.pageYOffset;
+      const duration = 5800; // Adjust duration for smoothness
+      let startTime = null;
+    
+      function scrollStep(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = timestamp - startTime;
+        const easeInOutCubic = progress / duration < 0.5
+          ? 4 * (progress / duration) ** 3
+          : 1 - Math.pow(-2 * (progress / duration) + 2, 3) / 2;
+        
+        window.scrollTo(0, startPosition * (1 - easeInOutCubic));
+    
+        if (progress < duration) {
+          requestAnimationFrame(scrollStep);
+        }
+      }
+    
+      requestAnimationFrame(scrollStep);
+    }
+    
+    // Call the function to scroll smoothly
+    smoothScrollToTop();
+    
     
     // Navigate after a short delay to allow smooth scrolling
     setTimeout(() => {
