@@ -54,7 +54,17 @@ const Hero = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Digital Marketing Services
+            Expert Web Development
+            <Box
+              component="span"
+              sx={{
+                display: 'block',
+                fontSize: { xs: '2rem', md: '3rem' },
+                color: 'text.secondary'
+              }}
+            >
+              & Digital Solutions
+            </Box>
           </Typography>
 
           <Typography
@@ -62,7 +72,7 @@ const Hero = () => {
             color="text.secondary"
             sx={{ mb: 4, maxWidth: '600px', mx: 'auto' }}
           >
-            Transform your digital presence with our comprehensive suite of marketing services designed to drive growth and deliver results.
+            From custom Wix development to full-stack MERN applications, we deliver scalable and innovative web solutions that drive business growth.
           </Typography>
 
           <Button

@@ -67,7 +67,7 @@ const Hero = () => {
                   mb: 2,
                 }}
               >
-                Transform Your Digital
+                Custom Web Solutions
                 <Box
                   component="span"
                   sx={{
@@ -79,7 +79,7 @@ const Hero = () => {
                     WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  Presence & Growth
+                  That Drive Results
                 </Box>
               </Typography>
               <Typography
@@ -91,7 +91,7 @@ const Hero = () => {
                   fontWeight: 300,
                 }}
               >
-                Innovative Digital Marketing Solutions for the Modern Business Era
+                Wix Development, MERN Stack Web Apps, and React Native Mobile Solutions
               </Typography>
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
@@ -149,19 +149,35 @@ const Hero = () => {
                   flexWrap: 'wrap',
                 }}
               >
-                {['500+ Clients', '95% Success Rate', '24/7 Support'].map((stat, index) => (
+                {[
+                  'Fast & Scalable',
+                  'User-Friendly',
+                  'Custom Solutions',
+                  'Expert Team',
+                ].map((item) => (
                   <Box
-                    key={index}
+                    key={item}
                     sx={{
-                      bgcolor: 'rgba(255,255,255,0.1)',
-                      px: 3,
-                      py: 1,
-                      borderRadius: '20px',
-                      backdropFilter: 'blur(10px)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
                     }}
                   >
-                    <Typography color="white" fontWeight="500">
-                      {stat}
+                    <Box
+                      sx={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        bgcolor: 'secondary.main',
+                      }}
+                    />
+                    <Typography
+                      sx={{
+                        color: 'rgba(255,255,255,0.9)',
+                        fontWeight: 500,
+                      }}
+                    >
+                      {item}
                     </Typography>
                   </Box>
                 ))}
@@ -170,33 +186,21 @@ const Hero = () => {
           </Grid>
           <Grid item xs={12} md={5}>
             <Box
+              component="img"
+              src="/images/hero-illustration.jpg"
+              alt="Hero Illustration"
               sx={{
-                position: 'relative',
-                '&::before': {
-                  content: '""',
-                  position: 'absolute',
-                  top: '-20px',
-                  left: '-20px',
-                  right: '-20px',
-                  bottom: '-20px',
-                  background: 'rgba(255,255,255,0.1)',
-                  borderRadius: '20px',
-                  backdropFilter: 'blur(10px)',
+                width: '100%',
+                height: 'auto',
+                borderRadius: '20px',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+                transform: 'perspective(1000px) rotateY(-5deg)',
+                transition: 'transform 0.5s ease',
+                '&:hover': {
+                  transform: 'perspective(1000px) rotateY(0deg)',
                 },
               }}
-            >
-              <Box
-                component="img"
-                src="/images/hero-illustration.jpg"
-                alt="Digital Marketing"
-                sx={{
-                  width: '100%',
-                  height: 'auto',
-                  position: 'relative',
-                  borderRadius: '20px',
-                }}
-              />
-            </Box>
+            />
           </Grid>
         </Grid>
       </Container>

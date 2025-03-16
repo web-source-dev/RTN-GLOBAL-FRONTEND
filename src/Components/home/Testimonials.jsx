@@ -130,18 +130,14 @@ const Testimonials = () => {
               key={index}
               sx={{
                 height: '100%',
-                background: theme.palette.mode === 'dark'
-                  ? 'linear-gradient(145deg, rgba(40,40,40,0.9), rgba(30,30,30,0.9))'
-                  : 'linear-gradient(145deg, rgba(255,255,255,0.9), rgba(245,245,245,0.9))',
-                backdropFilter: 'blur(10px)',
-                border: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                transition: 'all 0.3s ease',
+                transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                 '&:hover': {
                   transform: 'translateY(-8px)',
-                  boxShadow: theme.palette.mode === 'dark'
-                    ? '0 8px 24px rgba(0,0,0,0.4)'
-                    : '0 8px 24px rgba(0,0,0,0.1)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
                 },
+                borderRadius: 2,
+                position: 'relative',
+                overflow: 'hidden',
               }}
             >
               <CardContent sx={{ p: 4 }}>

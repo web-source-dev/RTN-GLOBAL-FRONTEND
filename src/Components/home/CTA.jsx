@@ -23,10 +23,10 @@ const CTA = () => {
           }}
         >
           <Typography variant="h2" gutterBottom>
-            Ready to Grow Your Business?
+            Ready to Build Your Digital Presence?
           </Typography>
           <Typography variant="h5" paragraph sx={{ mb: 4 }}>
-            Get a Free Digital Marketing Strategy Session Worth $500
+            Get a Free Web Development Consultation Worth $500
           </Typography>
           <Button
             variant="contained"

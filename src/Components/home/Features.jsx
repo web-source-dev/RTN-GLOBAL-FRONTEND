@@ -1,47 +1,47 @@
 import React from 'react';
 import { Box, Container, Grid, Typography, Paper, IconButton } from '@mui/material';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import PeopleIcon from '@mui/icons-material/People';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
-import AutoGraphIcon from '@mui/icons-material/AutoGraph';
-import CampaignIcon from '@mui/icons-material/Campaign';
+import SpeedIcon from '@mui/icons-material/Speed';
+import DevicesIcon from '@mui/icons-material/Devices';
+import SecurityIcon from '@mui/icons-material/Security';
+import CodeIcon from '@mui/icons-material/Code';
+import BrushIcon from '@mui/icons-material/Brush';
+import SupportIcon from '@mui/icons-material/Support';
 
 const features = [
   {
-    icon: RocketLaunchIcon,
-    title: 'Fast Implementation',
-    description: 'Quick deployment of marketing strategies that start delivering results from day one.',
+    icon: SpeedIcon,
+    title: 'Fast Performance',
+    description: 'Optimized code and efficient architecture for lightning-fast loading and smooth user experience.',
     color: '#2196f3'
   },
   {
-    icon: TrendingUpIcon,
-    title: 'Growth Focused',
-    description: 'Data-driven strategies designed to maximize your business growth and ROI.',
+    icon: DevicesIcon,
+    title: 'Responsive Design',
+    description: 'Fully responsive layouts that work perfectly across all devices, from desktops to smartphones.',
     color: '#4caf50'
   },
   {
-    icon: PeopleIcon,
-    title: 'Target Audience',
-    description: 'Precise audience targeting to reach the people who matter most to your business.',
+    icon: SecurityIcon,
+    title: 'Secure Solutions',
+    description: 'Built-in security features and best practices to protect your data and your users.',
     color: '#ff9800'
   },
   {
-    icon: AnalyticsIcon,
-    title: 'Advanced Analytics',
-    description: 'Comprehensive analytics and reporting to track your campaign performance.',
+    icon: CodeIcon,
+    title: 'Clean Code',
+    description: 'Well-structured, maintainable code that follows industry standards for long-term reliability.',
     color: '#9c27b0'
   },
   {
-    icon: AutoGraphIcon,
-    title: 'Market Analysis',
-    description: 'In-depth market research and competitor analysis for strategic advantage.',
+    icon: BrushIcon,
+    title: 'Modern UI/UX',
+    description: 'Beautiful, intuitive interfaces designed for optimal user engagement and conversion.',
     color: '#f44336'
   },
   {
-    icon: CampaignIcon,
-    title: 'Brand Amplification',
-    description: 'Strategic brand promotion across multiple digital channels.',
+    icon: SupportIcon,
+    title: 'Ongoing Support',
+    description: 'Dedicated technical support and maintenance to keep your web solutions running smoothly.',
     color: '#00bcd4'
   }
 ];
@@ -70,9 +70,8 @@ const Features = () => {
           color="text.secondary" 
           textAlign="center" 
           mb={6}
-          sx={{ maxWidth: '800px', mx: 'auto' }}
-        >
-          Discover the advantages that set us apart in the digital marketing landscape
+          sx={{ maxWidth: '800px', mx: 'auto' }}        >
+          Discover the advantages that set our web development solutions apart
         </Typography>
         <Grid container spacing={4}>
           {features.map((feature, index) => (

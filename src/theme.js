@@ -8,45 +8,45 @@ export const getDesignTokens = (mode) => ({
       ? {
           // Light mode
           primary: {
-            main: '#1976d2',
-            light: '#42a5f5',
-            dark: '#1565c0',
+            main: '#0052CC',
+            light: '#4C9AFF',
+            dark: '#0747A6',
           },
           secondary: {
-            main: '#9c27b0',
-            light: '#ba68c8',
-            dark: '#7b1fa2',
+            main: '#6554C0',
+            light: '#8777D9',
+            dark: '#5243AA',
           },
           background: {
-            default: '#ffffff',
-            paper: '#ffffff',
-            alternate: '#f8f9fa',
+            default: '#FFFFFF',
+            paper: '#FFFFFF',
+            alternate: '#F4F5F7',
           },
           text: {
-            primary: '#1a1a1a',
-            secondary: '#666666',
+            primary: '#172B4D',
+            secondary: '#505F79',
           },
         }
       : {
           // Dark mode
           primary: {
-            main: '#90caf9',
-            light: '#e3f2fd',
-            dark: '#42a5f5',
+            main: '#4C9AFF',
+            light: '#B3D4FF',
+            dark: '#0052CC',
           },
           secondary: {
-            main: '#ce93d8',
-            light: '#f3e5f5',
-            dark: '#ab47bc',
+            main: '#8777D9',
+            light: '#C0B6F2',
+            dark: '#6554C0',
           },
           background: {
-            default: '#121212',
-            paper: '#1e1e1e',
-            alternate: '#262626',
+            default: '#0D1117',
+            paper: '#161B22',
+            alternate: '#21262D',
           },
           text: {
-            primary: '#ffffff',
-            secondary: '#b0b0b0',
+            primary: '#F0F6FC',
+            secondary: '#C9D1D9',
           },
         }),
   },

@@ -4,10 +4,10 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const achievements = [
-  'Over 10 years of digital marketing excellence',
+  'Over 10 years of web development excellence',
   'Served 500+ satisfied clients worldwide',
-  'Award-winning marketing strategies',
-  'Industry-leading ROI for clients',
+  'Award-winning web solutions',
+  'Industry-leading performance for clients',
 ];
 
 const About = () => {
@@ -38,7 +38,7 @@ const About = () => {
                 <Box
                   component="img"
                   src="/images/about/team.jpg"
-                  alt="Digital Marketing Team"
+                  alt="Web Development Team"
                   sx={{
                     width: '100%',
                     height: 'auto',
@@ -99,14 +99,14 @@ const About = () => {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Your Partner in Digital Success
+              Your Partner in Web Development
             </Typography>
             <Typography variant="h5" color="text.secondary" paragraph>
-              Transforming Businesses Through Strategic Digital Marketing
+              Transforming Businesses Through Custom Web Solutions
             </Typography>
             <Typography paragraph color="text.secondary">
-              We are a team of digital marketing experts passionate about helping businesses grow their online presence. 
-              With years of experience and a data-driven approach, we deliver results that matter.
+              We are a team of web development experts passionate about helping businesses establish a powerful online presence. 
+              With years of experience and a user-centered approach, we deliver fast, scalable, and user-friendly digital experiences.
             </Typography>
             
             <Box my={4}>
@@ -150,7 +150,7 @@ const About = () => {
                   textTransform: 'none',
                 }}
               >
-                Watch Video
+                Watch Demo
               </Button>
             </Box>
           </Grid>

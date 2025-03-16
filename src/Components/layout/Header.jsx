@@ -67,9 +67,24 @@ const Header = () => {
                   href={page.path}
                   sx={{
                     color: 'inherit',
+                    position: 'relative',
                     '&:hover': {
                       color: 'primary.main',
+                      '&::after': {
+                        width: '100%',
+                        left: 0
+                      }
                     },
+                    '&::after': {
+                      content: '""',
+                      position: 'absolute',
+                      bottom: -2,
+                      right: 0,
+                      width: 0,
+                      height: '2px',
+                      backgroundColor: 'primary.main',
+                      transition: 'width 0.3s ease, left 0.3s ease'
+                    }
                   }}
                 >
                   {page.title}
@@ -82,7 +97,16 @@ const Header = () => {
                 sx={{
                   ml: 2,
                   px: 3,
+                  py: 1,
                   borderRadius: '50px',
+                  background: (theme) =>
+                    `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                  '&:hover': {
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 6px 16px rgba(0, 0, 0, 0.2)'
+                  }
                 }}
               >
                 Get Started

@@ -99,15 +99,15 @@ const Footer = () => {
             <Typography
               variant="h6"
               sx={{
-                fontFamily: 'monospace',
-                fontWeight: 700,
+                fontFamily: '"Poppins", sans-serif',
+                fontWeight: 500,
                 color: 'primary.main',
                 mb: 2,
               }}
             >
               RTN GLOBAL
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, maxWidth: '300px' }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2, maxWidth: '300px', fontFamily: '"Inter", sans-serif', fontWeight: 400 }}>
               Empowering businesses with innovative digital marketing solutions. 
               Transform your online presence and drive growth with our expert strategies.
             </Typography>
@@ -153,7 +153,7 @@ const Footer = () => {
 
           {/* Services */}
           <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontFamily: '"Poppins", sans-serif', fontWeight: 500 }}>
               Services
             </Typography>
             <Box component="ul" sx={{ p: 0, m: 0, listStyle: 'none' }}>
@@ -185,7 +185,7 @@ const Footer = () => {
 
           {/* Company */}
           <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontFamily: '"Poppins", sans-serif', fontWeight: 500 }}>
               Company
             </Typography>
             <Box component="ul" sx={{ p: 0, m: 0, listStyle: 'none' }}>
@@ -217,7 +217,7 @@ const Footer = () => {
 
           {/* Resources */}
           <Grid item xs={12} sm={6} md={2}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontFamily: '"Poppins", sans-serif', fontWeight: 500 }}>
               Resources
             </Typography>
             <Box component="ul" sx={{ p: 0, m: 0, listStyle: 'none' }}>
@@ -249,19 +249,19 @@ const Footer = () => {
 
           {/* Newsletter - Can be added in future */}
           <Grid item xs={12} md={2}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontFamily: '"Poppins", sans-serif', fontWeight: 500 }}>
               Contact Us
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-              Email: info@rtnglobal.com
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontFamily: '"Inter", sans-serif', fontWeight: 400 }}>
+              Email: info@rtnglobal.site
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontFamily: '"Inter", sans-serif', fontWeight: 400 }}>
               Phone: +1 (555) 123-4567
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Address: 123 Marketing St,
+            <Typography variant="body2" color="text.secondary" sx={{ fontFamily: '"Inter", sans-serif', fontWeight: 400 }}>
+            1209 MOUNTAIN ROAD PLNE, STE R
               <br />
-              Digital City, DC 12345
+              ALBUQUERQUE, NM
             </Typography>
           </Grid>
         </Grid>
@@ -278,7 +278,7 @@ const Footer = () => {
             gap: 2,
           }}
         >
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" sx={{ fontFamily: '"Inter", sans-serif', fontWeight: 400 }}>
             {new Date().getFullYear()} RTN Global. All rights reserved.
           </Typography>
           <Box

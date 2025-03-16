@@ -12,6 +12,7 @@ import {
   IconButton,
   useTheme,
   alpha,
+  Paper,
 } from '@mui/material';
 import LinkIcon from '@mui/icons-material/Link';
 import LaunchIcon from '@mui/icons-material/Launch';
@@ -19,54 +20,80 @@ import StarIcon from '@mui/icons-material/Star';
 
 const portfolioItems = [
   {
-    title: 'E-commerce Growth Strategy',
-    description: 'Increased online sales by 200% through targeted digital marketing campaigns and SEO optimization.',
+    title: 'Premium Wix Website for Luxury Boutique',
+    description: 'Designed and developed a custom Wix website for a high-end fashion boutique, featuring e-commerce integration, appointment booking, and responsive design that increased online sales by 245%.',
     image: '/images/portfolio/project1.jpg',
-    category: 'E-commerce',
-    tags: ['SEO', 'PPC', 'Social Media'],
+    category: 'Wix Website',
+    tags: ['Wix', 'E-commerce', 'Responsive Design'],
     stats: {
-      growth: '200%',
-      duration: '6 months',
-      roi: '350%'
+      performance: 'Outstanding',
+      duration: '3 weeks',
+      satisfaction: 'Exceptional (5★)'
     },
     featured: true
   },
   {
-    title: 'Brand Transformation',
-    description: 'Complete digital transformation for a traditional retail brand, establishing strong online presence.',
+    title: 'MERN Stack Property Management Platform',
+    description: 'Built a comprehensive property management web application using MongoDB, Express, React, and Node.js, featuring real-time updates, user authentication, and advanced filtering capabilities.',
     image: '/images/portfolio/project2.jpg',
-    category: 'Branding',
-    tags: ['Branding', 'Social Media', 'Content'],
+    category: 'MERN Stack',
+    tags: ['MongoDB', 'Express', 'React', 'Node.js'],
     stats: {
-      growth: '150%',
-      duration: '8 months',
-      roi: '280%'
+      performance: 'Excellent',
+      duration: '8 weeks',
+      satisfaction: 'Highly Rated (5★)'
     },
     featured: true
   },
   {
-    title: 'Lead Generation Campaign',
-    description: 'Generated 500+ qualified leads per month through multi-channel marketing strategy.',
+    title: 'React Native Fitness Tracking App',
+    description: 'Developed a cross-platform mobile application for fitness tracking using React Native, featuring workout plans, progress tracking, and social sharing capabilities for both iOS and Android users.',
     image: '/images/portfolio/project3.jpg',
-    category: 'Lead Generation',
-    tags: ['Email Marketing', 'Landing Pages', 'Analytics'],
+    category: 'React Native',
+    tags: ['Mobile App', 'iOS', 'Android', 'Cross-platform'],
     stats: {
-      growth: '300%',
-      duration: '4 months',
-      roi: '400%'
+      performance: 'Top-tier',
+      duration: '7 weeks',
+      satisfaction: 'Very Satisfied (5★)'
     },
     featured: false
   },
   {
-    title: 'SaaS Marketing Success',
-    description: 'Helped a SaaS startup achieve 10,000+ active users through strategic digital marketing.',
+    title: 'MERN Stack E-Learning Platform',
+    description: 'Created a scalable online learning platform with MongoDB, Express, React and Node.js, featuring video courses, interactive quizzes, and a comprehensive admin dashboard for content management.',
     image: '/images/portfolio/project4.jpg',
-    category: 'SaaS',
-    tags: ['B2B', 'Content Marketing', 'PPC'],
+    category: 'MERN Stack',
+    tags: ['Full Stack', 'Education', 'User Authentication'],
     stats: {
-      growth: '400%',
-      duration: '12 months',
-      roi: '500%'
+      performance: 'Superior',
+      duration: '10 weeks',
+      satisfaction: 'Exceptional (5★)'
+    },
+    featured: true
+  },
+  {
+    title: 'Wix Healthcare Provider Website',
+    description: 'Designed a HIPAA-compliant Wix website for a medical practice, featuring online appointment scheduling, patient portal integration, and optimized mobile experience that improved patient acquisition.',
+    image: '/images/portfolio/project5.jpg',
+    category: 'Wix Website',
+    tags: ['Healthcare', 'Appointment Booking', 'Responsive Design'],
+    stats: {
+      performance: 'Excellent',
+      duration: '2.5 weeks',
+      satisfaction: 'Highly Rated (5★)'
+    },
+    featured: false
+  },
+  {
+    title: 'React Native Delivery Service App',
+    description: 'Built a high-performance food delivery mobile application using React Native with real-time order tracking, payment processing, and push notifications for both restaurant partners and customers.',
+    image: '/images/portfolio/project6.jpg',
+    category: 'React Native',
+    tags: ['Mobile App', 'Geolocation', 'Payment Integration'],
+    stats: {
+      performance: 'Best-in-class',
+      duration: '9 weeks',
+      satisfaction: 'Perfect (5★)'
     },
     featured: true
   }
@@ -132,14 +159,14 @@ const Portfolio = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Success Stories That Drive Results
+            Fast, Scalable & User-Friendly Solutions
           </Typography>
           <Typography
             variant="h5"
             color="text.secondary"
             sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
           >
-            Explore our portfolio of successful digital marketing campaigns and transformations
+            Explore our portfolio of custom web solutions including Wix websites, MERN stack applications, and React Native mobile apps
           </Typography>
 
           {/* Category Filter */}
@@ -180,30 +207,20 @@ const Portfolio = () => {
             .filter(item => activeCategory === 'All' || item.category === activeCategory)
             .map((item, index) => (
               <Grid item xs={12} md={6} key={index}>
-                <Card
-                  sx={{
-                    height: '100%',
-                    background: isDark
-                      ? 'linear-gradient(145deg, rgba(40,40,40,0.9), rgba(30,30,30,0.9))'
-                      : 'linear-gradient(145deg, rgba(255,255,255,0.9), rgba(245,245,245,0.9))',
-                    backdropFilter: 'blur(10px)',
-                    border: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                    transition: 'all 0.3s ease',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    '&:hover': {
-                      transform: 'translateY(-8px)',
-                      boxShadow: isDark
-                        ? '0 8px 24px rgba(0,0,0,0.4)'
-                        : '0 8px 24px rgba(0,0,0,0.1)',
-                      '& .portfolio-overlay': {
-                        opacity: 1,
-                      },
-                      '& .portfolio-image': {
-                        transform: 'scale(1.1)',
-                      },
-                    },
-                  }}
+                <Paper
+                elevation={0}
+                sx={{
+                  p: 4,
+                  height: '100%',
+                  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                  '&:hover': {
+                    transform: 'translateY(-8px)',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+                  },
+                  borderRadius: 2,
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
                 >
                   {item.featured && (
                     <Box
@@ -322,20 +339,20 @@ const Portfolio = () => {
                       }}
                     >
                       <Box>
-                        <Typography variant="body2" color="text.secondary">Growth</Typography>
-                        <Typography variant="h6" color="primary">{item.stats.growth}</Typography>
+                        <Typography variant="body2" color="text.secondary">Performance</Typography>
+                        <Typography variant="h6" color="primary">{item.stats.performance}</Typography>
                       </Box>
                       <Box>
                         <Typography variant="body2" color="text.secondary">Duration</Typography>
                         <Typography variant="h6" color="primary">{item.stats.duration}</Typography>
                       </Box>
                       <Box>
-                        <Typography variant="body2" color="text.secondary">ROI</Typography>
-                        <Typography variant="h6" color="primary">{item.stats.roi}</Typography>
+                        <Typography variant="body2" color="text.secondary">Satisfaction</Typography>
+                        <Typography variant="h6" color="primary">{item.stats.satisfaction}</Typography>
                       </Box>
                     </Box>
                   </CardContent>
-                </Card>
+                </Paper>
               </Grid>
             ))}
         </Grid>

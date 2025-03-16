@@ -7,7 +7,7 @@ import {
   Button,
   useTheme,
 } from '@mui/material';
-import BuildIcon from '@mui/icons-material/Build';
+import CodeIcon from '@mui/icons-material/Code';
 
 const Hero = () => {
   const theme = useTheme();
@@ -32,32 +32,32 @@ const Hero = () => {
                 mb: 3,
               }}
             >
-              Digital Marketing Tools Suite
+              Custom Web Solutions
             </Typography>
             <Typography
               variant="h5"
               color="text.secondary"
               sx={{ mb: 4, maxWidth: '600px' }}
             >
-              Powerful tools and resources to streamline your marketing efforts and
-              maximize your ROI. Built for modern marketers.
+              Build fast, scalable, and user-friendly digital experiences with our expert team. 
+              Specializing in Wix websites, MERN stack applications, and React Native mobile apps.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <Button
                 variant="contained"
                 size="large"
-                startIcon={<BuildIcon />}
+                startIcon={<CodeIcon />}
                 sx={{ borderRadius: 2 }}
               >
-                Explore Tools
+                Explore Services
               </Button>
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
             <Box
               component="img"
-              src="/images/digital-tools-hero.svg"
-              alt="Digital Tools Hero"
+              src="/images/web-development-hero.svg"
+              alt="Web Development Services"
               sx={{
                 width: '100%',
                 height: 'auto',

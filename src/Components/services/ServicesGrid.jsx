@@ -10,62 +10,62 @@ import {
   IconButton,
   useTheme,
 } from '@mui/material';
-import StrategyIcon from '@mui/icons-material/Lightbulb';
-import SeoIcon from '@mui/icons-material/TrendingUp';
-import ContentIcon from '@mui/icons-material/Description';
-import SocialIcon from '@mui/icons-material/Share';
-import PpcIcon from '@mui/icons-material/Campaign';
-import EmailIcon from '@mui/icons-material/Email';
+import WebIcon from '@mui/icons-material/Language';
+import CodeIcon from '@mui/icons-material/Code';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import SpeedIcon from '@mui/icons-material/Speed';
+import BrushIcon from '@mui/icons-material/Brush';
 import LaunchIcon from '@mui/icons-material/Launch';
 
 const services = [
   {
-    title: 'Digital Strategy',
-    description: 'Comprehensive digital transformation and growth strategies tailored to your business goals',
-    icon: StrategyIcon,
+    title: 'Wix Website Development',
+    description: 'Professional Wix websites with custom design, functionality, and integrations for small businesses and entrepreneurs',
+    icon: WebIcon,
     color: '#2196f3',
-    features: ['Market Analysis', 'Growth Planning', 'Digital Transformation'],
-    path: '/services/digital-strategy'
+    features: ['Custom Design', 'SEO-Friendly', 'Mobile Responsive'],
+    path: '/services/wix-development'
   },
   {
-    title: 'SEO Optimization',
-    description: 'Boost your online visibility and organic traffic with data-driven SEO strategies',
-    icon: SeoIcon,
+    title: 'MERN Stack Web Apps',
+    description: 'Full-stack web applications using MongoDB, Express, React, and Node.js for scalable and dynamic solutions',
+    icon: CodeIcon,
     color: '#4caf50',
-    features: ['Keyword Research', 'Technical SEO', 'Content Optimization'],
-    path: '/services/seo-optimization'
+    features: ['Scalable Architecture', 'Real-time Features', 'API Integration'],
+    path: '/services/mern-stack'
   },
   {
-    title: 'Content Marketing',
-    description: 'Engage your audience with compelling content that drives conversions',
-    icon: ContentIcon,
-    color: '#ff9800',
-    features: ['Content Strategy', 'Content Creation', 'Distribution'],
-    path: '/services/content-marketing'
-  },
-  {
-    title: 'Social Media',
-    description: 'Build and engage your community across all social platforms',
-    icon: SocialIcon,
+    title: 'React Native Mobile Apps',
+    description: 'Cross-platform mobile applications that deliver native performance for iOS and Android from a single codebase',
+    icon: PhoneIphoneIcon,
     color: '#e91e63',
-    features: ['Platform Strategy', 'Content Calendar', 'Community Management'],
-    path: '/services/social-media'
+    features: ['Native Performance', 'Cross-Platform', 'Offline Capability'],
+    path: '/services/react-native'
   },
   {
-    title: 'PPC Management',
-    description: 'Maximize ROI with targeted paid advertising campaigns',
-    icon: PpcIcon,
+    title: 'E-Commerce Solutions',
+    description: 'Custom online stores with secure payment processing, inventory management, and seamless user experience',
+    icon: StorefrontIcon,
+    color: '#ff9800',
+    features: ['Secure Checkout', 'Inventory Management', 'Customer Analytics'],
+    path: '/services/ecommerce'
+  },
+  {
+    title: 'Performance Optimization',
+    description: 'Speed up your existing web applications with advanced optimization techniques for better user experience',
+    icon: SpeedIcon,
     color: '#9c27b0',
-    features: ['Campaign Strategy', 'Ad Optimization', 'Performance Tracking'],
-    path: '/services/ppc-management'
+    features: ['Fast Loading', 'Core Web Vitals', 'SEO Improvement'],
+    path: '/services/optimization'
   },
   {
-    title: 'Email Marketing',
-    description: 'Drive engagement and conversions with personalized email campaigns',
-    icon: EmailIcon,
+    title: 'UI/UX Design',
+    description: 'User-centered design that enhances usability, accessibility, and visual appeal of your digital products',
+    icon: BrushIcon,
     color: '#00bcd4',
-    features: ['Campaign Automation', 'List Management', 'Performance Analytics'],
-    path: '/services/email-marketing'
+    features: ['User Research', 'Wireframing', 'Prototyping'],
+    path: '/services/ui-ux-design'
   }
 ];
 

@@ -9,55 +9,55 @@ import {
   Button,
   useTheme,
 } from '@mui/material';
-import IntegrationInstructionsIcon from '@mui/icons-material/IntegrationInstructions';
-import CloudSyncIcon from '@mui/icons-material/CloudSync';
+import WebIcon from '@mui/icons-material/Web';
+import StorageIcon from '@mui/icons-material/Storage';
 import ApiIcon from '@mui/icons-material/Api';
 import SecurityIcon from '@mui/icons-material/Security';
 import SpeedIcon from '@mui/icons-material/Speed';
-import SyncIcon from '@mui/icons-material/Sync';
+import CodeIcon from '@mui/icons-material/Code';
 
 const integrations = [
   {
-    title: 'API Integration',
-    description: 'Seamlessly connect with your existing tools through our robust API',
-    icon: ApiIcon,
+    title: 'Wix Development',
+    description: 'Expert integration with Wix development tools and APIs',
+    icon: WebIcon,
     color: '#2196f3',
-    features: ['RESTful API', 'Real-time sync', 'Secure endpoints'],
+    features: ['Wix API', 'Custom Widgets', 'Third-party Services'],
   },
   {
-    title: 'Cloud Services',
-    description: 'Connect with popular cloud platforms and services',
-    icon: CloudSyncIcon,
+    title: 'MERN Stack',
+    description: 'Full-stack integration with MongoDB, Express, React, and Node.js',
+    icon: StorageIcon,
     color: '#4caf50',
-    features: ['AWS', 'Google Cloud', 'Azure'],
+    features: ['Database Design', 'RESTful APIs', 'State Management'],
   },
   {
-    title: 'CRM Integration',
-    description: 'Sync data with your favorite CRM platforms',
-    icon: SyncIcon,
+    title: 'React Native',
+    description: 'Mobile app development with React Native and native features',
+    icon: CodeIcon,
     color: '#ff9800',
-    features: ['Salesforce', 'HubSpot', 'Zoho'],
+    features: ['Native Modules', 'Mobile SDKs', 'Push Services'],
   },
   {
     title: 'Security',
-    description: 'Enterprise-grade security for all integrations',
+    description: 'Robust security implementation across all platforms',
     icon: SecurityIcon,
     color: '#e91e63',
-    features: ['OAuth 2.0', 'Encryption', 'Compliance'],
+    features: ['Authentication', 'Data Encryption', 'Security Audits'],
   },
   {
     title: 'Performance',
-    description: 'High-performance integration with minimal latency',
+    description: 'Optimization techniques for maximum application performance',
     icon: SpeedIcon,
     color: '#9c27b0',
-    features: ['Fast sync', 'Load balancing', 'Caching'],
+    features: ['Code Splitting', 'Caching', 'Load Balancing'],
   },
   {
-    title: 'Custom Integration',
-    description: 'Build custom integrations for your specific needs',
-    icon: IntegrationInstructionsIcon,
+    title: 'API Development',
+    description: 'Custom API development and third-party integrations',
+    icon: ApiIcon,
     color: '#00bcd4',
-    features: ['Custom APIs', 'Webhooks', 'SDKs'],
+    features: ['REST/GraphQL', 'Microservices', 'Documentation'],
   },
 ];
 
@@ -76,21 +76,6 @@ const Integration = () => {
         overflow: 'hidden',
       }}
     >
-      {/* Background Pattern */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          opacity: isDark ? 0.1 : 0.05,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
-          zIndex: 1,
-        }}
-      />
-
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
@@ -103,116 +88,115 @@ const Integration = () => {
             textFillColor: 'transparent',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
+            position: 'relative',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              bottom: '-10px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '60px',
+              height: '4px',
+              background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+              borderRadius: '2px'
+            }
           }}
         >
-          Powerful Integrations
+          Technical Capabilities
         </Typography>
         <Typography
           variant="h5"
           color="text.secondary"
           textAlign="center"
-          sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
+          sx={{ mb: 8, maxWidth: '800px', mx: 'auto', opacity: 0.9 }}
         >
-          Connect our tools with your favorite platforms and services
+          Our development stack and technical expertise enable us to build
+          robust, scalable, and integrated solutions across multiple platforms.
         </Typography>
 
         <Grid container spacing={4}>
-          {integrations.map((integration, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+          {integrations.map((integration) => (
+            <Grid item xs={12} md={4} key={integration.title}>
               <Card
                 sx={{
                   height: '100%',
-                  transition: 'all 0.3s ease',
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                    '& .integration-icon': {
-                      transform: 'rotate(360deg)',
-                    },
-                  },
+                  display: 'flex',
+                  flexDirection: 'column',
                   position: 'relative',
                   overflow: 'hidden',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  boxShadow: theme.shadows[2],
+                  '&:hover': {
+                    transform: 'translateY(-8px)',
+                    boxShadow: theme.shadows[8],
+                  },
                 }}
               >
-                <Box
-                  sx={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    width: '150px',
-                    height: '150px',
-                    background: `radial-gradient(circle at top right, ${integration.color}15, transparent 70%)`,
-                    borderRadius: '0 0 0 100%',
-                  }}
-                />
-                <CardContent sx={{ p: 4 }}>
+                <CardContent sx={{ p: 3 }}>
                   <Box
-                    className="integration-icon"
                     sx={{
-                      width: 60,
-                      height: 60,
-                      borderRadius: '50%',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      bgcolor: `${integration.color}15`,
-                      color: integration.color,
                       mb: 3,
-                      transition: 'transform 0.6s ease',
                     }}
                   >
-                    <integration.icon fontSize="large" />
+                    <Box
+                      sx={{
+                        backgroundColor: `${integration.color}15`,
+                        borderRadius: '12px',
+                        p: 1.5,
+                        mr: 2,
+                        transition: 'all 0.3s ease',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                          backgroundColor: `${integration.color}25`
+                        }
+                      }}
+                    >
+                      <integration.icon sx={{ color: integration.color, fontSize: 28 }} />
+                    </Box>
+                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                      {integration.title}
+                    </Typography>
                   </Box>
-
-                  <Typography variant="h5" gutterBottom fontWeight="bold">
-                    {integration.title}
-                  </Typography>
-
-                  <Typography color="text.secondary" paragraph>
+                  <Typography
+                    variant="body1"
+                    color="text.secondary"
+                    paragraph
+                    sx={{ mb: 3, lineHeight: 1.7 }}
+                  >
                     {integration.description}
                   </Typography>
-
-                  <Box sx={{ mt: 3 }}>
-                    {integration.features.map((feature, idx) => (
-                      <Box
-                        key={idx}
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          mb: 1,
-                          '&:before': {
-                            content: '""',
-                            width: 6,
-                            height: 6,
-                            borderRadius: '50%',
-                            bgcolor: integration.color,
-                            mr: 1.5,
-                          },
-                        }}
-                      >
-                        <Typography variant="body2" color="text.secondary">
-                          {feature}
-                        </Typography>
-                      </Box>
-                    ))}
-                  </Box>
-
-                  <Button
-                    variant="outlined"
-                    fullWidth
+                  <Box
                     sx={{
-                      mt: 3,
-                      borderRadius: 2,
-                      borderColor: integration.color,
-                      color: integration.color,
-                      '&:hover': {
-                        borderColor: integration.color,
-                        bgcolor: `${integration.color}10`,
-                      },
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: 1.5,
+                      mt: 'auto'
                     }}
                   >
-                    Learn More
-                  </Button>
+                    {integration.features.map((feature) => (
+                      <Typography
+                        key={feature}
+                        variant="body2"
+                        sx={{
+                          backgroundColor: `${integration.color}15`,
+                          color: integration.color,
+                          px: 2,
+                          py: 0.75,
+                          borderRadius: 2,
+                          fontWeight: 500,
+                          transition: 'all 0.3s ease',
+                          '&:hover': {
+                            backgroundColor: `${integration.color}25`,
+                            transform: 'translateY(-2px)'
+                          }
+                        }}
+                      >
+                        {feature}
+                      </Typography>
+                    ))}
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>

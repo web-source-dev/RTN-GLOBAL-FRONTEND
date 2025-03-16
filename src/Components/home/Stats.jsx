@@ -89,10 +89,13 @@ const Stats = () => {
                   textAlign: 'center',
                   background: 'rgba(255,255,255,0.05)',
                   backdropFilter: 'blur(10px)',
-                  borderRadius: 4,
-                  transition: 'transform 0.3s ease',
+                  borderRadius: 2,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                   '&:hover': {
                     transform: 'translateY(-8px)',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
                     '& .stat-icon': {
                       transform: 'scale(1.2)',
                     },

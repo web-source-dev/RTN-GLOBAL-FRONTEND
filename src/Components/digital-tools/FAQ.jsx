@@ -15,53 +15,53 @@ import SearchIcon from '@mui/icons-material/Search';
 
 const faqs = [
   {
-    category: 'General',
+    category: 'Web Development Services',
     questions: [
       {
-        question: 'What is RTN Global digital marketing platform?',
-        answer: 'Our platform is a comprehensive suite of digital marketing tools designed to help businesses grow their online presence, manage campaigns, and track performance across multiple channels.'
+        question: 'What web development services does RTN Global offer?',
+        answer: 'We specialize in three core areas: Professional Wix website development, full-stack MERN (MongoDB, Express.js, React, Node.js) applications, and React Native mobile app development. Our services cover everything from initial design to deployment and maintenance.'
       },
       {
-        question: 'How do I get started with the tools?',
-        answer: 'Getting started is easy! Simply choose a plan that fits your needs, create an account, and our onboarding team will guide you through the setup process.'
+        question: 'Why should I choose RTN Global for my web development needs?',
+        answer: 'With over 10 years of experience, we offer expertise in modern web technologies, a proven track record of successful projects, and a client-centric approach. Our solutions are scalable, performant, and tailored to your specific business needs.'
       },
       {
-        question: 'Do you offer training and support?',
-        answer: 'Yes, we provide comprehensive training resources, documentation, and dedicated support to help you make the most of our tools.'
+        question: 'How long does it typically take to complete a web development project?',
+        answer: 'Project timelines vary based on complexity and requirements. Typically, Wix websites take 2-4 weeks, MERN stack applications 6-12 weeks, and React Native mobile apps 8-16 weeks. We provide detailed timelines during the initial consultation.'
       }
     ]
   },
   {
-    category: 'Features',
+    category: 'Technical Expertise',
     questions: [
       {
-        question: 'What analytics features are included?',
-        answer: 'Our analytics suite includes real-time tracking, custom dashboards, automated reporting, conversion tracking, and detailed audience insights.'
+        question: 'What makes your Wix development services stand out?',
+        answer: 'We are certified Wix Partners with extensive experience in custom Wix development. We leverage Wix Velo for advanced functionality, create custom animations, and implement complex business logic while maintaining the ease of use of the Wix platform.'
       },
       {
-        question: 'Can I integrate with other tools?',
-        answer: 'Yes, our platform offers extensive integration capabilities with popular CRM systems, analytics tools, and marketing platforms.'
+        question: 'Can you handle complex MERN stack applications?',
+        answer: 'Absolutely! We excel in building sophisticated MERN applications with features like real-time data processing, complex authentication systems, API integrations, and high-performance database operations. Our team ensures scalability and security at every step.'
       },
       {
-        question: 'Is there a limit to the number of campaigns?',
-        answer: 'Campaign limits vary by plan. Professional and Enterprise plans offer unlimited campaigns.'
+        question: 'Do you provide cross-platform mobile app development?',
+        answer: 'Yes, using React Native, we develop high-performance mobile apps that work seamlessly on both iOS and Android platforms. Our apps feature native-like performance, offline capabilities, and can integrate with various device features and APIs.'
       }
     ]
   },
   {
-    category: 'Pricing',
+    category: 'Project Management & Support',
     questions: [
       {
-        question: 'Do you offer a free trial?',
-        answer: 'Yes, we offer a 14-day free trial on all our plans so you can test our tools before committing.'
+        question: 'What is your development process like?',
+        answer: 'We follow an agile development methodology with regular client communications and iterative development cycles. This includes requirements gathering, design approval, development sprints, testing, and deployment, ensuring transparency throughout the project.'
       },
       {
-        question: 'Can I upgrade or downgrade my plan?',
-        answer: 'Yes, you can change your plan at any time. Changes take effect at the start of your next billing cycle.'
+        question: 'Do you provide post-launch support and maintenance?',
+        answer: 'Yes, we offer comprehensive post-launch support packages including regular updates, security patches, performance monitoring, and technical support. We also provide training for your team to manage the platform effectively.'
       },
       {
-        question: 'What payment methods do you accept?',
-        answer: 'We accept all major credit cards, PayPal, and offer invoice payment options for enterprise customers.'
+        question: 'What are your payment terms and project costs?',
+        answer: 'We offer flexible payment plans with clear milestones. Project costs are determined based on scope, complexity, and timeline. We provide detailed quotes after initial consultation and requirements gathering, with no hidden fees.'
       }
     ]
   }

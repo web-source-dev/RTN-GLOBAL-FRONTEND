@@ -1,55 +1,55 @@
 import React from 'react';
 import { Box, Container, Grid, Typography, Card, CardContent, IconButton, Button } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import CampaignIcon from '@mui/icons-material/Campaign';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import ShareIcon from '@mui/icons-material/Share';
-import EmailIcon from '@mui/icons-material/Email';
+import WebIcon from '@mui/icons-material/Web';
 import CodeIcon from '@mui/icons-material/Code';
+import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import SpeedIcon from '@mui/icons-material/Speed';
+import BrushIcon from '@mui/icons-material/Brush';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const services = [
   {
-    title: 'Search Engine Optimization',
-    description: 'Boost your website ranking with our advanced SEO strategies and dominate search results',
-    icon: SearchIcon,
+    title: 'Wix Website Development',
+    description: 'Professional Wix websites with custom design, functionality, and integrations for small businesses and entrepreneurs',
+    icon: WebIcon,
     color: '#2196f3',
-    metrics: ['200% Traffic Increase', '1st Page Rankings', 'Local SEO'],
+    metrics: ['Custom Design', 'SEO-Friendly', 'Mobile Responsive'],
   },
   {
-    title: 'Social Media Marketing',
-    description: 'Engage your audience across all social media platforms with compelling content',
-    icon: ShareIcon,
-    color: '#e91e63',
-    metrics: ['Brand Growth', 'Community Building', 'Viral Content'],
-  },
-  {
-    title: 'Content Marketing',
-    description: 'Create compelling content that drives conversions and establishes authority',
-    icon: CampaignIcon,
-    color: '#4caf50',
-    metrics: ['Lead Generation', 'Brand Authority', 'Engagement'],
-  },
-  {
-    title: 'Analytics & Reporting',
-    description: 'Data-driven insights to optimize your marketing strategy and maximize ROI',
-    icon: BarChartIcon,
-    color: '#ff9800',
-    metrics: ['Real-time Data', 'Custom Reports', 'ROI Tracking'],
-  },
-  {
-    title: 'Email Marketing',
-    description: 'Targeted email campaigns that nurture leads and drive conversions',
-    icon: EmailIcon,
-    color: '#9c27b0',
-    metrics: ['High Open Rates', 'Automation', 'Personalization'],
-  },
-  {
-    title: 'Web Development',
-    description: 'Custom website development focused on conversion and user experience',
+    title: 'MERN Stack Web Apps',
+    description: 'Full-stack web applications using MongoDB, Express, React, and Node.js for scalable and dynamic solutions',
     icon: CodeIcon,
+    color: '#4caf50',
+    metrics: ['Scalable Architecture', 'Real-time Features', 'API Integration'],
+  },
+  {
+    title: 'React Native Mobile Apps',
+    description: 'Cross-platform mobile applications that deliver native performance for iOS and Android from a single codebase',
+    icon: PhoneIphoneIcon,
+    color: '#e91e63',
+    metrics: ['Native Performance', 'Cross-Platform', 'Offline Capability'],
+  },
+  {
+    title: 'E-Commerce Solutions',
+    description: 'Custom online stores with secure payment processing, inventory management, and seamless user experience',
+    icon: StorefrontIcon,
+    color: '#ff9800',
+    metrics: ['Secure Checkout', 'Inventory Management', 'Customer Analytics'],
+  },
+  {
+    title: 'Performance Optimization',
+    description: 'Speed up your existing web applications with advanced optimization techniques for better user experience',
+    icon: SpeedIcon,
+    color: '#9c27b0',
+    metrics: ['Fast Loading', 'Core Web Vitals', 'SEO Improvement'],
+  },
+  {
+    title: 'UI/UX Design',
+    description: 'User-centered design that enhances usability, accessibility, and visual appeal of your digital products',
+    icon: BrushIcon,
     color: '#00bcd4',
-    metrics: ['Mobile-First', 'SEO-Friendly', 'Fast Loading'],
+    metrics: ['User Research', 'Wireframing', 'Prototyping'],
   },
 ];
 
@@ -83,14 +83,14 @@ const Services = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Digital Solutions for Your Business
+            Custom Web Solutions
           </Typography>
           <Typography
             variant="h5"
             color="text.secondary"
             sx={{ maxWidth: '800px', mx: 'auto', mb: 4 }}
           >
-            Comprehensive digital marketing services tailored to your success
+            Build fast, scalable, and user-friendly digital experiences with our expert team
           </Typography>
         </Box>
 
@@ -149,25 +149,28 @@ const Services = () => {
                   <Typography color="text.secondary" paragraph>
                     {service.description}
                   </Typography>
-                  
-                  <Box sx={{ my: 3 }}>
+
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
                     {service.metrics.map((metric, idx) => (
                       <Box
                         key={idx}
                         sx={{
-                          display: 'inline-block',
-                          mr: 1,
-                          mb: 1,
-                          px: 2,
-                          py: 0.5,
-                          borderRadius: '15px',
-                          bgcolor: `${service.color}10`,
-                          color: service.color,
-                          fontSize: '0.875rem',
-                          fontWeight: 500,
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 0.5,
                         }}
                       >
-                        {metric}
+                        <Box
+                          sx={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: '50%',
+                            bgcolor: service.color,
+                          }}
+                        />
+                        <Typography variant="body2" color="text.secondary" fontWeight={500}>
+                          {metric}
+                        </Typography>
                       </Box>
                     ))}
                   </Box>
@@ -176,14 +179,14 @@ const Services = () => {
                     className="learn-more"
                     endIcon={<ArrowForwardIcon className="arrow-icon" />}
                     sx={{
-                      mt: 2,
-                      color: 'text.secondary',
+                      textTransform: 'none',
+                      p: 0,
                       '& .arrow-icon': {
-                        transition: 'transform 0.2s ease',
+                        transition: 'transform 0.3s ease',
                       },
                     }}
                   >
-                    Learn More
+                    Learn more
                   </Button>
                 </CardContent>
               </Card>

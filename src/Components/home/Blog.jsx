@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Card, CardMedia, CardContent, Button, Avatar, Chip } from '@mui/material';
+import { Box, Container, Grid, Typography, Card, CardMedia, CardContent, Button, Avatar, Chip, useTheme } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const blogPosts = [
@@ -39,9 +39,35 @@ const blogPosts = [
 ];
 
 const Blog = () => {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
+  
   return (
-    <Box py={8}>
-      <Container>
+    <Box 
+      py={8} 
+      sx={{ 
+        background: isDark
+          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
+          : 'linear-gradient(145deg, #fafafa 0%, #f5f5f5 100%)',
+        position: 'relative',
+        overflow: 'hidden'
+      }}
+    >
+      {/* Background Pattern */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: isDark ? 0.1 : 0.05,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          zIndex: 1
+        }}
+      />
+      <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography 
           variant="h2" 
           textAlign="center" 
