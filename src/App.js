@@ -37,7 +37,6 @@ import LoginForm from './Components/auth/LoginForm';
 import RegisterForm from './Components/auth/RegisterForm';
 import ForgotPasswordForm from './Components/auth/ForgotPasswordForm';
 import ResetPasswordForm from './Components/auth/ResetPasswordForm';
-import MemberPage from './Components/member/MemberPage';
 import CreateBlog from './Components/blog/CreateBlog';
 import ManageBlog from './Components/blog/ManageBlog';
 import { AuthProvider } from './contexts/AuthContext';

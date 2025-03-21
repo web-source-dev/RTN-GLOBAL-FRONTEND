@@ -1,0 +1,241 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Badge,
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Divider,
+  CircularProgress,
+  Tooltip,
+  Avatar
+} from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import InfoIcon from '@mui/icons-material/Info';
+import SupportIcon from '@mui/icons-material/Support';
+import EmailIcon from '@mui/icons-material/Email';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
+import { format } from 'date-fns';
+
+const NotificationComponent = () => {
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/user/notifications`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch notifications');
+
+      const data = await response.json();
+      setNotifications(data);
+      setUnreadCount(data.filter(notification => !notification.read).length);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching notifications:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNotificationClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const markAsRead = async (notificationId) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/user/notifications/${notificationId}/read`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+
+      if (!response.ok) throw new Error('Failed to mark notification as read');
+
+      setNotifications(prevNotifications =>
+        prevNotifications.map(notification =>
+          notification.id === notificationId
+            ? { ...notification, read: true }
+            : notification
+        )
+      );
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (err) {
+      console.error('Error marking notification as read:', err);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/user/notifications/read-all`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+
+      if (!response.ok) throw new Error('Failed to mark all notifications as read');
+
+      setNotifications(prevNotifications =>
+        prevNotifications.map(notification => ({ ...notification, read: true }))
+      );
+      setUnreadCount(0);
+    } catch (err) {
+      console.error('Error marking all notifications as read:', err);
+    }
+  };
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case 'system':
+        return <InfoIcon color="info" />;
+      case 'support':
+        return <SupportIcon color="warning" />;
+      case 'message':
+        return <EmailIcon color="primary" />;
+      case 'consultation':
+        return <EventNoteIcon color="success" />;
+      default:
+        return <InfoIcon />;
+    }
+  };
+
+  const renderNotificationContent = (notification) => (
+    <ListItem
+      alignItems="flex-start"
+      sx={{
+        backgroundColor: notification.read ? 'inherit' : 'action.hover',
+        '&:hover': { backgroundColor: 'action.selected' }
+      }}
+      onClick={() => markAsRead(notification.id)}
+    >
+      <ListItemIcon>
+        {getNotificationIcon(notification.type)}
+      </ListItemIcon>
+      <ListItemText
+        primary={
+          <Typography variant="subtitle2" component="div">
+            {notification.title}
+          </Typography>
+        }
+        secondary={
+          <React.Fragment>
+            <Typography variant="body2" color="text.secondary" component="div">
+              {notification.message}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {format(new Date(notification.createdAt), 'MMM d, yyyy HH:mm')}
+            </Typography>
+          </React.Fragment>
+        }
+      />
+    </ListItem>
+  );
+
+  return (
+    <Box>
+      <Tooltip title="Notifications">
+        <IconButton color="inherit" onClick={handleNotificationClick}>
+          <Badge badgeContent={unreadCount} color="error">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+      </Tooltip>
+
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            mt: 1.5,
+            width: 360,
+            maxHeight: 500,
+            '& .MuiList-root': {
+              padding: 0
+            }
+          }
+        }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography variant="h6">Notifications</Typography>
+            {unreadCount > 0 && (
+              <Tooltip title="Mark all as read">
+                <IconButton size="small" onClick={markAllAsRead}>
+                  <DoneAllIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Box>
+        </Box>
+
+        {loading ? (
+          <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+            <CircularProgress size={20} />
+          </Box>
+        ) : error ? (
+          <Box sx={{ p: 2 }}>
+            <Typography color="error">{error}</Typography>
+          </Box>
+        ) : notifications.length === 0 ? (
+          <Box sx={{ p: 2 }}>
+            <Typography color="text.secondary">No notifications</Typography>
+          </Box>
+        ) : (
+          <List sx={{ p: 0, maxHeight: 400, overflowY: 'auto' }}>
+            {notifications.map((notification, index) => (
+              <React.Fragment key={notification.id}>
+                {index > 0 && <Divider />}
+                {renderNotificationContent(notification)}
+              </React.Fragment>
+            ))}
+          </List>
+        )}
+      </Menu>
+    </Box>
+  );
+};
+
+export default NotificationComponent;

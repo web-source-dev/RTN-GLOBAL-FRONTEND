@@ -5,6 +5,7 @@ import Footer from './Footer';
 import PageTransition from '../common/PageTransition';
 import CustomScrollbar from '../common/CustomScrollbar';
 import MouseFollower from '../common/MouseFollower';
+import LoadingProgress from '../common/LoadingProgress';
 
 const Layout = ({ children }) => {
   return (
@@ -23,6 +24,7 @@ const Layout = ({ children }) => {
         }
       }}
     >
+      <LoadingProgress />
       <CustomScrollbar />
       <MouseFollower />
       <Header />
