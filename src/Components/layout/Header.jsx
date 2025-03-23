@@ -35,6 +35,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ThemeSwitcher from '../ThemeSwitcher';
 import NotificationComponent from '../notifications/NotificationComponent';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import API from '../../BackendAPi/ApiProvider';
 
 const pages = [
   { title: 'Services', path: '/services' },
@@ -63,49 +65,56 @@ const Header = () => {
     emailNotifications: true
   });
 
+  const { logout } = useAuth();
+
   // Fetch user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          setLoading(false);
-          return;
-        }
-
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/user/profile`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (!response.ok) throw new Error('Failed to fetch user data');
-
-        const userData = await response.json();
-        setUser(userData);
+        setLoading(true);
+        // Replace direct fetch with API provider for cookie auth
+        const response = await API.get('/api/user/profile');
+        
+        // If successful, update state
+        setUser(response.data);
         setIsLoggedIn(true);
-        setUserPreferences(userData.preferences);
+        setUserPreferences(response.data.preferences || {});
       } catch (err) {
-        setError(err.message);
-        console.error('Error fetching user data:', err);
+        // Handle error but don't show it to the user
+        console.error('Error fetching user profile:', err);
+        setIsLoggedIn(false);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUserData();
+    // Only fetch if there's a user in localStorage (possible from previous login)
+    if (localStorage.getItem('user')) {
+      fetchUserData();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const handleLogout = async () => {
     try {
-
-      localStorage.removeItem('token');
+      // Use API provider for logout
+      await API.post('/api/auth/logout');
+      
+      // Clear user from localStorage
+      localStorage.removeItem('user');
+      
+      // Update state
       setUser(null);
       setIsLoggedIn(false);
-      handleProfileMenuClose();
-    } catch (err) {
-      console.error('Error during logout:', err);
-      setError('Failed to logout. Please try again.');
+      
+      // Use auth context logout if available
+      if (logout) logout();
+      
+      // Close menu
+      setAnchorEl(null);
+    } catch (error) {
+      console.error('Logout failed:', error);
     }
   };
 

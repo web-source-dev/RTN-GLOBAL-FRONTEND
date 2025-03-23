@@ -1,22 +1,51 @@
-import React, { useState } from 'react';
-import { Box, Grid, Paper, Typography, useTheme, AppBar, Toolbar, IconButton, Avatar, Drawer } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Grid, Paper, Typography, useTheme, AppBar, Toolbar, IconButton, Avatar, Drawer, CircularProgress } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import UserSidebar from './UserSidebar';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import WorkIcon from '@mui/icons-material/Work';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import SupportIcon from '@mui/icons-material/Support';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
+import API from '../../BackendAPi/ApiProvider';
 
 const UserDashboard = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Verify user authentication on mount
+    const verifyAuth = async () => {
+      try {
+        const response = await API.get('/api/user/profile');
+        setUser(response.data);
+      } catch (err) {
+        // Redirect to login if not authenticated
+        navigate('/auth/login', { state: { from: '/user' } });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    verifyAuth();
+  }, [navigate]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
@@ -97,7 +126,9 @@ const UserDashboard = () => {
             <IconButton sx={{ mx: 1 }}>
               <NotificationsIcon />
             </IconButton>
-            <Avatar sx={{ bgcolor: theme.palette.primary.main }}>N</Avatar>
+            <Avatar sx={{ bgcolor: theme.palette.primary.main }}>
+              {user?.firstName?.charAt(0) || 'U'}
+            </Avatar>
           </Toolbar>
         </AppBar>
 

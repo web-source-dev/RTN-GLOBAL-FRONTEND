@@ -55,14 +55,14 @@ const Hero = () => {
 
       <Container maxWidth="lg">
         <Grid container spacing={4} alignItems="center">
-          <Grid item xs={12} md={7}>
+          <Grid item xs={12} md={6}>
             <Box>
               <Typography
                 variant="h1"
                 color="white"
                 fontWeight="800"
                 sx={{
-                  fontSize: { xs: '2.5rem', md: '4rem' },
+                  fontSize: { xs: '2.5rem', md: '3.5rem' },
                   textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
                   mb: 2,
                 }}
@@ -101,7 +101,6 @@ const Hero = () => {
                 <Button
                   variant="contained"
                   size="large"
-                  color="secondary"
                   startIcon={<RocketLaunchIcon />}
                   onClick={handleGetStarted}
                   sx={{
@@ -110,6 +109,7 @@ const Hero = () => {
                     borderRadius: '30px',
                     fontSize: '1.1rem',
                     textTransform: 'none',
+                    background: (theme) => `linear-gradient(45deg, ${theme.palette.secondary.main} 30%, ${theme.palette.primary.main} 90%)`,
                     boxShadow: '0 8px 20px rgba(0,0,0,0.2)',
                     '&:hover': {
                       transform: 'translateY(-2px)',
@@ -145,7 +145,7 @@ const Hero = () => {
               <Box
                 sx={{
                   display: 'flex',
-                  gap: 4,
+                  gap: 2,
                   flexWrap: 'wrap',
                 }}
               >
@@ -168,7 +168,7 @@ const Hero = () => {
                         width: 8,
                         height: 8,
                         borderRadius: '50%',
-                        bgcolor: 'secondary.main',
+                        bgcolor: 'secondary.light',
                       }}
                     />
                     <Typography
@@ -184,16 +184,15 @@ const Hero = () => {
               </Box>
             </Box>
           </Grid>
-          <Grid item xs={12} md={5}>
+          <Grid item xs={12} md={6}>
             <Box
               component="img"
-              src="/images/hero-illustration.jpg"
+              src="/images/hero-illustration.png"
               alt="Hero Illustration"
               sx={{
                 width: '100%',
-                height: 'auto',
+                height: '500px',
                 borderRadius: '20px',
-                boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
                 transform: 'perspective(1000px) rotateY(-5deg)',
                 transition: 'transform 0.5s ease',
                 '&:hover': {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -12,7 +12,10 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Alert,
+  CircularProgress,
 } from '@mui/material';
+import API from '../../../BackendAPi/ApiProvider';
 
 function SettingsSection() {
   const [settings, setSettings] = useState({
@@ -21,6 +24,26 @@ function SettingsSection() {
     language: 'en',
     timezone: 'UTC',
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        setLoading(true);
+        const response = await API.get('/api/user/settings');
+        setSettings(response.data);
+      } catch (err) {
+        console.error('Error fetching settings:', err);
+        setError('Failed to load settings. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSettings();
+  }, []);
 
   const handleSettingChange = (setting, value) => {
     setSettings(prev => ({
@@ -29,11 +52,49 @@ function SettingsSection() {
     }));
   };
 
+  const handleSaveSettings = async () => {
+    try {
+      setLoading(true);
+      await API.put('/api/user/settings', settings);
+      setSuccess('Settings saved successfully!');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccess(null);
+      }, 3000);
+    } catch (err) {
+      console.error('Error saving settings:', err);
+      setError(err.response?.data?.message || 'Failed to save settings. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading && Object.keys(settings).length === 0) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
     <Box>
       <Typography variant="h5" gutterBottom>
         Settings
       </Typography>
+      
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      
+      {success && (
+        <Alert severity="success" sx={{ mb: 2 }}>
+          {success}
+        </Alert>
+      )}
       
       <Box sx={{ mt: 3 }}>
         <Typography variant="h6" gutterBottom>
@@ -105,8 +166,13 @@ function SettingsSection() {
       </Box>
 
       <Box sx={{ mt: 4 }}>
-        <Button variant="contained" color="primary">
-          Save Changes
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSaveSettings}
+          disabled={loading}
+        >
+          {loading ? <CircularProgress size={24} /> : 'Save Changes'}
         </Button>
       </Box>
     </Box>

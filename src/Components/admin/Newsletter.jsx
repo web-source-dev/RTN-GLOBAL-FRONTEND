@@ -31,6 +31,7 @@ import {
   Download as DownloadIcon,
   FilterList as FilterIcon,
 } from '@mui/icons-material';
+import API from '../../BackendAPi/ApiProvider';
 
 const Newsletter = () => {
   const theme = useTheme();
@@ -51,15 +52,8 @@ const Newsletter = () => {
 
   const fetchSubscribers = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/admin/newsletter?page=${page + 1}&limit=${rowsPerPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-      const data = await response.json();
+      const response = await API.get(`/api/admin/newsletter?page=${page + 1}&limit=${rowsPerPage}`);
+      const data = response.data;
       setSubscribers(data.subscribers);
       setTotalSubscribers(data.total);
     } catch (error) {
@@ -71,15 +65,8 @@ const Newsletter = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/admin/newsletter/stats`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-      const data = await response.json();
+      const response = await API.get('/api/admin/newsletter/stats');
+      const data = response.data;
       setActiveSubscribers(data.activeSubscribers);
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -88,14 +75,7 @@ const Newsletter = () => {
 
   const handleSubscriptionToggle = async (subscriberId, isSubscribed) => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/admin/newsletter/${subscriberId}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ isSubscribed }),
-      });
+      await API.patch(`/api/admin/newsletter/${subscriberId}/status`, { isSubscribed });
       fetchSubscribers();
       fetchStats();
     } catch (error) {
@@ -110,12 +90,7 @@ const Newsletter = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/admin/newsletter/${selectedSubscriber._id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      await API.delete(`/api/admin/newsletter/${selectedSubscriber._id}`);
       fetchSubscribers();
       fetchStats();
       setDeleteDialogOpen(false);

@@ -1,53 +1,102 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Container, Typography, Card, CardContent, Avatar, Rating, IconButton, useTheme } from '@mui/material';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import { keyframes } from '@mui/system';
 
 const testimonials = [
   {
-    name: 'John Smith',
-    position: 'CEO, TechStart Inc.',
-    content: 'The ROI we\'ve seen since working with this team has been remarkable. Our online presence has never been stronger. They took the time to understand our business and delivered a strategy that perfectly aligned with our goals.',
-    avatar: '/images/avatars/avatar1.jpg',
+    name: 'Nahaz Quddus',
+    position: 'BOD, Harmony 4All.',
+    content: 'What a great experience with RTN Global again! We are so grateful for their exceptional work and willingness to go beyond the scope of the project to help us. We’re definitely coming back to RTN Global for future projects—highly recommended! 🙏💓🙏',
+    avatar: '/images/clients/client1.png',
     rating: 5,
     country: 'United States',
-    projectValue: '$5,000+',
     verified: true,
   },
   {
-    name: 'Sarah Johnson',
-    position: 'Marketing Director, Growth Co',
-    content: 'Their strategic approach to digital marketing has transformed our business. We\'ve seen a 200% increase in leads and our social media engagement has skyrocketed. The team is responsive, professional, and always delivers results.',
-    avatar: '/images/avatars/avatar2.jpg',
-    rating: 5,
-    country: 'Canada',
-    projectValue: '$10,000+',
-    verified: true,
-  },
-  {
-    name: 'Michael Brown',
-    position: 'Founder, StartUp Inc',
-    content: 'Professional, responsive, and results-driven. They\'ve helped us establish a strong digital presence from scratch. Their content strategy has positioned us as thought leaders in our industry. Highly recommended!',
-    avatar: '/images/avatars/avatar3.jpg',
+    name: 'Jean Pierre',
+    position: 'Director, Youngers',
+    content: 'Professional, creative, has a can do attitude and willingly goes the extra mile.',
+    avatar: '/images/clients/client2.png',
     rating: 5,
     country: 'United Kingdom',
-    projectValue: '$7,500+',
     verified: true,
   },
   {
-    name: 'Emily Chen',
-    position: 'E-commerce Manager',
-    content: 'Outstanding service and exceptional results! Their PPC campaigns have generated a 300% ROI for our e-commerce business. The team is knowledgeable, creative, and always available when we need them.',
-    avatar: '/images/avatars/avatar4.jpg',
+    name: 'Raphael Mubake',
+    position: 'Ceo ,Maid Sparkling Clean',
+    content: 'Was very understanding and able to make the requested changes. I appreciate his efforts!',
+    avatar: '/images/clients/client3.png',
     rating: 5,
     country: 'Australia',
-    projectValue: '$15,000+',
+    verified: true,
+  },
+  {
+    name: 'Nabeel',
+    position: 'Founder ,Handy Men Directory',
+    content: 'I placed the order and went to sleep when I woke up I check my account and the order was delivered😃😃 that was really really quick delivery. Thank you so very much for the hard work. The quality was excellent . I will definitely come back for more.',
+    avatar: '/images/clients/client4.png',
+    rating: 5,
+    country: 'United States',
+    verified: true,
+  },
+  {
+    name: 'Troy',
+    position: 'Founder ,Troys Crib',
+    content: 'I asked for a custom Wix website and after going through many other freelancers we finally found someone who could do the job and do it well. We supplied photographs, sketches, and a general idea of what we were looking for And he delivered Communication is fantastic and language fluency is excellent. you won’t be disappointed.',
+    avatar: '/images/clients/client5.jpg',
+    rating: 5,
+    country: 'United States',
+    verified: true,
+  },
+  {
+    name: 'Ashley',
+    position: 'Co Owner ,Precision impressions',
+    content: 'RTN Global is an outstanding Agency who truly exceeded my expectations. His professionalism and code expertise transformed my site beyond what I imagined. Quick to respond and going above and beyond in every aspect, I’ve already recommended him to two others – HIGHLY recommend! 👏',
+    avatar: '/images/clients/client6.jpg',
+    rating: 5,
+    country: 'United States',
+    verified: true,
+  },
+  {
+    name: 'Estevan Lujannc',
+    position: 'Project Manager ,NMGA',
+    content: 'RTN Global are wonderful professional to work with. He went above and beyond to address our needs and did it quickly. I would highly recommend them to anyone looking to navigate tough projects.',
+    avatar: '/images/clients/client7.jpg',
+    rating: 5,
+    country: 'United States',
+    verified: true,
+  },
+  {
+    name: 'Annie Kat',
+    position: 'Co Owner ,Flamingo Bay Tanning & Beauty',
+    content: 'RTN Global has been available to assist 100% of the time, demonstrating patience and professionalism, even when I wasnt always available. They have understood everything I asked for and have gone above and beyond to help in every possible way. If you are looking for a professional agency that delivers top-notch service and responds to your questions promptly, RTN Global is the team you need to handle your projects efficiently. Thank you once again for all your help!',
+    avatar: '/images/clients/client8.jpg',
+    rating: 5,
+    country: 'United Kingdom',
     verified: true,
   },
 ];
 
+const slideAnimation = keyframes`
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+`;
+
 const Testimonials = () => {
   const theme = useTheme();
+  const [isHovered, setIsHovered] = useState(false);
+  const sliderRef = useRef(null);
+  const duplicatedTestimonials = [...testimonials, ...testimonials];
+
+  useEffect(() => {
+    if (sliderRef.current) {
+      const scrollWidth = sliderRef.current.scrollWidth;
+      const animationDuration = scrollWidth * 0.01; // Adjust speed based on content width
+      sliderRef.current.style.animationDuration = `${animationDuration}s`;
+    }
+  }, []);
 
   return (
     <Box 
@@ -115,21 +164,26 @@ const Testimonials = () => {
         </Box>
 
         <Box 
+          ref={sliderRef}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
           sx={{ 
-            display: 'grid',
-            gridTemplateColumns: {
-              xs: '1fr',
-              md: 'repeat(2, 1fr)',
-              lg: 'repeat(2, 1fr)',
-            },
+            display: 'flex',
             gap: 4,
+            animation: `${slideAnimation} 30s linear infinite`,
+            animationPlayState: isHovered ? 'paused' : 'running',
+            '&:hover': {
+              cursor: 'grab',
+            },
+            width: 'fit-content',
           }}
         >
-          {testimonials.map((testimonial, index) => (
+          {duplicatedTestimonials.map((testimonial, index) => (
             <Card
               key={index}
               sx={{
-                height: '100%',
+                width: 550,
+                height: 'auto',
                 transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                 '&:hover': {
                   transform: 'translateY(-8px)',
@@ -138,6 +192,9 @@ const Testimonials = () => {
                 borderRadius: 2,
                 position: 'relative',
                 overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
               }}
             >
               <CardContent sx={{ p: 4 }}>
@@ -200,41 +257,6 @@ const Testimonials = () => {
                 >
                   "{testimonial.content}"
                 </Typography>
-
-                {/* Project Details */}
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 2,
-                    flexWrap: 'wrap',
-                    mt: 3,
-                    pt: 3,
-                    borderTop: `1px solid ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      px: 2,
-                      py: 1,
-                      borderRadius: '20px',
-                      bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
-                      fontSize: '0.875rem',
-                    }}
-                  >
-                    {testimonial.projectValue}
-                  </Box>
-                  <Box
-                    sx={{
-                      px: 2,
-                      py: 1,
-                      borderRadius: '20px',
-                      bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
-                      fontSize: '0.875rem',
-                    }}
-                  >
-                    {testimonial.country}
-                  </Box>
-                </Box>
               </CardContent>
             </Card>
           ))}

@@ -13,6 +13,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from '@mui/material';
+import API from '../../BackendAPi/ApiProvider';
 
 const DEPARTMENTS = [
   'Engineering',
@@ -95,20 +96,15 @@ const JobApplicationForm = () => {
           }
         });
 
-        const response = await fetch('http://localhost:5000/api/forms/job-application', {
-          method: 'POST',
-          body: formDataToSend,
+        const response = await API.post('/api/forms/job-application', formDataToSend, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Something went wrong');
-        }
 
         setSnackbar({
           open: true,
-          message: `Application ${data.applicationId} submitted successfully! We'll review your application and get back to you soon.`,
+          message: `Application ${response.data.applicationId} submitted successfully! We'll review your application and get back to you soon.`,
           severity: 'success'
         });
 
@@ -131,7 +127,7 @@ const JobApplicationForm = () => {
       } catch (error) {
         setSnackbar({
           open: true,
-          message: error.message || 'Failed to submit job application',
+          message: error.response?.data?.message || 'Failed to submit application. Please try again.',
           severity: 'error'
         });
       }

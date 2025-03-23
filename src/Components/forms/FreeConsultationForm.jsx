@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -36,6 +35,8 @@ import SecurityIcon from '@mui/icons-material/Security';
 import GroupIcon from '@mui/icons-material/Group';
 import Contact from '../home/Contact';
 import { CheckCircleOutline, Assessment, TipsAndUpdates, SettingsSuggest } from "@mui/icons-material";
+import API from '../../BackendAPi/ApiProvider';
+
 const ConsultationProcess = [
   {
     title: "Initial Discussion",
@@ -222,7 +223,7 @@ const FreeConsultationForm = () => {
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/forms/free-consultation`, {
+        const response = await API.post('/api/forms/free-consultation', {
           ...values,
           preferredDate: new Date(values.preferredDate).toISOString()
         });
@@ -245,7 +246,7 @@ const FreeConsultationForm = () => {
   const fetchAvailableTimeSlots = async (date) => {
     if (!date) return;
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/forms/free-consultation/available-slots`, {
+      const response = await API.get('/api/forms/free-consultation/available-slots', {
         params: { date: new Date(date).toISOString() }
       });
       setAvailableTimeSlots(response.data.availableSlots);

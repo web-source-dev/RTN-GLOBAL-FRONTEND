@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useNavigate } from 'react-router-dom';
+import API from '../../BackendAPi/ApiProvider';
 
 const UserConsultations = () => {
   const navigate = useNavigate();
@@ -30,19 +31,14 @@ const UserConsultations = () => {
 
   const fetchConsultations = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/user/consultations`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setConsultations(data);
-      } else {
-        setMessage({ type: 'error', text: data.message || 'Error fetching consultations' });
-      }
+      setLoading(true);
+      const response = await API.get('/api/user/consultations');
+      setConsultations(response.data);
     } catch (error) {
-      setMessage({ type: 'error', text: 'Error fetching consultations' });
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || 'Error fetching consultations' 
+      });
     } finally {
       setLoading(false);
     }

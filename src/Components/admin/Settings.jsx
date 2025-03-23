@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { Facebook, Twitter, LinkedIn, Instagram, YouTube, CloudUpload } from '@mui/icons-material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import axios from 'axios';
+import API from '../../BackendAPi/ApiProvider';
 
 const Settings = () => {
   const [settings, setSettings] = useState(null);
@@ -37,11 +37,7 @@ const Settings = () => {
 
   const fetchSettings = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/settings`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      const response = await API.get('/api/admin/settings');
       setSettings(response.data);
       setModifiedSettings(response.data);
     } catch (err) {
@@ -73,20 +69,19 @@ const Settings = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append('image', file);
-
     setUploading(true);
     setError('');
     
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/admin/settings/upload/${field}`,
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      const response = await API.post(
+        `/api/admin/settings/upload/${field}`,
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         }
       );
@@ -106,15 +101,7 @@ const Settings = () => {
 
   const handleSaveAll = async () => {
     try {
-      const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/admin/settings`,
-        modifiedSettings,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
+      const response = await API.put('/api/admin/settings', modifiedSettings);
       setSettings(response.data);
       setModifiedSettings(response.data);
       setSuccess('All settings updated successfully');
@@ -125,7 +112,7 @@ const Settings = () => {
 
   const handleReset = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/settings/reset`);
+      const response = await API.post('/api/admin/settings/reset');
       setSettings(response.data);
       setSuccess('Settings reset to default');
     } catch (err) {

@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Visibility, ThumbUp, Comment } from '@mui/icons-material';
+import API from '../../BackendAPi/ApiProvider';
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
@@ -29,16 +30,21 @@ const BlogPage = () => {
 
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [page]);
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/blogs`);
-      if (!response.ok) throw new Error('Failed to fetch blogs');
-      const data = await response.json();
-      setBlogs(data);
-    } catch (err) {
-      setError(err.message);
+      setLoading(true);
+      const response = await API.get(`/api/blogs?page=${page}&limit=${blogsPerPage}`);
+      if (response && response.data) {
+        setBlogs(response.data);
+      } else {
+        setBlogs([]);
+      }
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+      setError('Failed to load blogs');
+      setBlogs([]);
     } finally {
       setLoading(false);
     }
@@ -76,9 +82,9 @@ const BlogPage = () => {
       {/* Featured Blog */}
       {blogs.length > 0 && (
         <Box mb={8}>
-          <Card 
-            sx={{ 
-              display: { md: 'flex' }, 
+          <Card
+            sx={{
+              display: { md: 'flex' },
               mb: 4,
               borderRadius: 2,
               overflow: 'hidden',
@@ -106,11 +112,11 @@ const BlogPage = () => {
             />
             <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, bgcolor: 'background.paper' }}>
               <CardContent sx={{ flex: '1 0 auto', p: 4 }}>
-                <Typography 
-                  component="h1" 
-                  variant="h3" 
+                <Typography
+                  component="h1"
+                  variant="h3"
                   gutterBottom
-                  sx={{ 
+                  sx={{
                     fontWeight: 800,
                     color: 'text.primary',
                     mb: 2,
@@ -121,7 +127,7 @@ const BlogPage = () => {
                   {blogs[0].title}
                 </Typography>
                 <Box
-                  sx={{ 
+                  sx={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: 2,
@@ -131,24 +137,24 @@ const BlogPage = () => {
                   <Avatar
                     src={blogs[0].author?.avatar}
                     alt={blogs[0].author ? `${blogs[0].author.firstName} ${blogs[0].author.lastName}` : 'Anonymous'}
-                    sx={{ 
-                      width: 40, 
+                    sx={{
+                      width: 40,
                       height: 40,
                       border: '2px solid',
                       borderColor: 'primary.main'
                     }}
                   />
                   <Box>
-                    <Typography 
+                    <Typography
                       variant="subtitle1"
-                      sx={{ 
+                      sx={{
                         fontWeight: 600,
                         color: 'text.primary'
                       }}
                     >
                       {blogs[0].author ? `${blogs[0].author.firstName} ${blogs[0].author.lastName}` : 'Anonymous'}
                     </Typography>
-                    <Typography 
+                    <Typography
                       variant="body2"
                       sx={{ color: 'text.secondary' }}
                     >
@@ -160,23 +166,23 @@ const BlogPage = () => {
                     </Typography>
                   </Box>
                 </Box>
-                <Typography 
-                  variant="body1" 
+                <Typography
+                  variant="body1"
                   paragraph
-                  sx={{ 
+                  sx={{
                     color: 'text.secondary',
                     fontSize: '1.1rem',
                     lineHeight: 1.7,
                     mb: 4
                   }}
                 >
-                  {truncateText(blogs[0].content, 350)}
+                  {blogs[0].description}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 2 }}>
-                  <Chip 
-                    icon={<ThumbUp sx={{ color: 'primary.main' }} />} 
+                  <Chip
+                    icon={<ThumbUp sx={{ color: 'primary.main' }} />}
                     label={blogs[0].likes?.length || 0}
-                    sx={{ 
+                    sx={{
                       borderRadius: '20px',
                       px: 2,
                       py: 0.5,
@@ -186,12 +192,12 @@ const BlogPage = () => {
                       '& .MuiChip-icon': {
                         color: 'inherit'
                       }
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    icon={<Comment sx={{ color: 'secondary.main' }} />} 
+                  <Chip
+                    icon={<Comment sx={{ color: 'secondary.main' }} />}
                     label={`${blogs[0].comments?.length || 0} Comments`}
-                    sx={{ 
+                    sx={{
                       borderRadius: '20px',
                       px: 2,
                       py: 0.5,
@@ -201,7 +207,7 @@ const BlogPage = () => {
                       '& .MuiChip-icon': {
                         color: 'inherit'
                       }
-                    }} 
+                    }}
                   />
                 </Box>
               </CardContent>
@@ -237,10 +243,10 @@ const BlogPage = () => {
       <Divider sx={{ mb: 8 }} />
 
       {/* Recent Blogs Grid */}
-      <Typography 
-        variant="h4" 
-        gutterBottom 
-        sx={{ 
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{
           mb: 6,
           fontWeight: 700,
           color: theme.palette.text.primary
@@ -252,10 +258,10 @@ const BlogPage = () => {
       <Grid container spacing={4}>
         {currentBlogs.map((blog) => (
           <Grid item xs={12} sm={6} md={4} key={blog._id}>
-            <Card 
-              sx={{ 
-                height: '100%', 
-                display: 'flex', 
+            <Card
+              sx={{
+                height: '100%',
+                display: 'flex',
                 flexDirection: 'column',
                 borderRadius: 2,
                 overflow: 'hidden',
@@ -267,23 +273,25 @@ const BlogPage = () => {
                 }
               }}
             >
-              <CardMedia
-                component="img"
-                height="200"
-                sx={{ 
-                  objectFit: 'cover',
-                  transition: 'transform 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'scale(1.05)'
-                  }
-                }}
-                image={blog.image ? `${process.env.REACT_APP_API_URL}${blog.image}` : '/default-blog.jpg'}
-                alt={blog.title}
-              />
+             <CardMedia
+  component="img"
+  sx={{
+    height: 150, // Set a fixed height
+    width: "100%", // Ensures responsiveness
+    objectFit: "cover",
+    transition: "transform 0.3s ease-in-out",
+    "&:hover": {
+      transform: "scale(1.05)",
+    },
+  }}
+  image={blog.image ? `${process.env.REACT_APP_API_URL}${blog.image}` : "/default-blog.jpg"}
+  alt={blog.title}
+/>
+
               <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                <Typography 
-                  gutterBottom 
-                  variant="h5" 
+                <Typography
+                  gutterBottom
+                  variant="h5"
                   component="h2"
                   sx={{
                     fontWeight: 700,
@@ -294,10 +302,10 @@ const BlogPage = () => {
                 >
                   {blog.title}
                 </Typography>
-                <Box 
-                  sx={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
                     mb: 2,
                     gap: 1
                   }}
@@ -305,25 +313,25 @@ const BlogPage = () => {
                   <Avatar
                     src={blog.author?.avatar}
                     alt={blog.author ? `${blog.author.firstName} ${blog.author.lastName}` : 'Anonymous'}
-                    sx={{ 
-                      width: 32, 
+                    sx={{
+                      width: 32,
                       height: 32,
                       border: '2px solid',
                       borderColor: 'primary.light'
                     }}
                   />
                   <Box>
-                    <Typography 
-                      variant="subtitle2" 
-                      sx={{ 
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
                         fontWeight: 600,
                         color: 'text.primary'
                       }}
                     >
                       {blog.author ? `${blog.author.firstName} ${blog.author.lastName}` : 'Anonymous'}
                     </Typography>
-                    <Typography 
-                      variant="caption" 
+                    <Typography
+                      variant="caption"
                       sx={{ color: 'text.secondary' }}
                     >
                       {new Date(blog.createdAt).toLocaleDateString('en-US', {
@@ -334,51 +342,56 @@ const BlogPage = () => {
                     </Typography>
                   </Box>
                 </Box>
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    color: 'text.secondary',
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "text.secondary",
                     mb: 3,
-                    lineHeight: 1.6
+                    lineHeight: 1.6,
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2, // Limits to 2 lines
+                    overflow: "hidden",
                   }}
                 >
-                  {truncateText(blog.content, 150)}
+                  {blog.description}
                 </Typography>
+
               </CardContent>
-              <CardActions 
-                sx={{ 
-                  justifyContent: 'space-between', 
-                  px: 3, 
+              <CardActions
+                sx={{
+                  justifyContent: 'space-between',
+                  px: 3,
                   pb: 3,
                   pt: 0
                 }}
               >
                 <Box sx={{ display: 'flex', gap: 1 }}>
-                  <Chip 
-                    icon={<ThumbUp sx={{ fontSize: '0.9rem' }} />} 
-                    label={blog.likes?.length || 0} 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    icon={<ThumbUp sx={{ fontSize: '0.9rem' }} />}
+                    label={blog.likes?.length || 0}
+                    size="small"
+                    sx={{
                       borderRadius: '15px',
                       bgcolor: 'primary.soft',
                       color: 'primary.main',
                       '& .MuiChip-icon': {
                         color: 'inherit'
                       }
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    icon={<Comment sx={{ fontSize: '0.9rem' }} />} 
-                    label={blog.comments?.length || 0} 
-                    size="small" 
-                    sx={{ 
+                  <Chip
+                    icon={<Comment sx={{ fontSize: '0.9rem' }} />}
+                    label={blog.comments?.length || 0}
+                    size="small"
+                    sx={{
                       borderRadius: '15px',
                       bgcolor: 'secondary.soft',
                       color: 'secondary.main',
                       '& .MuiChip-icon': {
                         color: 'inherit'
                       }
-                    }} 
+                    }}
                   />
                 </Box>
                 <Button
@@ -406,10 +419,10 @@ const BlogPage = () => {
       {/* Add Pagination */}
       {pageCount > 1 && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <Pagination 
-            count={pageCount} 
-            page={page} 
-            onChange={handlePageChange} 
+          <Pagination
+            count={pageCount}
+            page={page}
+            onChange={handlePageChange}
             color="primary"
             size="large"
           />

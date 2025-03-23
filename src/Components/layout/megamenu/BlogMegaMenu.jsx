@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import API from '../../../BackendAPi/ApiProvider';
 
 const BlogMegaMenu = () => {
   const [blogs, setBlogs] = useState([]);
@@ -25,10 +26,8 @@ const BlogMegaMenu = () => {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/blogs?has_image=true&limit=6`);
-        if (!response.ok) throw new Error('Failed to fetch blogs');
-        const data = await response.json();
-        setBlogs(data);
+        const response = await API.get('/api/blogs?has_image=true&limit=6');
+        setBlogs(response.data);
       } catch (err) {
         setError(err.message);
         console.error('Error fetching blogs:', err);
@@ -66,139 +65,134 @@ const BlogMegaMenu = () => {
     );
   }
 
-
-
-return (
-  <Box sx={{ p: 3, width: '100%', maxWidth: '100%', bgcolor: 'background.default' }}>
-    <Grid container spacing={2}>
-
-             {/* Latest Blogs Section */}
-      <Grid item xs={4}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, borderBottom: '2px solid', borderColor: 'primary.main', pb: 0.5 }}>
-          Latest Blogs
-        </Typography>
-        <Stack spacing={1.5}>
-          {blogs.slice(0, 3).map((blog) => (
-            <Box
-              key={blog._id}
-              component={Link}
-              to={`/blog/post/${blog._id}`}
-              sx={{
-                textDecoration: 'none',
-                color: 'text.primary',
-                '&:hover': { color: 'primary.main' }
-              }}
-            >
-              <Typography variant="subtitle2" gutterBottom>
-                {blog.title}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <AccessTimeIcon sx={{ fontSize: 14 }} />
-                <Typography variant="caption">
-                  {new Date(blog.createdAt).toLocaleDateString()}
-                </Typography>
-              </Box>
-              <Divider sx={{ mt: 1.5 }} />
-            </Box>
-          ))}
-        </Stack>
-      </Grid>
-      {/* Trending Blogs Section */}
-      <Grid item xs={4}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, borderBottom: '2px solid', borderColor: 'primary.main', pb: 0.5 }}>
-          Trending Blogs
-        </Typography>
-        <Stack spacing={2}>
-          {blogs.slice(0, 3).map((blog) => (
-            <Card
-              key={blog._id}
-              component={Link}
-              to={`/blog/post/${blog._id}`}
-              sx={{
-                display: 'flex',
-                textDecoration: 'none',
-                transition: 'all 0.2s',
-                '&:hover': {
-                  transform: 'translateX(4px)'
-                }
-              }}
-            >
-              <CardMedia
-                component="img"
-                sx={{ width: 80, height: 80 }}
-                image={`${process.env.REACT_APP_API_URL}${blog.image}`}
-                alt={blog.title}
-              />
-              <CardContent sx={{ flex: 1, p: 1 }}>
-                <Typography variant="subtitle2" noWrap>
+  return (
+    <Box sx={{ p: 3, width: '100%', maxWidth: '100%', bgcolor: 'background.default' }}>
+      <Grid container spacing={2}>
+        {/* Latest Blogs Section */}
+        <Grid item xs={4}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, borderBottom: '2px solid', borderColor: 'primary.main', pb: 0.5 }}>
+            Latest Blogs
+          </Typography>
+          <Stack spacing={1.5}>
+            {blogs.slice(0, 3).map((blog) => (
+              <Box
+                key={blog._id}
+                component={Link}
+                to={`/blog/post/${blog._id}`}
+                sx={{
+                  textDecoration: 'none',
+                  color: 'text.primary',
+                  '&:hover': { color: 'primary.main' }
+                }}
+              >
+                <Typography variant="subtitle2" gutterBottom>
                   {blog.title}
                 </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <VisibilityIcon sx={{ fontSize: 14, mr: 0.5 }} />
-                    <Typography variant="caption">{blog.views || 0}</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <BookmarkIcon sx={{ fontSize: 14, mr: 0.5 }} />
-                    <Typography variant="caption">{blog.bookmarks || 0}</Typography>
-                  </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <AccessTimeIcon sx={{ fontSize: 14 }} />
+                  <Typography variant="caption">
+                    {new Date(blog.createdAt).toLocaleDateString()}
+                  </Typography>
                 </Box>
-              </CardContent>
-            </Card>
-          ))}
-        </Stack>
-      </Grid>
+                <Divider sx={{ mt: 1.5 }} />
+              </Box>
+            ))}
+          </Stack>
+        </Grid>
+        {/* Trending Blogs Section */}
+        <Grid item xs={4}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, borderBottom: '2px solid', borderColor: 'primary.main', pb: 0.5 }}>
+            Trending Blogs
+          </Typography>
+          <Stack spacing={2}>
+            {blogs.slice(0, 3).map((blog) => (
+              <Card
+                key={blog._id}
+                component={Link}
+                to={`/blog/post/${blog._id}`}
+                sx={{
+                  display: 'flex',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    transform: 'translateX(4px)'
+                  }
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  sx={{ width: 80, height: 80 }}
+                  image={`${process.env.REACT_APP_API_URL}${blog.image}`}
+                  alt={blog.title}
+                />
+                <CardContent sx={{ flex: 1, p: 1 }}>
+                  <Typography variant="subtitle2" noWrap>
+                    {blog.title}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <VisibilityIcon sx={{ fontSize: 14, mr: 0.5 }} />
+                      <Typography variant="caption">{blog.views || 0}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <BookmarkIcon sx={{ fontSize: 14, mr: 0.5 }} />
+                      <Typography variant="caption">{blog.bookmarks || 0}</Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            ))}
+          </Stack>
+        </Grid>
 
- 
-
-      {/* Featured Blogs Section */}
-      <Grid item xs={4}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, borderBottom: '2px solid', borderColor: 'primary.main', pb: 0.5 }}>
-          Featured Blogs
-        </Typography>
-        <Stack spacing={2}>
-          {blogs.slice(0, 3).map((blog) => (
-    <Card
-    key={blog._id}
-    component={Link}
-    to={`/blog/post/${blog._id}`}
-    sx={{
-      display: 'flex',
-      textDecoration: 'none',
-      transition: 'all 0.2s',
-      '&:hover': {
-        transform: 'translateX(4px)'
-      }
-    }}
-  >
-    <CardMedia
-      component="img"
-      sx={{ width: 80, height: 80 }}
-      image={`${process.env.REACT_APP_API_URL}${blog.image}`}
-      alt={blog.title}
-    />
-    <CardContent sx={{ flex: 1, p: 1 }}>
-      <Typography variant="subtitle2" noWrap>
-        {blog.title}
-      </Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <VisibilityIcon sx={{ fontSize: 14, mr: 0.5 }} />
-          <Typography variant="caption">{blog.views || 0}</Typography>
-        </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <BookmarkIcon sx={{ fontSize: 14, mr: 0.5 }} />
-          <Typography variant="caption">{blog.bookmarks || 0}</Typography>
-        </Box>
-      </Box>
-    </CardContent>
-  </Card>
-          ))}
-        </Stack>
+        {/* Featured Blogs Section */}
+        <Grid item xs={4}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2, borderBottom: '2px solid', borderColor: 'primary.main', pb: 0.5 }}>
+            Featured Blogs
+          </Typography>
+          <Stack spacing={2}>
+            {blogs.slice(0, 3).map((blog) => (
+              <Card
+                key={blog._id}
+                component={Link}
+                to={`/blog/post/${blog._id}`}
+                sx={{
+                  display: 'flex',
+                  textDecoration: 'none',
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    transform: 'translateX(4px)'
+                  }
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  sx={{ width: 80, height: 80 }}
+                  image={`${process.env.REACT_APP_API_URL}${blog.image}`}
+                  alt={blog.title}
+                />
+                <CardContent sx={{ flex: 1, p: 1 }}>
+                  <Typography variant="subtitle2" noWrap>
+                    {blog.title}
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <VisibilityIcon sx={{ fontSize: 14, mr: 0.5 }} />
+                      <Typography variant="caption">{blog.views || 0}</Typography>
+                    </Box>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <BookmarkIcon sx={{ fontSize: 14, mr: 0.5 }} />
+                      <Typography variant="caption">{blog.bookmarks || 0}</Typography>
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Card>
+            ))}
+          </Stack>
+        </Grid>
       </Grid>
-    </Grid>
-  </Box>
-);
+    </Box>
+  );
 };
 
 export default BlogMegaMenu;

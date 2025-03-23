@@ -21,7 +21,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import CloseIcon from '@mui/icons-material/Close';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from 'axios';
+import API from '../../BackendAPi/ApiProvider';
 
 const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
   const { user } = useAuth();
@@ -56,7 +56,7 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
   useEffect(() => {
     if (propSessionId) {
       setSessionId(propSessionId);
-      fetchMessages(propSessionId);
+      fetchSession(propSessionId);
     } else {
       startChatSession();
     }
@@ -68,50 +68,14 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
     }
 
     pollInterval.current = setInterval(() => {
-      fetchMessages(sid);
+      fetchSession(sid);
     }, 3000);
   }, []);
-
-  const getAuthConfig = () => {
-    const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
-    return {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    };
-  };
-
-  const fetchMessages = async (sid) => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/chat/session/${sid}`,
-        getAuthConfig()
-      );
-
-      if (response.data) {
-        setMessages(response.data.messages || []);
-        setSessionStatus(response.data.status);
-
-        if (response.data.status === 'closed') {
-          if (pollInterval.current) {
-            clearInterval(pollInterval.current);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      setError('Failed to fetch messages');
-    }
-  };
 
   const startChatSession = async () => {
     try {
       setLoading(true);
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/chat/session`,
-        {},
-        getAuthConfig()
-      );
+      const response = await API.post('/api/chat/session');
 
       if (response.data) {
         setSessionId(response.data._id);
@@ -131,6 +95,25 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
     }
   };
 
+  const fetchSession = async (id) => {
+    try {
+      setLoading(true);
+      const response = await API.get(`/api/chat/session/${id}`);
+      
+      setMessages(response.data.messages || []);
+      setSessionStatus(response.data.status);
+      
+      if (response.data.status !== 'closed') {
+        startPolling(id);
+      }
+    } catch (error) {
+      console.error('Fetch session error:', error);
+      setError('Failed to load chat session');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSendMessage = async (event) => {
     event.preventDefault();
     if ((!newMessage.trim() && !file) || loading || sessionStatus === 'closed') return;
@@ -139,25 +122,17 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
     setError('');
 
     try {
-      const formData = new FormData();
+      let formData = new FormData();
       formData.append('content', newMessage.trim());
       if (file) {
         formData.append('attachment', file);
       }
 
-      const config = {
-        ...getAuthConfig(),
+      const response = await API.post(`/api/chat/message/${sessionId}`, formData, {
         headers: {
-          ...getAuthConfig().headers,
           'Content-Type': 'multipart/form-data'
         }
-      };
-
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/chat/message/${sessionId}`,
-        formData,
-        config
-      );
+      });
 
       if (response.data) {
         setMessages(response.data.messages || []);

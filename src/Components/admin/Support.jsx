@@ -32,6 +32,7 @@ import {
   Delete as DeleteIcon,
   Visibility as ViewIcon,
 } from '@mui/icons-material';
+import API from '../../BackendAPi/ApiProvider';
 
 const priorityColors = {
   'Low': 'info',
@@ -67,15 +68,10 @@ const Support = () => {
 
   const fetchTickets = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/admin/support?page=${page + 1}&limit=${rowsPerPage}&status=${statusFilter}&priority=${priorityFilter}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
+      const response = await API.get(
+        `/api/admin/support?page=${page + 1}&limit=${rowsPerPage}&status=${statusFilter}&priority=${priorityFilter}`
       );
-      const data = await response.json();
+      const data = response.data;
       setTickets(data.tickets);
     } catch (error) {
       console.error('Error fetching tickets:', error);
@@ -87,19 +83,12 @@ const Support = () => {
 
   const handleStatusChange = async (ticketId, newStatus) => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/admin/support/${ticketId}/status`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: JSON.stringify({ status: newStatus }),
-        }
+      const response = await API.patch(
+        `/api/admin/support/${ticketId}/status`,
+        { status: newStatus }
       );
 
-      if (!response.ok) {
+      if (!response.data) {
         throw new Error('Failed to update ticket status');
       }
 
@@ -112,17 +101,9 @@ const Support = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/admin/support/${selectedTicket._id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
+      const response = await API.delete(`/api/admin/support/${selectedTicket._id}`);
 
-      if (!response.ok) {
+      if (!response.data) {
         throw new Error('Failed to delete ticket');
       }
 

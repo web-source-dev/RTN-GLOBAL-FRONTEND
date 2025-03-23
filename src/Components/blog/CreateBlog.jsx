@@ -16,12 +16,14 @@ import {
 import { PhotoCamera, Close } from '@mui/icons-material';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import API from '../../BackendAPi/ApiProvider';
 
 const CreateBlog = () => {
   const theme = useTheme();
   const { id } = useParams(); // Get blog ID if editing
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState('');
@@ -38,10 +40,10 @@ const CreateBlog = () => {
   const fetchBlog = async () => {
     setInitialLoading(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/blogs/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch blog');
-      const data = await response.json();
+      const response = await API.get(`/api/blogs/${id}`);
+      const data = response.data;
       setTitle(data.title);
+      setDescription(data.description);
       setContent(data.content);
       if (data.image) {
         setPreview(`${process.env.REACT_APP_API_URL}${data.image}`);
@@ -74,34 +76,35 @@ const CreateBlog = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
-
+  
     try {
       const formData = new FormData();
       formData.append('title', title);
+      formData.append('description', description);
       formData.append('content', content);
       if (image) {
         formData.append('image', image);
       }
-
-      const url = id
-        ? `${process.env.REACT_APP_API_URL}/api/blogs/${id}`
-        : `${process.env.REACT_APP_API_URL}/api/blogs`;
-
-      const response = await fetch(url, {
-        method: id ? 'PATCH' : 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(id ? 'Failed to update blog' : 'Failed to create blog');
+  
+      let response;
+      
+      if (id) {
+        response = await API.patch(`/api/blogs/${id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      } else {
+        response = await API.post('/api/blogs', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
       }
-
+  
       navigate('/blog/manage');
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || 'Failed to save blog');
     } finally {
       setLoading(false);
     }
@@ -179,6 +182,24 @@ const CreateBlog = () => {
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&:hover fieldset': {
+                    borderColor: theme.palette.primary.main,
+                  },
+                },
+              }}
+            />
+
+            <TextField
+              label="Short Description"
+              variant="outlined"
+              fullWidth
+              required
+              multiline
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   '&:hover fieldset': {

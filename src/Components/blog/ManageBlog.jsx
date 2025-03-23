@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import { Edit, Delete, Add } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import API from '../../BackendAPi/ApiProvider';
 
 const ManageBlog = () => {
   const navigate = useNavigate();
@@ -40,14 +41,8 @@ const ManageBlog = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/blogs`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      if (!response.ok) throw new Error('Failed to fetch blogs');
-      const data = await response.json();
-      setBlogs(data);
+      const response = await API.get('/api/blogs');
+      setBlogs(response.data);
     } catch (err) {
       setError(err.message);
     }
@@ -60,16 +55,7 @@ const ManageBlog = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/blogs/${blogToDelete._id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-      if (!response.ok) throw new Error('Failed to delete blog');
+      await API.delete(`/api/blogs/${blogToDelete._id}`);
       setBlogs(blogs.filter(blog => blog._id !== blogToDelete._id));
       setDeleteDialogOpen(false);
     } catch (err) {

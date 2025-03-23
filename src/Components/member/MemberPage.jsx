@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -18,6 +18,8 @@ import {
   CardContent,
   Tab,
   Tabs,
+  CircularProgress,
+  Alert
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -25,20 +27,56 @@ import HistoryIcon from '@mui/icons-material/History';
 import EditIcon from '@mui/icons-material/Edit';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SecurityIcon from '@mui/icons-material/Security';
+import API from '../../BackendAPi/ApiProvider';
+import { useNavigate } from 'react-router-dom';
 
 const MemberPage = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
   const [activeTab, setActiveTab] = useState(0);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock user data - Replace with actual API data
-  const userData = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    joinDate: 'January 2024',
-    membershipType: 'Premium',
-    avatar: null, // Replace with actual avatar URL
-  };
+  // User data state
+  const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    joinDate: '',
+    membershipType: '',
+    avatar: null
+  });
+
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        const response = await API.get('/api/user/profile');
+        
+        // Format the user data
+        setUserData({
+          name: `${response.data.firstName} ${response.data.lastName}`,
+          email: response.data.email,
+          joinDate: new Date(response.data.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+          membershipType: response.data.membershipType || 'Standard',
+          avatar: response.data.avatar
+        });
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+        setError('Failed to load user profile. Please try again later.');
+        
+        // Redirect to login if unauthorized
+        if (err.response?.status === 401) {
+          navigate('/auth/login', { state: { from: '/member' } });
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -179,20 +217,33 @@ const MemberPage = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Alert severity="error">{error}</Alert>
+      </Container>
+    );
+  }
+
   return (
     <Box
       sx={{
+        py: 6,
         minHeight: '100vh',
-        pt: 8,
-        pb: 6,
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
+        backgroundColor: theme.palette.background.default,
       }}
     >
       <Container maxWidth="lg">
         <Grid container spacing={4}>
-          {/* Profile Summary */}
+          {/* Welcome Banner */}
           <Grid item xs={12}>
             <Paper
               elevation={0}
@@ -213,6 +264,7 @@ const MemberPage = () => {
                   bgcolor: '#fff',
                   color: '#1976d2',
                 }}
+                src={userData.avatar ? `${process.env.REACT_APP_API_URL}${userData.avatar}` : null}
               >
                 {userData.name.charAt(0)}
               </Avatar>
@@ -227,7 +279,7 @@ const MemberPage = () => {
             </Paper>
           </Grid>
 
-          {/* Main Content */}
+          {/* Main Content with Tabs */}
           <Grid item xs={12}>
             <Paper
               elevation={0}

@@ -25,6 +25,7 @@ import {
   Send,
   AccessTime,
 } from '@mui/icons-material';
+import API from '../../BackendAPi/ApiProvider';
 
 const services = [
   'Digital Marketing Strategy',
@@ -51,6 +52,9 @@ const Contact = () => {
     message: '',
     severity: 'success',
   });
+  const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -61,46 +65,35 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:5000/api/forms/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
+    if (validateForm()) {
+      setLoading(true);
+      try {
+        await API.post('/api/forms/contact', formData);
+        
+        setSuccess(true);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          company: '',
+          service: '',
+          message: '',
+        });
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      } finally {
+        setLoading(false);
       }
-
-      setSnackbar({
-        open: true,
-        message: 'Thank you! We\'ll get back to you shortly.',
-        severity: 'success',
-      });
-
-      setFormData({
-        name: '',
-        email: '',
-        phone: '',
-        company: '',
-        service: '',
-        message: '',
-      });
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: error.message || 'Failed to submit contact form',
-        severity: 'error',
-      });
     }
   };
 
   const handleCloseSnackbar = () => {
     setSnackbar({ ...snackbar, open: false });
+  };
+
+  const validateForm = () => {
+    // Implement form validation logic here
+    return true; // Placeholder return, actual implementation needed
   };
 
   return (

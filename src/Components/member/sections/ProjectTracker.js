@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -21,33 +21,54 @@ import {
   FormControl,
   InputLabel,
   Select,
+  CircularProgress,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import API from '../../../BackendAPi/ApiProvider';
 
 function ProjectTracker() {
-  const [projects, setProjects] = useState([
-    {
-      id: 1,
-      name: 'Website Redesign',
-      status: 'In Progress',
-      progress: 65,
-      deadline: '2024-03-01',
-      description: 'Complete overhaul of company website with modern design',
-      milestones: [
-        { id: 1, title: 'Design Approval', completed: true },
-        { id: 2, title: 'Frontend Development', completed: true },
-        { id: 3, title: 'Backend Integration', completed: false },
-        { id: 4, title: 'Testing', completed: false },
-      ],
-    },
-    // Add more sample projects as needed
-  ]);
-
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [newMilestone, setNewMilestone] = useState('');
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        const response = await API.get('/api/projects');
+        setProjects(response.data);
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+        setError('Failed to load projects. Please try again later.');
+        // Fallback to sample data if API fails
+        setProjects([
+          {
+            id: 1,
+            name: 'Website Redesign',
+            status: 'In Progress',
+            progress: 65,
+            deadline: '2024-03-01',
+            description: 'Complete overhaul of company website with modern design',
+            milestones: [
+              { id: 1, title: 'Design Approval', completed: true },
+              { id: 2, title: 'Frontend Development', completed: true },
+              { id: 3, title: 'Backend Integration', completed: false },
+              { id: 4, title: 'Testing', completed: false },
+            ],
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const handleAddProject = () => {
     setSelectedProject(null);
@@ -59,51 +80,90 @@ function ProjectTracker() {
     setOpenDialog(true);
   };
 
-  const handleDeleteProject = (projectId) => {
-    setProjects(projects.filter((p) => p.id !== projectId));
-  };
-
-  const handleSaveProject = (formData) => {
-    if (selectedProject) {
-      setProjects(projects.map((p) =>
-        p.id === selectedProject.id ? { ...p, ...formData } : p
-      ));
-    } else {
-      setProjects([...projects, { id: Date.now(), ...formData }]);
+  const handleDeleteProject = async (projectId) => {
+    try {
+      await API.delete(`/api/projects/${projectId}`);
+      setProjects(projects.filter((p) => p.id !== projectId));
+    } catch (err) {
+      console.error('Error deleting project:', err);
+      setError(err.response?.data?.message || 'Failed to delete project. Please try again.');
     }
-    setOpenDialog(false);
   };
 
-  const handleAddMilestone = (projectId) => {
+  const handleSaveProject = async (formData) => {
+    try {
+      if (selectedProject) {
+        const response = await API.put(`/api/projects/${selectedProject.id}`, formData);
+        setProjects(projects.map((p) =>
+          p.id === selectedProject.id ? response.data : p
+        ));
+      } else {
+        const response = await API.post('/api/projects', formData);
+        setProjects([...projects, response.data]);
+      }
+      setOpenDialog(false);
+    } catch (err) {
+      console.error('Error saving project:', err);
+      setError(err.response?.data?.message || 'Failed to save project. Please try again.');
+    }
+  };
+
+  const handleAddMilestone = async (projectId) => {
     if (!newMilestone) return;
-    setProjects(projects.map((p) => {
-      if (p.id === projectId) {
-        return {
-          ...p,
-          milestones: [
-            ...p.milestones,
-            { id: Date.now(), title: newMilestone, completed: false },
-          ],
-        };
-      }
-      return p;
-    }));
-    setNewMilestone('');
+    
+    try {
+      const response = await API.post(`/api/projects/${projectId}/milestones`, {
+        title: newMilestone,
+        completed: false
+      });
+      
+      setProjects(projects.map((p) => {
+        if (p.id === projectId) {
+          return {
+            ...p,
+            milestones: [...p.milestones, response.data]
+          };
+        }
+        return p;
+      }));
+      
+      setNewMilestone('');
+    } catch (err) {
+      console.error('Error adding milestone:', err);
+      setError(err.response?.data?.message || 'Failed to add milestone. Please try again.');
+    }
   };
 
-  const handleToggleMilestone = (projectId, milestoneId) => {
-    setProjects(projects.map((p) => {
-      if (p.id === projectId) {
-        return {
-          ...p,
-          milestones: p.milestones.map((m) =>
-            m.id === milestoneId ? { ...m, completed: !m.completed } : m
-          ),
-        };
-      }
-      return p;
-    }));
+  const handleToggleMilestone = async (projectId, milestoneId, completed) => {
+    try {
+      await API.patch(`/api/projects/${projectId}/milestones/${milestoneId}`, {
+        completed: !completed
+      });
+      
+      setProjects(projects.map((p) => {
+        if (p.id === projectId) {
+          return {
+            ...p,
+            milestones: p.milestones.map((m) =>
+              m.id === milestoneId ? { ...m, completed: !completed } : m
+            )
+          };
+        }
+        return p;
+      }));
+    } catch (err) {
+      console.error('Error updating milestone:', err);
+      setError(err.response?.data?.message || 'Failed to update milestone. Please try again.');
+    }
   };
+
+  if (loading && projects.length === 0) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box>
@@ -170,7 +230,7 @@ function ProjectTracker() {
                 {project.milestones.map((milestone) => (
                   <ListItem
                     key={milestone.id}
-                    onClick={() => handleToggleMilestone(project.id, milestone.id)}
+                    onClick={() => handleToggleMilestone(project.id, milestone.id, milestone.completed)}
                     sx={{ cursor: 'pointer' }}
                   >
                     <ListItemText

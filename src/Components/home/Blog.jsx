@@ -1,46 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Container, Grid, Typography, Card, CardMedia, CardContent, Button, Avatar, Chip, useTheme } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-
-const blogPosts = [
-  {
-    title: 'The Future of Digital Marketing in 2025',
-    excerpt: 'Explore the emerging trends and technologies shaping the digital marketing landscape.',
-    image: '/images/blog/post1.jpg',
-    category: 'Trends',
-    author: {
-      name: 'Emily Johnson',
-      avatar: '/images/avatars/avatar1.jpg'
-    },
-    date: 'Feb 25, 2025'
-  },
-  {
-    title: 'Maximizing ROI with AI-Powered Marketing',
-    excerpt: 'Learn how artificial intelligence is revolutionizing marketing strategies and improving returns.',
-    image: '/images/blog/post2.jpg',
-    category: 'Technology',
-    author: {
-      name: 'David Chen',
-      avatar: '/images/avatars/avatar2.jpg'
-    },
-    date: 'Feb 20, 2025'
-  },
-  {
-    title: 'Social Media Strategies That Drive Growth',
-    excerpt: 'Discover proven social media tactics that can significantly boost your business growth.',
-    image: '/images/blog/post3.jpg',
-    category: 'Social Media',
-    author: {
-      name: 'Sarah Miller',
-      avatar: '/images/avatars/avatar3.jpg'
-    },
-    date: 'Feb 15, 2025'
-  }
-];
+import axios from 'axios';
+import API from '../../BackendAPi/ApiProvider';
 
 const Blog = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  const [blogPosts, setBlogPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await API.get('/api/blogs');
+        // Take only the latest 3 blogs (they are already sorted by date from the backend)
+        setBlogPosts(response.data.slice(0, 3));
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+      }
+    };
+    fetchBlogs();
+  }, []);
   
   return (
     <Box 
@@ -94,7 +74,7 @@ const Blog = () => {
         </Typography>
         <Grid container spacing={4}>
           {blogPosts.map((post, index) => (
-            <Grid item xs={12} md={4} key={index}>
+            <Grid item xs={12} md={4} key={post._id || index}>
               <Card 
                 sx={{ 
                   height: '100%',
@@ -110,7 +90,7 @@ const Blog = () => {
                 <CardMedia
                   component="img"
                   height="240"
-                  image={post.image}
+                  image={`${process.env.REACT_APP_API_URL}${post.image}` || '/images/blog/default.jpg'}
                   alt={post.title}
                   sx={{
                     position: 'relative',
@@ -127,7 +107,7 @@ const Blog = () => {
                 />
                 <Box sx={{ position: 'relative', mt: -3, mx: 2 }}>
                   <Chip
-                    label={post.category}
+                    label="Blog"
                     color="primary"
                     size="small"
                     sx={{ 
@@ -142,15 +122,29 @@ const Blog = () => {
                   <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
                     {post.title}
                   </Typography>
-                  <Typography color="text.secondary" paragraph>
-                    {post.excerpt}
-                  </Typography>
+                  <Typography
+  variant="body2"
+  sx={{
+    color: "text.secondary",
+    mb: 3,
+    lineHeight: 1.6,
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: 2, // Limits to 2 lines
+    overflow: "hidden",
+  }}
+>
+  {post.description}
+</Typography>
+
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Avatar src={post.author.avatar} sx={{ width: 32, height: 32, mr: 1 }} />
+                      <Avatar src={post.author?.avatar} sx={{ width: 32, height: 32, mr: 1 }} />
                       <Box>
-                        <Typography variant="subtitle2">{post.author.name}</Typography>
-                        <Typography variant="caption" color="text.secondary">{post.date}</Typography>
+                        <Typography variant="subtitle2">{`${post.author?.firstName} ${post.author?.lastName}`}</Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {new Date(post.createdAt).toLocaleDateString()}
+                        </Typography>
                       </Box>
                     </Box>
                     <Button 
@@ -160,6 +154,7 @@ const Blog = () => {
                         '&:hover': { transform: 'translateX(4px)' },
                         transition: 'transform 0.2s'
                       }}
+                      href={`/blog/post/${post._id}`}
                     >
                       Read More
                     </Button>

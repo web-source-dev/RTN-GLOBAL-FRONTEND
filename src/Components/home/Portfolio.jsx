@@ -14,7 +14,6 @@ import {
   alpha,
   Paper,
 } from '@mui/material';
-import LinkIcon from '@mui/icons-material/Link';
 import LaunchIcon from '@mui/icons-material/Launch';
 import StarIcon from '@mui/icons-material/Star';
 
@@ -22,7 +21,7 @@ const portfolioItems = [
   {
     title: 'Premium Wix Website for Luxury Boutique',
     description: 'Designed and developed a custom Wix website for a high-end fashion boutique, featuring e-commerce integration, appointment booking, and responsive design that increased online sales by 245%.',
-    image: '/images/portfolio/project1.jpg',
+    image: '/images/portfolio/project1.png',
     category: 'Wix Website',
     tags: ['Wix', 'E-commerce', 'Responsive Design'],
     stats: {
@@ -61,7 +60,7 @@ const portfolioItems = [
   {
     title: 'MERN Stack E-Learning Platform',
     description: 'Created a scalable online learning platform with MongoDB, Express, React and Node.js, featuring video courses, interactive quizzes, and a comprehensive admin dashboard for content management.',
-    image: '/images/portfolio/project4.jpg',
+    image: '/images/portfolio/project4.png',
     category: 'MERN Stack',
     tags: ['Full Stack', 'Education', 'User Authentication'],
     stats: {
@@ -87,7 +86,7 @@ const portfolioItems = [
   {
     title: 'React Native Delivery Service App',
     description: 'Built a high-performance food delivery mobile application using React Native with real-time order tracking, payment processing, and push notifications for both restaurant partners and customers.',
-    image: '/images/portfolio/project6.jpg',
+    image: '/images/portfolio/project6.png',
     category: 'React Native',
     tags: ['Mobile App', 'Geolocation', 'Payment Integration'],
     stats: {
@@ -206,11 +205,11 @@ const Portfolio = () => {
           {portfolioItems
             .filter(item => activeCategory === 'All' || item.category === activeCategory)
             .map((item, index) => (
-              <Grid item xs={12} md={6} key={index}>
+              <Grid item xs={12} md={4} key={index}>
                 <Paper
                 elevation={0}
                 sx={{
-                  p: 4,
+                  p: 2,
                   height: '100%',
                   transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                   '&:hover': {
@@ -292,7 +291,7 @@ const Portfolio = () => {
                     </Box>
                   </Box>
 
-                  <CardContent sx={{ p: 4 }}>
+                  <CardContent>
                     <Typography
                       variant="h5"
                       gutterBottom
@@ -305,16 +304,20 @@ const Portfolio = () => {
                     </Typography>
 
                     <Typography
-                      color="text.secondary"
-                      paragraph
-                      sx={{
-                        color: isDark ? 'rgba(255,255,255,0.7)' : 'text.secondary',
-                      }}
-                    >
-                      {item.description}
-                    </Typography>
-
-                    <Box sx={{ mb: 3, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+  variant="body2"
+  sx={{
+    color: "text.secondary",
+    mb: 1,
+    lineHeight: 1.6,
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: 2, // Limits to 2 lines
+    overflow: "hidden",
+  }}
+>
+  {item.description}
+</Typography>
+                    <Box sx={{ mb: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                       {item.tags.map((tag, idx) => (
                         <Chip
                           key={idx}
@@ -330,18 +333,15 @@ const Portfolio = () => {
 
                     <Box
                       sx={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
                         gap: 2,
-                        mt: 3,
+                        mt: 2,
                         pt: 3,
                         borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
                       }}
                     >
-                      <Box>
-                        <Typography variant="body2" color="text.secondary">Performance</Typography>
-                        <Typography variant="h6" color="primary">{item.stats.performance}</Typography>
-                      </Box>
+                     
                       <Box>
                         <Typography variant="body2" color="text.secondary">Duration</Typography>
                         <Typography variant="h6" color="primary">{item.stats.duration}</Typography>

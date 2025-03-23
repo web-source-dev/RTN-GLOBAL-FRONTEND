@@ -28,6 +28,7 @@ import {
   Search as SearchIcon,
   Add as AddIcon,
 } from '@mui/icons-material';
+import API from '../../BackendAPi/ApiProvider';
 
 const Users = () => {
   const theme = useTheme();
@@ -45,19 +46,8 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/admin/users?page=${page + 1}&limit=${rowsPerPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setUsers(data.users || []);
+      const response = await API.get(`/api/admin/users?page=${page + 1}&limit=${rowsPerPage}`);
+      setUsers(response.data.users || []);
     } catch (error) {
       console.error('Error fetching users:', error);
       setUsers([]);
@@ -82,12 +72,7 @@ const Users = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/admin/users/${selectedUser._id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      await API.delete(`/api/admin/users/${selectedUser._id}`);
       fetchUsers();
       setDeleteDialogOpen(false);
     } catch (error) {

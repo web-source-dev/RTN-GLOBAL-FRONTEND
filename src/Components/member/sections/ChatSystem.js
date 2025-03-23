@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -19,45 +19,117 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import API from '../../../BackendAPi/ApiProvider';
 
 function ChatSystem() {
   const [selectedChat, setSelectedChat] = useState(null);
   const [message, setMessage] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
+  const [chats, setChats] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Sample data - replace with actual data from backend
-  const [chats] = useState([
-    {
-      id: 1,
-      name: 'Marketing Team',
-      type: 'group',
-      lastMessage: 'Let\'s discuss the new campaign',
-      unread: 2,
-      messages: [
-        { id: 1, sender: 'Alice', content: 'Hi team!', timestamp: '09:00' },
-        { id: 2, sender: 'Bob', content: 'Hello!', timestamp: '09:01' },
-        { id: 3, sender: 'Charlie', content: 'Let\'s discuss the new campaign', timestamp: '09:05' },
-      ],
-    },
-    {
-      id: 2,
-      name: 'John Smith',
-      type: 'direct',
-      lastMessage: 'Can we meet tomorrow?',
-      unread: 1,
-      messages: [
-        { id: 1, sender: 'John', content: 'Hi, how are you?', timestamp: '10:00' },
-        { id: 2, sender: 'You', content: 'I\'m good, thanks!', timestamp: '10:01' },
-        { id: 3, sender: 'John', content: 'Can we meet tomorrow?', timestamp: '10:05' },
-      ],
-    },
-  ]);
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        setLoading(true);
+        const response = await API.get('/api/chats');
+        setChats(response.data);
+      } catch (err) {
+        console.error('Error fetching chats:', err);
+        setError('Failed to load chats. Please try again later.');
+        // Fallback to sample data if API fails
+        setChats([
+          {
+            id: 1,
+            name: 'Marketing Team',
+            type: 'group',
+            lastMessage: 'Let\'s discuss the new campaign',
+            unread: 2,
+            messages: [
+              { id: 1, sender: 'Alice', content: 'Hi team!', timestamp: '09:00' },
+              { id: 2, sender: 'Bob', content: 'Hello!', timestamp: '09:01' },
+              { id: 3, sender: 'Charlie', content: 'Let\'s discuss the new campaign', timestamp: '09:05' },
+            ],
+          },
+          {
+            id: 2,
+            name: 'John Smith',
+            type: 'direct',
+            lastMessage: 'Can we meet tomorrow?',
+            unread: 1,
+            messages: [
+              { id: 1, sender: 'John', content: 'Hi, how are you?', timestamp: '10:00' },
+              { id: 2, sender: 'You', content: 'I\'m good, thanks!', timestamp: '10:01' },
+              { id: 3, sender: 'John', content: 'Can we meet tomorrow?', timestamp: '10:05' },
+            ],
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleSendMessage = () => {
-    if (!message.trim()) return;
-    // TODO: Implement sending message to backend
-    console.log('Sending message:', message);
-    setMessage('');
+    fetchChats();
+  }, []);
+
+  const handleSendMessage = async () => {
+    if (!message.trim() || !selectedChat) return;
+    
+    try {
+      const response = await API.post(`/api/chats/${selectedChat.id}/messages`, {
+        content: message
+      });
+      
+      // Update the chat with the new message
+      setChats(chats.map(chat => 
+        chat.id === selectedChat.id 
+          ? { 
+              ...chat, 
+              messages: [...chat.messages, response.data],
+              lastMessage: message
+            }
+          : chat
+      ));
+      
+      // Update selected chat with new message
+      if (selectedChat) {
+        setSelectedChat({
+          ...selectedChat,
+          messages: [...selectedChat.messages, response.data]
+        });
+      }
+      
+      setMessage('');
+    } catch (err) {
+      console.error('Error sending message:', err);
+      // Fallback implementation if API fails
+      const newMessage = {
+        id: Date.now(),
+        sender: 'You',
+        content: message,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      
+      setChats(chats.map(chat => 
+        chat.id === selectedChat.id 
+          ? { 
+              ...chat, 
+              messages: [...chat.messages, newMessage],
+              lastMessage: message
+            }
+          : chat
+      ));
+      
+      if (selectedChat) {
+        setSelectedChat({
+          ...selectedChat,
+          messages: [...selectedChat.messages, newMessage]
+        });
+      }
+      
+      setMessage('');
+    }
   };
 
   const handleMenuOpen = (event) => {

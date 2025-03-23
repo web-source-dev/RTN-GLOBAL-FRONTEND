@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import {
   Box,
   Container,
@@ -24,6 +23,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
 import BusinessIcon from '@mui/icons-material/Business';
 import PhoneIcon from '@mui/icons-material/Phone';
+import API from '../../BackendAPi/ApiProvider';
 
 const RegisterForm = () => {
   const theme = useTheme();
@@ -93,36 +93,38 @@ const RegisterForm = () => {
     if (validateForm()) {
       setIsLoading(true);
       try {
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          company: formData.company,
-          phone: formData.phone
-        });
-
-        const { data } = response;
-
-        // Store the token and user data
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-
+        const response = await API.post('/api/auth/register', formData);
+        
+        // Remove token storage in localStorage since cookies are now used
+        // Store only user data in localStorage if needed
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        
         setSnackbar({
           open: true,
-          message: 'Registration successful! Welcome to RTN Global.',
+          message: 'Registration successful! Redirecting to dashboard...',
           severity: 'success',
         });
-
-        // Redirect to dashboard
+        
+        // Reset form
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+          company: '',
+          phone: '',
+          acceptTerms: false,
+        });
+        
         setTimeout(() => {
           window.location.href = '/';
-        }, 1500);
+        }, 2000);
       } catch (error) {
-        const errorMessage = error.response?.data?.message || error.message || 'Registration failed. Please try again.';
+        console.error('Registration error:', error);
         setSnackbar({
           open: true,
-          message: errorMessage,
+          message: error.response?.data?.message || 'Registration failed. Please try again.',
           severity: 'error',
         });
       } finally {

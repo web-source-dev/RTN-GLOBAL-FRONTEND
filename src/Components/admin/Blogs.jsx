@@ -33,6 +33,7 @@ import {
   Comment as CommentIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import API from '../../BackendAPi/ApiProvider';
 
 const Blogs = () => {
   const theme = useTheme();
@@ -51,19 +52,8 @@ const Blogs = () => {
 
   const fetchBlogs = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/admin/blogs?page=${page + 1}&limit=${rowsPerPage}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
-      setBlogs(data.blogs || []);
+      const response = await API.get(`/api/admin/blogs?page=${page + 1}&limit=${rowsPerPage}`);
+      setBlogs(response.data.blogs || []);
     } catch (error) {
       console.error('Error fetching blogs:', error);
       setBlogs([]);
@@ -74,13 +64,8 @@ const Blogs = () => {
 
   const handleStatusChange = async (blogId, isActive) => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/admin/blogs/${blogId}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ isActive }),
+      await API.patch(`/api/admin/blogs/${blogId}/status`, {
+        isActive
       });
       fetchBlogs();
     } catch (error) {
@@ -95,12 +80,7 @@ const Blogs = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/admin/blogs/${selectedBlog._id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      await API.delete(`/api/admin/blogs/${selectedBlog._id}`);
       fetchBlogs();
       setDeleteDialogOpen(false);
     } catch (error) {
@@ -260,4 +240,4 @@ const Blogs = () => {
   );
 };
 
-export default Blogs; 
+export default Blogs;

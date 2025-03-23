@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import API from '../../BackendAPi/ApiProvider';
 import {
   Container,
   Typography,
@@ -29,7 +29,7 @@ const ManageConsultation = () => {
 
   const fetchConsultations = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/consultations`);
+      const response = await API.get('/api/admin/consultations');
       setConsultations(response.data);
     } catch (error) {
       console.error('Failed to fetch consultations', error);
@@ -38,7 +38,7 @@ const ManageConsultation = () => {
 
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/consultations/${id}`, { status: newStatus });
+      await API.put(`/api/admin/consultations/${id}`, { status: newStatus });
       fetchConsultations();
     } catch (error) {
       console.error('Failed to update consultation status', error);

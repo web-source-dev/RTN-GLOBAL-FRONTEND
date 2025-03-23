@@ -22,6 +22,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { format } from 'date-fns';
+import API from '../../BackendAPi/ApiProvider';
 
 const NotificationComponent = () => {
   const [notifications, setNotifications] = useState([]);
@@ -36,25 +37,12 @@ const NotificationComponent = () => {
 
   const fetchNotifications = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/user/notifications`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch notifications');
-
-      const data = await response.json();
-      setNotifications(data);
-      setUnreadCount(data.filter(notification => !notification.read).length);
+      setLoading(true);
+      const response = await API.get('/api/user/notifications');
+      setNotifications(response.data);
+      setUnreadCount(response.data.filter(notification => !notification.read).length);
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || 'Failed to fetch notifications');
       console.error('Error fetching notifications:', err);
     } finally {
       setLoading(false);
@@ -71,27 +59,17 @@ const NotificationComponent = () => {
 
   const markAsRead = async (notificationId) => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/user/notifications/${notificationId}/read`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }
-      );
-
-      if (!response.ok) throw new Error('Failed to mark notification as read');
-
-      setNotifications(prevNotifications =>
-        prevNotifications.map(notification =>
-          notification.id === notificationId
-            ? { ...notification, read: true }
-            : notification
-        )
-      );
-      setUnreadCount(prev => Math.max(0, prev - 1));
+      await API.post(`/api/user/notifications/${notificationId}/read`);
+      
+      // Update the notifications state
+      setNotifications(notifications.map(notification => 
+        notification.id === notificationId 
+          ? { ...notification, read: true } 
+          : notification
+      ));
+      
+      // Update unread count
+      setUnreadCount(prevCount => Math.max(0, prevCount - 1));
     } catch (err) {
       console.error('Error marking notification as read:', err);
     }
@@ -99,22 +77,10 @@ const NotificationComponent = () => {
 
   const markAllAsRead = async () => {
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/user/notifications/read-all`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        }
-      );
-
-      if (!response.ok) throw new Error('Failed to mark all notifications as read');
-
-      setNotifications(prevNotifications =>
-        prevNotifications.map(notification => ({ ...notification, read: true }))
-      );
+      await API.post('/api/user/notifications/read-all');
+      
+      // Update all notifications to read
+      setNotifications(notifications.map(notification => ({ ...notification, read: true })));
       setUnreadCount(0);
     } catch (err) {
       console.error('Error marking all notifications as read:', err);

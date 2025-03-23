@@ -70,12 +70,11 @@ function App() {
         <Router>
           <Routes>
             {/* User Dashboard Routes */}
-            <Route path="/user" element={<UserDashboard />}>
+            <Route path="/dashboard/user" element={<UserDashboard />}>
               <Route path="support" element={<UserSupportTickets />} />
               <Route path="applications" element={<UserJobApplications />} />
               <Route path="consultations" element={<UserConsultations />} />
                   <Route path="profile" element={<UserProfile />} />
-                  <Route path="" element={<UserJobApplications />} />
 
             </Route>
             <Route path="/livechat" element={<LiveChat />} />

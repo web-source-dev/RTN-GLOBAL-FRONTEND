@@ -14,7 +14,7 @@ import {
   Checkbox,
   Link,
 } from '@mui/material';
-
+import API from '../../BackendAPi/ApiProvider';
 
 const NewsletterForm = () => {
   const theme = useTheme();
@@ -57,19 +57,7 @@ const NewsletterForm = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await fetch('http://localhost:5000/api/forms/newsletter', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Something went wrong');
-        }
+        const response = await API.post('/api/forms/newsletter', formData);
 
         setSnackbar({
           open: true,
@@ -89,7 +77,7 @@ const NewsletterForm = () => {
       } catch (error) {
         setSnackbar({
           open: true,
-          message: error.message || 'Failed to subscribe to newsletter',
+          message: error.response?.data?.message || 'Failed to subscribe. Please try again.',
           severity: 'error'
         });
       }

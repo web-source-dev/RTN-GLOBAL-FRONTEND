@@ -34,7 +34,7 @@ import {
   Search as SearchIcon,
   GetApp as DownloadIcon,
 } from '@mui/icons-material';
-
+import API from '../../BackendAPi/ApiProvider';
 const statusColors = {
   'Pending': 'warning',
   'Reviewing': 'info',
@@ -62,13 +62,8 @@ const Jobs = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/admin/jobs?page=${page + 1}&limit=${rowsPerPage}&status=${statusFilter}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
+      const response = await API.get(
+        `/api/admin/jobs?page=${page + 1}&limit=${rowsPerPage}&status=${statusFilter}`
       );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -98,13 +93,8 @@ const Jobs = () => {
     }
 
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/admin/jobs/${applicationId}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ status: newStatus }),
+      await API.patch(`/api/admin/jobs/${applicationId}/status`, {
+        status: newStatus 
       });
       fetchApplications();
     } catch (error) {
@@ -114,16 +104,9 @@ const Jobs = () => {
 
   const handleInterviewSubmit = async () => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/admin/jobs/${selectedApplication._id}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({
-          status: 'Interview',
-          interviewDetails: interviewData
-        }),
+      await API.patch(`/api/admin/jobs/${selectedApplication._id}/status`, {
+        status: 'Interview',
+        interviewDetails: interviewData
       });
       setInterviewDialogOpen(false);
       setInterviewData({ date: '', time: '', notes: '' });
@@ -140,12 +123,7 @@ const Jobs = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/admin/job-applications/${selectedApplication._id}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      await API.delete(`/api/admin/job-applications/${selectedApplication._id}`);
       fetchApplications();
       setDeleteDialogOpen(false);
     } catch (error) {

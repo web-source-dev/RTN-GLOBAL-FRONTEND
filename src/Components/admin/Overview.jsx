@@ -18,6 +18,7 @@ import {
   Support as SupportIcon,
 } from '@mui/icons-material';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import API from '../../BackendAPi/ApiProvider';
 
 const StatCard = ({ title, value, icon: Icon, color }) => {
   const theme = useTheme();
@@ -70,15 +71,8 @@ const Overview = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/admin/stats/overview`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-      const data = await response.json();
+      const response = await API.get('/api/admin/stats/overview');
+      const data = response.data;
       setStats(data);
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -89,15 +83,8 @@ const Overview = () => {
 
   const fetchChartData = async () => {
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/admin/stats/chart`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-      const data = await response.json();
+      const response = await API.get('/api/admin/stats/chart');
+      const data = response.data;
       setChartData(data);
     } catch (error) {
       console.error('Error fetching chart data:', error);

@@ -15,6 +15,7 @@ import {
   Link,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import API from '../../BackendAPi/ApiProvider';
 
 const PRIORITY_LEVELS = [
   'Low',
@@ -86,37 +87,25 @@ const SupportForm = () => {
           }
         });
 
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/forms/support`, {
-          method: 'POST',
-          body: formDataToSend,
+        const response = await API.post('/api/forms/support', formDataToSend, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Something went wrong');
-        }
 
         setSnackbar({
           open: true,
-          message: `Support ticket ${data.ticketNumber} has been created. We'll get back to you soon!`,
+          message: `Support ticket #${response.data.ticketId} created successfully! We'll respond as soon as possible.`,
           severity: 'success'
         });
 
-        setFormData({
-          name: '',
-          email: '',
-          issueCategory: '',
-          priority: '',
-          subject: '',
-          description: '',
-          attachments: null,
-          subscribeToUpdates: true
-        });
+        setTimeout(() => {
+          navigate(`/support/ticket/${response.data.ticketId}`);
+        }, 2000);
       } catch (error) {
         setSnackbar({
           open: true,
-          message: error.message || 'Failed to submit support ticket',
+          message: error.response?.data?.message || 'Failed to create support ticket. Please try again.',
           severity: 'error'
         });
       }

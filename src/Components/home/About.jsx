@@ -37,7 +37,7 @@ const About = () => {
               >
                 <Box
                   component="img"
-                  src="/images/about/team.jpg"
+                  src="/images/about/about.png"
                   alt="Web Development Team"
                   sx={{
                     width: '100%',

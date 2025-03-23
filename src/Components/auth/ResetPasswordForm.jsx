@@ -17,7 +17,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import LockIcon from '@mui/icons-material/Lock';
-
+import API from '../../BackendAPi/ApiProvider';
 const ResetPasswordForm = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
@@ -44,18 +44,7 @@ const ResetPasswordForm = () => {
     const validateToken = async (token) => {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/validate-reset-token/${token}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Invalid token');
-        }
+        const response = await API.get(`/api/auth/validate-reset-token/${token}`);
         
         setTokenValid(true);
       } catch (error) {
@@ -72,7 +61,6 @@ const ResetPasswordForm = () => {
 
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
-    console.log(token);
     if (token) {
       validateToken(token);
     } else {
@@ -105,34 +93,16 @@ const ResetPasswordForm = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        setSnackbar({
-          open: true,
-          message: 'Resetting your password...',
-          severity: 'info',
-        });
-
         const params = new URLSearchParams(location.search);
         const token = params.get('token');
-
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/reset-password/${token}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            password: formData.password,
-          }),
+        
+        const response = await API.post(`/api/auth/reset-password/${token}`, {
+          password: formData.password
         });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Failed to reset password');
-        }
 
         setSnackbar({
           open: true,
-          message: 'Your password has been successfully reset! You can now log in with your new password.',
+          message: 'Password reset successful! You can now log in with your new password.',
           severity: 'success',
         });
 
@@ -142,7 +112,7 @@ const ResetPasswordForm = () => {
       } catch (error) {
         setSnackbar({
           open: true,
-          message: error.message || 'Failed to reset password. Please try again.',
+          message: error.response?.data?.message || 'Password reset failed. Please try again.',
           severity: 'error',
         });
       }

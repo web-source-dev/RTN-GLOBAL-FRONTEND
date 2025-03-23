@@ -2,7 +2,8 @@ import React, { createContext, useContext, useState, useMemo, useEffect } from '
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material/styles';
 import { getDesignTokens } from '../theme';
-import axios from 'axios';
+import API from '../BackendAPi/ApiProvider';
+import { useAuth } from './AuthContext';
 
 export const ThemeContext = createContext({
   mode: 'system',
@@ -14,20 +15,18 @@ export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
   const [mode, setMode] = useState('system');
+  const { user, isAuthenticated } = useAuth();
 
   // Get user preferences from database on mount
   useEffect(() => {
     const getUserPreferences = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (token) {
-          const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/auth/preferences`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+        if (isAuthenticated) {
+          const response = await API.get('/api/user/preferences');
           
-          if (response.data.preferences) {
+          if (response.data?.theme) {
             // Set theme preference
-            setMode(response.data.preferences.theme || getSystemTheme());
+            setMode(response.data.theme);
           } else {
             // Use system defaults if no preferences saved
             setMode(getSystemTheme());
@@ -44,7 +43,7 @@ export const ThemeProvider = ({ children }) => {
     };
 
     getUserPreferences();
-  }, []);
+  }, [isAuthenticated, user]);
 
   // Get system theme preference
   const getSystemTheme = () => {
@@ -56,10 +55,19 @@ export const ThemeProvider = ({ children }) => {
     if (mode === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       const handleChange = () => {
-        setMode(getSystemTheme());
+        // Just rerender with the new system value
+        setMode('system');
       };
-      mediaQuery.addListener(handleChange);
-      return () => mediaQuery.removeListener(handleChange);
+      
+      // Use the event listener approach based on browser support
+      if (mediaQuery.addEventListener) {
+        mediaQuery.addEventListener('change', handleChange);
+        return () => mediaQuery.removeEventListener('change', handleChange);
+      } else {
+        // Fallback for older browsers
+        mediaQuery.addListener(handleChange);
+        return () => mediaQuery.removeListener(handleChange);
+      }
     }
   }, [mode]);
 
@@ -77,15 +85,10 @@ export const ThemeProvider = ({ children }) => {
   // Update user preferences in database
   const updateUserPreferences = async (preferences) => {
     try {
-      const token = localStorage.getItem('token');
-      if (token) {
-        await axios.put(
-          `${process.env.REACT_APP_API_URL}/api/auth/preferences`,
-          preferences,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
+      if (isAuthenticated) {
+        await API.put('/api/user/preferences', { 
+          ...preferences 
+        });
       }
     } catch (error) {
       console.error('Error updating user preferences:', error);

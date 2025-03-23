@@ -33,6 +33,7 @@ import {
   Visibility
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
+import API from '../../BackendAPi/ApiProvider';
 
 const BlogPost = () => {
   const { id } = useParams();
@@ -56,15 +57,9 @@ const BlogPost = () => {
   const fetchBlogAndComments = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/blogs/${id}`);
-      
-      if (!response.ok) {
-        throw new Error('Blog not found');
-      }
-      
-      const data = await response.json();
-      setBlog(data);
-      setComments(data.comments || []);
+      const response = await API.get(`/api/blogs/${id}`);
+      setBlog(response.data);
+      setComments(response.data.comments || []);
       fetchRelatedBlogs();
     } catch (err) {
       setError(err.message);
@@ -75,11 +70,8 @@ const BlogPost = () => {
 
   const fetchRelatedBlogs = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/blogs`);
-      if (response.ok) {
-        const data = await response.json();
-        setRelatedBlogs(data.filter(b => b._id !== id).slice(0, 3));
-      }
+      const response = await API.get('/api/blogs');
+      setRelatedBlogs(response.data.filter(b => b._id !== id).slice(0, 3));
     } catch (err) {
       console.error('Error fetching related blogs:', err);
     }
@@ -92,20 +84,12 @@ const BlogPost = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/blogs/${id}/like`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      if (response.ok) {
-        const updatedBlog = await response.json();
-        setBlog(prev => ({
-          ...prev,
-          ...updatedBlog,
-          author: prev.author
-        }));
-      }
+      const response = await API.post(`/api/blogs/${id}/like`);
+      setBlog(prev => ({
+        ...prev,
+        ...response.data,
+        author: prev.author
+      }));
     } catch (err) {
       setError('Failed to like blog');
     }
@@ -119,19 +103,11 @@ const BlogPost = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/blogs/${id}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ content: comment }),
+      const response = await API.post(`/api/blogs/${id}/comments`, {
+        content: comment
       });
-      if (response.ok) {
-        const newComment = await response.json();
-        setComments([...comments, newComment]);
-        setComment('');
-      }
+      setComments(prev => [...prev, response.data]);
+      setComment('');
     } catch (err) {
       setError('Failed to post comment');
     }
@@ -143,22 +119,18 @@ const BlogPost = () => {
       return;
     }
 
+    if (!replyText[commentId]?.trim()) return;
+
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/blogs/${id}/comments/${commentId}/replies`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-          body: JSON.stringify({ content: replyText[commentId] }),
-        }
-      );
-      if (response.ok) {
-        fetchBlogAndComments();
-        setReplyText({ ...replyText, [commentId]: '' });
-      }
+      const response = await API.post(`/api/blogs/${id}/comments/${commentId}/replies`, {
+        content: replyText[commentId]
+      });
+      fetchBlogAndComments();
+      setReplyText(prev => ({
+        ...prev,
+        [commentId]: ''
+      }));
+      setExpandedComment(null);
     } catch (err) {
       setError('Failed to post reply');
     }
@@ -171,32 +143,8 @@ const BlogPost = () => {
     }
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/blogs/${id}/comments/${commentId}/like`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        }
-      );
-      if (response.ok) {
-        const updatedComment = await response.json();
-        setComments(comments.map(c => {
-          if (c._id === commentId) {
-            return {
-              ...c,
-              ...updatedComment,
-              user: c.user,
-              replies: c.replies.map(r => ({
-                ...r,
-                user: r.user
-              }))
-            };
-          }
-          return c;
-        }));
-      }
+      await API.post(`/api/blogs/${id}/comments/${commentId}/like`);
+      fetchBlogAndComments();
     } catch (err) {
       setError('Failed to like comment');
     }
@@ -209,34 +157,25 @@ const BlogPost = () => {
     }
 
     try {
-
-  const blogUrl = `${window.location.origin}/blogs/${id}`;
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'Check out this blog!',
-        url: blogUrl,
-      });
-    } catch (error) {
-      console.error('Error sharing:', error);
-    }
-  } else {
-    try {
-      await navigator.clipboard.writeText(blogUrl);
-      alert('Blog link copied to clipboard!');
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  }
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/blogs/${id}/share`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
+      const blogUrl = `${window.location.origin}/blogs/${id}`;
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Check out this blog!',
+            url: blogUrl,
+          });
+        } catch (error) {
+          console.error('Error sharing:', error);
         }
-      );
+      } else {
+        try {
+          await navigator.clipboard.writeText(blogUrl);
+          alert('Blog link copied to clipboard!');
+        } catch (err) {
+          console.error('Failed to copy:', err);
+        }
+      }
+      const response = await API.post('/api/blogs/share');
       if (response.ok) {
         const updatedBlog = await response.json();
         setBlog(prev => ({

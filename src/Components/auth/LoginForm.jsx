@@ -18,7 +18,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
-
+import API from '../../BackendAPi/ApiProvider';
 const LoginForm = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
@@ -56,23 +56,13 @@ const LoginForm = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Login failed');
-        }
-
-        // Store the token in localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        const response = await API.post('/api/auth/login', formData);
+        
+        // No need to store token in localStorage anymore
+        // Cookies are handled automatically by the browser
+        
+        // Store user data in localStorage (if needed)
+        localStorage.setItem('user', JSON.stringify(response.data.user));
 
         setSnackbar({
           open: true,
@@ -80,14 +70,13 @@ const LoginForm = () => {
           severity: 'success',
         });
 
-        // Redirect to dashboard or home page after successful login
         setTimeout(() => {
           window.location.href = '/';
         }, 1500);
       } catch (error) {
         setSnackbar({
           open: true,
-          message: error.message || 'Login failed. Please try again.',
+          message: error.response?.data?.message || 'Login failed. Please try again.',
           severity: 'error',
         });
       }

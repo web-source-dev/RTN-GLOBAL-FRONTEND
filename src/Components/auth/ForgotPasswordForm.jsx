@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import EmailIcon from '@mui/icons-material/Email';
+import API from '../../BackendAPi/ApiProvider';
 
 const ForgotPasswordForm = () => {
   const theme = useTheme();
@@ -49,19 +50,7 @@ const ForgotPasswordForm = () => {
           severity: 'info',
         });
 
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/forgot-password`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || 'Failed to send reset instructions');
-        }
+        const response = await API.post('/api/auth/forgot-password', { email });
 
         setSnackbar({
           open: true,
@@ -72,7 +61,7 @@ const ForgotPasswordForm = () => {
       } catch (error) {
         setSnackbar({
           open: true,
-          message: error.message || 'Failed to send reset instructions. Please try again.',
+          message: error.response?.data?.message || 'Failed to send reset instructions. Please try again.',
           severity: 'error',
         });
         setError('An error occurred while processing your request');

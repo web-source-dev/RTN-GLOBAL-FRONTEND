@@ -20,6 +20,7 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import API from '../../BackendAPi/ApiProvider';
 
 const priorityColors = {
   'Low': 'info',
@@ -107,6 +108,7 @@ const TicketStatus = () => {
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [comment, setComment] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -116,7 +118,7 @@ const TicketStatus = () => {
     setError('');
     setTicket(null);
     try {
-      const response = await fetch(`http://localhost:5000/api/forms/support/ticket/${ticketNumber}`);
+      const response = await API.get(`/api/forms/support/ticket/${ticketNumber}`);
       
       if (!response.ok) {
         const errorData = await response.json();
@@ -126,9 +128,24 @@ const TicketStatus = () => {
       const data = await response.json();
       setTicket(data.data);
     } catch (error) {
-      setError(error.message);
+      setError(error.response?.data?.message || 'Failed to retrieve ticket information. Please check the ticket ID and try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!comment.trim()) return;
+
+    try {
+      const response = await API.post(`/api/support/ticket/${ticket.ticketId}/comment`, {
+        comment: comment
+      });
+
+      setTicket(response.data);
+      setComment('');
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to add comment. Please try again.');
     }
   };
 

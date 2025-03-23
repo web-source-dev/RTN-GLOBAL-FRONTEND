@@ -20,6 +20,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import TranslateIcon from '@mui/icons-material/Translate';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SecurityIcon from '@mui/icons-material/Security';
+import API from '../../BackendAPi/ApiProvider';
 
 const UserSettings = () => {
   const theme = useTheme();
@@ -38,16 +39,15 @@ const UserSettings = () => {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await response.json();
-      setSettings(data.preferences);
+      setLoading(true);
+      const response = await API.get('/api/user/preferences');
+      setSettings(response.data);
     } catch (error) {
       console.error('Error fetching settings:', error);
-      setMessage({ type: 'error', text: 'Failed to load settings' });
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || 'Failed to load settings' 
+      });
     } finally {
       setLoading(false);
     }
@@ -56,21 +56,16 @@ const UserSettings = () => {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/preferences`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(settings)
-      });
+      await API.put('/api/user/preferences', settings);
+      setMessage({ type: 'success', text: 'Settings updated successfully' });
       
-      if (response.ok) {
-        setMessage({ type: 'success', text: 'Settings updated successfully' });
-        setTimeout(() => window.location.reload(), 1500);
-      }
+      // Reload page after brief delay to apply new settings
+      setTimeout(() => window.location.reload(), 1500);
     } catch (error) {
-      setMessage({ type: 'error', text: 'Error updating settings' });
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || 'Error updating settings' 
+      });
     } finally {
       setSaving(false);
     }

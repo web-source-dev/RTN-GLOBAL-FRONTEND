@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, Alert, CircularProgress } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
+import API from '../../BackendAPi/ApiProvider';
 
 const UserJobApplications = () => {
   const { user } = useAuth();
@@ -14,19 +15,14 @@ const UserJobApplications = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/user/job-applications`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setApplications(data);
-      } else {
-        setMessage({ type: 'error', text: data.message || 'Error fetching applications' });
-      }
+      setLoading(true);
+      const response = await API.get('/api/user/job-applications');
+      setApplications(response.data);
     } catch (error) {
-      setMessage({ type: 'error', text: 'Error fetching applications' });
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || 'Error fetching applications' 
+      });
     } finally {
       setLoading(false);
     }

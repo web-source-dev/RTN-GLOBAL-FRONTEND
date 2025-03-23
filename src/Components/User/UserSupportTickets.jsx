@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, Alert, CircularProgress } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
+import API from '../../BackendAPi/ApiProvider';
 
 const UserSupportTickets = () => {
   const { user } = useAuth();
@@ -21,19 +22,14 @@ const UserSupportTickets = () => {
 
   const fetchTickets = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/user/support-tickets`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setTickets(data);
-      } else {
-        setMessage({ type: 'error', text: data.message || 'Error fetching tickets' });
-      }
+      setLoading(true);
+      const response = await API.get('/api/user/support-tickets');
+      setTickets(response.data);
     } catch (error) {
-      setMessage({ type: 'error', text: 'Error fetching tickets' });
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || 'Error fetching tickets' 
+      });
     } finally {
       setLoading(false);
     }
@@ -42,32 +38,29 @@ const UserSupportTickets = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/support/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          ...newTicket,
-          name: `${user.firstName} ${user.lastName}`,
-          email: user.email
-        })
+      setLoading(true);
+      const response = await API.post('/api/support/create', {
+        ...newTicket,
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email
       });
 
-      if (response.ok) {
-        setMessage({ type: 'success', text: 'Ticket created successfully' });
-        setOpenDialog(false);
-        fetchTickets();
-        setNewTicket({
-          issueCategory: '',
-          priority: '',
-          subject: '',
-          description: ''
-        });
-      }
+      setMessage({ type: 'success', text: 'Ticket created successfully' });
+      setOpenDialog(false);
+      fetchTickets();
+      setNewTicket({
+        issueCategory: '',
+        priority: '',
+        subject: '',
+        description: ''
+      });
     } catch (error) {
-      setMessage({ type: 'error', text: 'Error creating ticket' });
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || 'Error creating ticket' 
+      });
+    } finally {
+      setLoading(false);
     }
   };
 

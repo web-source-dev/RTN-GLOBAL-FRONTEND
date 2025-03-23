@@ -26,7 +26,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import LiveChat from '../support/LiveChat';
 import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
-
+import API from '../../BackendAPi/ApiProvider';
 const ChatDashboard = () => {
   const [sessions, setSessions] = useState([]);
   const [filteredSessions, setFilteredSessions] = useState([]);
@@ -61,17 +61,12 @@ const ChatDashboard = () => {
   };
 
   const getAuthConfig = () => ({
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`
-    }
+    // No need to manually set headers with token as cookies are automatically sent
   });
 
   const fetchSessions = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/chat/active-sessions`,
-        getAuthConfig()
-      );
+      const response = await API.get(`/api/chat/active-sessions`);
 
       if (response.data) {
         // Update sessions while preserving selected session state
@@ -133,11 +128,7 @@ const ChatDashboard = () => {
     event.stopPropagation();
     try {
       setLoading(true);
-      await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/chat/session/${sessionId}/end`,
-        {},
-        getAuthConfig()
-      );
+      await API.post(`/api/chat/session/${sessionId}/end`);
       
       if (selectedSession?._id === sessionId) {
         setSelectedSession(null);

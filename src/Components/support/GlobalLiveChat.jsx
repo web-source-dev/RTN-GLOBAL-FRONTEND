@@ -36,7 +36,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { useAuth } from '../../contexts/AuthContext';
-import axios from 'axios';
+import API from '../../BackendAPi/ApiProvider';
 import { io } from 'socket.io-client';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -47,7 +47,7 @@ const GlobalLiveChat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -92,10 +92,7 @@ const GlobalLiveChat = () => {
   const initializeChat = async () => {
     try {
       // Get or create global chat room
-      const roomResponse = await axios.get(
-        `${process.env.REACT_APP_API_URL}/api/global/chat/global`,
-        getAuthConfig()
-      );
+      const roomResponse = await API.get('/api/global/chat/global');
       setChatRoom(roomResponse.data);
 
       // Initialize socket connection
@@ -253,16 +250,12 @@ const GlobalLiveChat = () => {
       if (file) {
         const formData = new FormData();
         formData.append('file', file);
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_URL}/api/global/chat/upload`,
-          formData,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
+        const response = await API.post('/api/global/chat/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('token')}`
           }
-        );
+        });
         attachment = response.data;
       }
 
@@ -380,13 +373,10 @@ const GlobalLiveChat = () => {
     searchTimeoutRef.current = setTimeout(async () => {
       if (query.trim()) {
         try {
-          const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/global/chat/search/${chatRoom._id}`,
-            {
-              params: { query },
-              ...getAuthConfig()
-            }
-          );
+          const response = await API.get('/api/global/chat/search', {
+            params: { query },
+            ...getAuthConfig()
+          });
           setMessages(response.data);
         } catch (error) {
           setError('Error searching messages');
@@ -432,6 +422,25 @@ const GlobalLiveChat = () => {
       }
     }
   });
+
+  useEffect(() => {
+    fetchMessages();
+    // Set up polling if needed
+    const interval = setInterval(fetchMessages, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const fetchMessages = async () => {
+    try {
+      setLoading(true);
+      const response = await API.get('/api/chat/global');
+      setMessages(response.data);
+    } catch (err) {
+      console.error('Error fetching messages:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Box sx={{ 

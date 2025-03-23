@@ -12,11 +12,10 @@ const UserSidebar = ({ onMobileClose }) => {
   const theme = useTheme();
 
   const menuItems = [
-    { text: 'Dashboard', icon: <DashboardIcon />, path: '/user/dashboard' },
-    { text: 'Profile', icon: <PersonIcon />, path: '/user/profile' },
-    { text: 'Support Tickets', icon: <SupportIcon />, path: '/user/support' },
-    { text: 'Job Applications', icon: <WorkIcon />, path: '/user/applications' },
-    { text: 'Consultations', icon: <EventNoteIcon />, path: '/user/consultations' },
+    { text: 'Profile', icon: <PersonIcon />, path: '/dashboard/user/profile' },
+    { text: 'Support Tickets', icon: <SupportIcon />, path: '/dashboard/user/support' },
+    { text: 'Job Applications', icon: <WorkIcon />, path: '/dashboard/user/applications' },
+    { text: 'Consultations', icon: <EventNoteIcon />, path: '/dashboard/user/consultations' },
   ];
 
   const handleClick = () => {
