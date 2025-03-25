@@ -6,6 +6,7 @@ import FeaturedGuides from './FeaturedGuides';
 import LatestResources from './LatestResources';
 import Newsletter from './Newsletter';
 import CTA from '../home/CTA';
+import NewsletterForm from '../forms/NewsletterForm';
 
 const MarketingGuidePage = () => {
   return (
@@ -14,7 +15,7 @@ const MarketingGuidePage = () => {
       <GuideCategories />
       <FeaturedGuides />
       <LatestResources />
-      <Newsletter />
+      <NewsletterForm />
       <CTA />
     </Box>
   );

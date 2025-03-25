@@ -1,31 +1,31 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { Box, Typography, Paper } from '@mui/material';
-import { styled, keyframes } from '@mui/material/styles';
+import React, { useRef, useState, useEffect } from 'react';
+import { Box, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 const sectionData = [
   {
     text: "Welcome to RTN Global",
     images: [
-      { src: "/images/portfolio/project1.png" },
-      { src: "/images/portfolio/project2.jpg" },
-      { src: "/images/portfolio/project3.jpg" },
-      { src: "/images/portfolio/project4.png" }
+      { src: "/images/portfolio/project1.png", width: 500, height: 350, position: 'left' },
+      { src: "/images/portfolio/project2.jpg", width: 600, height: 400, position: 'right' },
+      { src: "/images/portfolio/project3.jpg", width: 600, height: 400, position: 'center' },
+      { src: "/images/portfolio/project4.png", width: 400, height: 500, position: 'right' }
     ]
   },
   {
     text: "Our Projects",
     images: [
-      { src: "/images/portfolio/project3.jpg" },
-      { src: "/images/portfolio/project4.png" },
-      { src: "/images/portfolio/project5.jpg" },
-      { src: "/images/portfolio/project6.png" }
+      { src: "/images/portfolio/project5.jpg", width: 500, height: 500, position: 'left' },
+      { src: "/images/portfolio/project6.png", width: 300, height: 600, position: 'right' },
+      { src: "/images/portfolio/project1.png", width: 500, height: 200, position: 'left' },
+      { src: "/images/portfolio/project4.png", width: 400, height: 360, position: 'right' }
     ]
   }
 ];
 
 const Container = styled(Box)(({ theme }) => ({
   position: 'relative',
-  height: '600vh',
+  height: '400vh',
   backgroundColor: theme.palette.background.default
 }));
 
@@ -43,116 +43,202 @@ const StickyContainer = styled(Box)(({ theme }) => ({
 const StickText = styled(Typography)(({ theme }) => ({
   fontSize: '8vw',
   color: theme.palette.text.primary,
-  zIndex: 1,
+  zIndex: 10,
   mixBlendMode: 'difference',
   fontWeight: 'bold',
+  position: 'absolute',
+  textAlign: 'center',
   [theme.breakpoints.down('md')]: {
     fontSize: '12vw'
   }
 }));
 
-const floatAnimation = keyframes`
-  0% { transform: translateY(100vh); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(-100vh); opacity: 0; }
-`;
+const FloatingImage = styled('img')(({ 
+  position,
+  animationState,
+  width,
+  height
+}) => {
+  // Handle horizontal positioning
+  let translateX = '0%';
+  if (position === 'left') translateX = '-75%';
+  if (position === 'right') translateX = '75%';
+  
+  // Different animation states
+  let translateY = '120vh';  // Default - below viewport
+  let opacity = 0;  // Default - invisible
+  
+  if (animationState === 'active') {
+    translateY = '0vh';  // Center of viewport
+    opacity = 1;  // Fully visible
+  } else if (animationState === 'exited-top') {
+    translateY = '-120vh';  // Above viewport
+    opacity = 0;
+  } else if (animationState === 'exited-bottom') {
+    translateY = '120vh';  // Below viewport
+    opacity = 0;
+  }
 
-const fadeOutAnimation = keyframes`
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-50vh); opacity: 0; }
-`;
-
-const FloatingImage = styled('img')(({ theme, index, scrollProgress, isActive }) => ({
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  objectFit: 'cover',
-  opacity: isActive ? 1 : 0,
-  transform: `translateY(${(scrollProgress * 200) - 100}vh)`,
-  transition: 'opacity 0.5s ease-out, transform 0.3s ease-out'
-}));
+  return {
+    position: 'absolute',
+    width: `${width}px`,
+    height: `${height}px`,
+    objectFit: 'cover',
+    opacity: opacity,
+    transform: `translate(${translateX}, ${translateY})`,
+    transition: 'opacity 0.8s ease-out, transform 1.5s ease-out',
+    boxShadow: '0 8px 30px rgba(0,0,0,0.12)',
+    borderRadius: '8px',
+    maxWidth: '80vw',
+    maxHeight: '80vh',
+    zIndex: 1
+  };
+});
 
 const StickTextSection = () => {
   const containerRef = useRef(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [currentSection, setCurrentSection] = useState(0);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [activeImageIndex, setActiveImageIndex] = useState(-1);
+  const [sectionProgress, setSectionProgress] = useState(0);
+  const [scrollingUp, setScrollingUp] = useState(false);
+  const lastScrollTop = useRef(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
+  // Handle scrolling and animation state calculation
   useEffect(() => {
     const handleScroll = () => {
-      if (containerRef.current) {
-        const element = containerRef.current;
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const elementTop = element.offsetTop;
-        const elementHeight = element.offsetHeight - window.innerHeight;
+      if (!containerRef.current) return;
+      
+      const element = containerRef.current;
+      const scrollTop = window.scrollY;
+      const elementTop = element.offsetTop;
+      const elementHeight = element.offsetHeight - window.innerHeight;
+      
+      // Determine scroll direction
+      const isScrollingUp = scrollTop < lastScrollTop.current;
+      setScrollingUp(isScrollingUp);
+      lastScrollTop.current = scrollTop;
+      
+      // Calculate overall progress through the component
+      const progress = Math.max(0, Math.min(1, (scrollTop - elementTop) / elementHeight));
+      
+      // Determine which section we're in (0 or 1)
+      const targetSection = progress < 0.5 ? 0 : 1;
+      
+      // Handle section change
+      if (targetSection !== currentSection) {
+        setIsTransitioning(true);
+        setCurrentSection(targetSection);
+        setActiveImageIndex(-1);
         
-        const progress = Math.max(0, Math.min(1, (scrollTop - elementTop) / elementHeight));
-        setScrollProgress(progress);
+        // Brief delay before starting the first image in the new section
+        setTimeout(() => {
+          setActiveImageIndex(0);
+          setIsTransitioning(false);
+        }, 300);
+      }
+      
+      // Calculate progress within the current section (0-1)
+      const currentSectionProgress = targetSection === 0 
+        ? progress * 2  // First half
+        : (progress - 0.5) * 2;  // Second half
+      
+      setSectionProgress(currentSectionProgress);
+      
+      // If we're not in a section transition, update the active image based on scroll
+      if (!isTransitioning) {
+        const imageCount = sectionData[targetSection].images.length;
         
-        // Calculate current section and active image based on scroll progress
-        if (progress <= 0.4) {
-          setCurrentSection(0);
-          setActiveImageIndex(Math.floor(progress * 10));
-        } else if (progress > 0.4 && progress <= 0.5) {
-          setCurrentSection(0);
-          setActiveImageIndex(-1); // Hide all images during text transition
-        } else {
-          setCurrentSection(1);
-          setActiveImageIndex(Math.floor((progress - 0.5) * 10));
+        // Distribute images evenly across section, leaving room for enter/exit
+        // Each image gets (0.8 / imageCount) of the scroll distance
+        const segmentSize = 0.8 / imageCount;
+        const scrollOffset = 0.1; // Start 10% into the section
+        
+        // Calculate which image should be visible
+        let targetImageIndex = -1;
+        
+        for (let i = 0; i < imageCount; i++) {
+          const rangeStart = scrollOffset + (i * segmentSize);
+          const rangeEnd = rangeStart + segmentSize;
+          
+          if (currentSectionProgress >= rangeStart && currentSectionProgress < rangeEnd) {
+            targetImageIndex = i;
+            break;
+          }
+        }
+        
+        // If we're at the end of the section, show the last image
+        if (currentSectionProgress >= scrollOffset + (imageCount - 1) * segmentSize && 
+            currentSectionProgress <= 1) {
+          targetImageIndex = imageCount - 1;
+        }
+        
+        // Special handling when scrolling up - make sure we have a valid image
+        if (isScrollingUp && targetImageIndex === -1 && activeImageIndex > 0) {
+          targetImageIndex = activeImageIndex - 1;
+        }
+        
+        // Update active image if needed
+        if (targetImageIndex !== -1 && targetImageIndex !== activeImageIndex) {
+          setActiveImageIndex(targetImageIndex);
         }
       }
     };
 
+    // Initial setup and event listeners
     window.addEventListener('scroll', handleScroll);
     handleScroll();
+    
+    // Set first image active after initial render with a small delay
+    if (activeImageIndex === -1) {
+      setTimeout(() => {
+        setActiveImageIndex(0);
+      }, 500);
+    }
+    
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentSection, activeImageIndex, isTransitioning]);
+
+  // Determine animation state for each image
+  const getImageAnimationState = (index) => {
+    if (index === activeImageIndex) {
+      return 'active';
+    } else if (index < activeImageIndex) {
+      return scrollingUp ? 'exited-bottom' : 'exited-top';
+    } else {
+      return 'exited-bottom'; // Images not yet shown wait below
+    }
+  };
 
   return (
     <Container ref={containerRef}>
       <StickyContainer>
-        <StickText variant="h1" sx={{
+        <StickText sx={{
           opacity: currentSection === 0 ? 1 : 0,
           transform: currentSection === 0 ? 'translateY(0)' : 'translateY(-50vh)',
           transition: 'all 0.8s ease-in-out'
         }}>
           {sectionData[0].text}
         </StickText>
-        <StickText variant="h1" sx={{
-          position: 'absolute',
+        <StickText sx={{
           opacity: currentSection === 1 ? 1 : 0,
           transform: currentSection === 1 ? 'translateY(0)' : 'translateY(50vh)',
           transition: 'all 0.8s ease-in-out'
         }}>
           {sectionData[1].text}
         </StickText>
+        
+        {/* Current section images */}
         {sectionData[currentSection].images.map((image, index) => (
-          <Paper
-            key={`${currentSection}-${index}`}
-            elevation={4}
-            sx={{
-              position: 'absolute',
-              borderRadius: 2,
-              overflow: 'hidden',
-              width: `${20 + (index % 3) * 15}%`,
-              height: `${300 + (index % 4) * 80}px`,
-              left: `${15 + ((index * 23) % 65)}%`,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              opacity: index === activeImageIndex ? 1 : 0,
-              transition: 'opacity 0.5s ease-out',
-              zIndex: index
-            }}
-          >
-            <FloatingImage
-              src={image.src}
-              alt={`Project ${index + 1}`}
-              index={index}
-              scrollProgress={scrollProgress}
-              isActive={index === activeImageIndex}
-            />
-          </Paper>
+          <FloatingImage
+            key={`image-${currentSection}-${index}`}
+            src={image.src}
+            alt={`Project ${index + 1}`}
+            width={image.width}
+            height={image.height}
+            position={image.position}
+            animationState={getImageAnimationState(index)}
+          />
         ))}
       </StickyContainer>
     </Container>

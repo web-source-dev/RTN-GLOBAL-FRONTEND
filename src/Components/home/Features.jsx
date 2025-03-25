@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Paper, IconButton } from '@mui/material';
+import { Box, Container, Grid, Typography, Paper, IconButton, useTheme } from '@mui/material';
 import SpeedIcon from '@mui/icons-material/Speed';
 import DevicesIcon from '@mui/icons-material/Devices';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -47,8 +47,14 @@ const features = [
 ];
 
 const Features = () => {
+  const theme = useTheme();
+  
   return (
-    <Box py={8} sx={{ background: 'linear-gradient(145deg, #fafafa 0%, #f5f5f5 100%)' }}>
+    <Box py={8} sx={{ 
+      background: theme.palette.mode === 'light' 
+        ? 'linear-gradient(145deg, #fafafa 0%, #f5f5f5 100%)' 
+        : 'linear-gradient(145deg, #121212 0%, #1e1e1e 100%)'
+    }}>
       <Container>
         <Typography 
           variant="h2" 
@@ -56,7 +62,7 @@ const Features = () => {
           gutterBottom
           sx={{
             fontWeight: 700,
-            background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+            background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
             backgroundClip: 'text',
             textFillColor: 'transparent',
             WebkitBackgroundClip: 'text',
@@ -70,7 +76,8 @@ const Features = () => {
           color="text.secondary" 
           textAlign="center" 
           mb={6}
-          sx={{ maxWidth: '800px', mx: 'auto' }}        >
+          sx={{ maxWidth: '800px', mx: 'auto' }}        
+        >
           Discover the advantages that set our web development solutions apart
         </Typography>
         <Grid container spacing={4}>
@@ -81,6 +88,8 @@ const Features = () => {
                 sx={{
                   p: 4,
                   height: '100%',
+                  bgcolor: theme.palette.background.paper,
+                  color: theme.palette.text.primary,
                   transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                   '&:hover': {
                     transform: 'translateY(-8px)',
@@ -113,7 +122,7 @@ const Features = () => {
                 >
                   <feature.icon fontSize="large" />
                 </IconButton>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+                <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
                   {feature.title}
                 </Typography>
                 <Typography color="text.secondary">

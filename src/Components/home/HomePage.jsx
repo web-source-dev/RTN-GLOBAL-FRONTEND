@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import Hero from './Hero';
 import Features from './Features';
 import Services from './Services';
@@ -13,19 +13,23 @@ import Contact from './Contact';
 import NewsLetter from '../forms/NewsletterForm'
 import Marquee from '../common/Marquee';
 import StickTextSection from '../AnimatedSections/StickText';
+import TestimonialsAnim from '../AnimatedSections/TestimonialsAnim';
 
 const HomePage = () => {
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+
   return (
     <Box>
       <Hero />
       <Features />
       <Services />
       <Marquee />
-      <StickTextSection />
+      {isDesktop && <StickTextSection />}
       <About />
       <Stats />
       <Portfolio />
-      <Testimonials />
+      <TestimonialsAnim />
       <Blog />
       <Contact />
       <NewsLetter />

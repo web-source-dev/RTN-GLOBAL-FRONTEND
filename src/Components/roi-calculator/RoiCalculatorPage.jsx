@@ -6,6 +6,7 @@ import Benefits from './Benefits';
 import CaseStudies from './CaseStudies';
 import Testimonials from '../home/Testimonials';
 import CTA from '../home/CTA';
+import TestimonialsAnim from '../AnimatedSections/TestimonialsAnim';
 
 const RoiCalculatorPage = () => {
   return (
@@ -14,7 +15,7 @@ const RoiCalculatorPage = () => {
       <Calculator />
       <Benefits />
       <CaseStudies />
-      <Testimonials />
+      <TestimonialsAnim />
       <CTA />
     </Box>
   );

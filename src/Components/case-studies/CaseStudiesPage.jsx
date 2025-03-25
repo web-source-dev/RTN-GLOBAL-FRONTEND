@@ -6,6 +6,7 @@ import Industries from './Industries';
 import Results from './Results';
 import Testimonials from '../home/Testimonials';
 import CTA from '../home/CTA';
+import TestimonialsAnim from '../AnimatedSections/TestimonialsAnim';
 
 const CaseStudiesPage = () => {
   return (
@@ -14,7 +15,7 @@ const CaseStudiesPage = () => {
       <CasesList />
       <Industries />
       <Results />
-      <Testimonials />
+      <TestimonialsAnim />
       <CTA />
     </Box>
   );

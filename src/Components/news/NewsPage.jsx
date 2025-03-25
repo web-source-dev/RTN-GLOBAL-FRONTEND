@@ -4,8 +4,8 @@ import Hero from './Hero';
 import LatestNews from './LatestNews';
 import PressReleases from './PressReleases';
 import MediaCoverage from './MediaCoverage';
-import Newsletter from './Newsletter';
 import CTA from '../home/CTA';
+import NewsletterForm from '../forms/NewsletterForm';
 
 const NewsPage = () => {
   const [loaded, setLoaded] = useState(false);
@@ -21,7 +21,7 @@ const NewsPage = () => {
         <LatestNews />
         <PressReleases />
         <MediaCoverage />
-        <Newsletter />
+        <NewsletterForm />
         <CTA />
       </Box>
     </Fade>

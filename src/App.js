@@ -61,6 +61,7 @@ import TicketStatus from './Components/forms/TicketStatus';
 import FreeConsultationForm from './Components/forms/FreeConsultationForm';
 import ManageConsultation from './Components/admin/ManageConsultation';
 import UserProfile from './Components/profile/UserProfile';
+import SessionExpired from './Components/error/SessionExpired';
 
 function App() {
   return (
@@ -134,7 +135,8 @@ function App() {
                   <Route path="/free-consultation" element={<FreeConsultationForm />} />
                   <Route path="/sitemap" element={<Sitemap />} />
                   <Route path="/pricing" element={<Pricing />} />
-                  <Route path="/500" element={<ServerError />} />
+                  <Route path="/error/server-error" element={<ServerError />} />
+                  <Route path="/error/session-expired" element={<SessionExpired />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Card, CardContent, IconButton, Button } from '@mui/material';
+import { Box, Container, Grid, Typography, Card, CardContent, IconButton, Button, useTheme } from '@mui/material';
 import WebIcon from '@mui/icons-material/Web';
 import CodeIcon from '@mui/icons-material/Code';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
@@ -54,14 +54,20 @@ const services = [
 ];
 
 const Services = () => {
+  const theme = useTheme();
+  
   return (
-    <Box py={12} sx={{ background: 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)' }}>
+    <Box py={12} sx={{ 
+      background: theme.palette.mode === 'light' 
+        ? 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)' 
+        : 'linear-gradient(135deg, #121212 0%, #1e1e1e 100%)'
+    }}>
       <Container>
         <Box sx={{ textAlign: 'center', mb: 8 }}>
           <Typography
             component="span"
             sx={{
-              color: 'primary.main',
+              color: theme.palette.primary.main,
               fontWeight: 600,
               textTransform: 'uppercase',
               letterSpacing: 1.5,
@@ -76,7 +82,7 @@ const Services = () => {
             sx={{
               fontWeight: 800,
               mb: 2,
-              background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+              background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
               backgroundClip: 'text',
               textFillColor: 'transparent',
               WebkitBackgroundClip: 'text',
@@ -101,6 +107,8 @@ const Services = () => {
                 sx={{
                   height: '100%',
                   transition: 'all 0.3s ease',
+                  bgcolor: theme.palette.background.paper,
+                  color: theme.palette.text.primary,
                   '&:hover': {
                     transform: 'translateY(-8px)',
                     boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
@@ -143,7 +151,7 @@ const Services = () => {
                   >
                     <service.icon fontSize="large" />
                   </IconButton>
-                  <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+                  <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
                     {service.title}
                   </Typography>
                   <Typography color="text.secondary" paragraph>
@@ -181,6 +189,7 @@ const Services = () => {
                     sx={{
                       textTransform: 'none',
                       p: 0,
+                      color: theme.palette.text.secondary,
                       '& .arrow-icon': {
                         transition: 'transform 0.3s ease',
                       },
