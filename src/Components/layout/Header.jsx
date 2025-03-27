@@ -24,7 +24,8 @@ import {
   Tooltip,
   Grid,
   ListItemIcon,
-  CircularProgress
+  CircularProgress,
+  CardMedia
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -251,21 +252,12 @@ const renderMegaMenu = (
     <AppBar position="fixed" elevation={1}>
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-          <Typography
-            variant="h6"
-            noWrap
-            component={Link}
-            to="/"
-            sx={{
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              color: 'inherit',
-              textDecoration: 'none',
-              fontSize: { xs: '1.2rem', md: '1.5rem' },
-            }}
-          >
-            RTN GLOBAL
-          </Typography>
+        <CardMedia
+          component="img"
+          image="/rtnglobal-logo.png"
+          alt="Logo"
+          sx={{width: 50, height: 50,ml:2 }}
+        />
 
           {!isMobile && (
             <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
