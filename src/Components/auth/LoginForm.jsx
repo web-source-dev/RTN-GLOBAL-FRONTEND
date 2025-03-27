@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -13,12 +13,14 @@ import {
   InputAdornment,
   IconButton,
   CircularProgress,
+  Paper,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
+import LockClockIcon from '@mui/icons-material/LockClock';
 import API from '../../BackendAPi/ApiProvider';
 
 const LoginForm = () => {
@@ -35,12 +37,63 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [accountLocked, setAccountLocked] = useState(false);
-  const [lockExpires, setLockExpires] = useState(null);
+  const [remainingTime, setRemainingTime] = useState('');
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
     severity: 'success',
   });
+
+  // Check localStorage for existing lock when component mounts
+  useEffect(() => {
+    const lockInfo = localStorage.getItem('accountLockInfo');
+    if (lockInfo) {
+      const { email, lockExpires } = JSON.parse(lockInfo);
+      const expireTime = new Date(lockExpires);
+      
+      if (expireTime > new Date()) {
+        setAccountLocked(true);
+        setFormData(prev => ({ ...prev, email }));
+      } else {
+        // Lock has expired, clear it
+        localStorage.removeItem('accountLockInfo');
+      }
+    }
+  }, []);
+
+  // Set up countdown timer if account is locked
+  useEffect(() => {
+    let interval;
+    
+    if (accountLocked) {
+      interval = setInterval(() => {
+        const lockInfo = localStorage.getItem('accountLockInfo');
+        if (lockInfo) {
+          const { lockExpires } = JSON.parse(lockInfo);
+          const expireTime = new Date(lockExpires);
+          const now = new Date();
+          
+          if (expireTime > now) {
+            // Calculate remaining time
+            const diff = Math.max(0, expireTime - now);
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            setRemainingTime(`${minutes}:${seconds.toString().padStart(2, '0')}`);
+          } else {
+            // Lock has expired
+            clearInterval(interval);
+            setAccountLocked(false);
+            setRemainingTime('');
+            localStorage.removeItem('accountLockInfo');
+          }
+        }
+      }, 1000);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [accountLocked]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -82,12 +135,19 @@ const LoginForm = () => {
         
         // Handle account locked scenario
         if (error.response?.data?.accountLocked) {
+          const lockExpires = new Date(error.response.data.lockExpires);
+          
+          // Save lock info to localStorage
+          localStorage.setItem('accountLockInfo', JSON.stringify({
+            email: formData.email,
+            lockExpires: lockExpires.toISOString()
+          }));
+          
           setAccountLocked(true);
-          setLockExpires(new Date(error.response.data.lockExpires));
           
           setSnackbar({
             open: true,
-            message: error.response.data.message,
+            message: error.response.data.message || 'Account is temporarily locked due to too many failed attempts',
             severity: 'error',
           });
           return;
@@ -135,29 +195,15 @@ const LoginForm = () => {
     }
   };
 
-  // Calculate remaining lock time
-  const getRemainingLockTime = () => {
-    if (!lockExpires) return '';
-    
-    const now = new Date();
-    const diff = Math.max(0, lockExpires - now);
-    const minutes = Math.floor(diff / 60000);
-    const seconds = Math.floor((diff % 60000) / 1000);
-    
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
   return (
     <Box
       sx={{
         minHeight: '100vh',
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
         position: 'relative',
+        background: isDark
+          ? 'linear-gradient(to right bottom, #121212, #1a1a1a)'
+          : 'linear-gradient(to right bottom, #f5f5f5, #e0e0e0)',
         overflow: 'hidden',
       }}
     >
@@ -171,12 +217,13 @@ const LoginForm = () => {
           bottom: 0,
           opacity: 0.1,
           background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+                     radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
           zIndex: 1,
         }}
       />
-      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={4} alignItems="center">
+
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
+        <Grid container spacing={4} alignItems="center" sx={{ minHeight: '100vh' }}>
           {/* Left side - Illustration */}
           <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
             <Box
@@ -191,12 +238,12 @@ const LoginForm = () => {
               }}
             >
               <img
-                src="/images/auth/login.svg"
-                alt="Login"
-                style={{ maxWidth: '100%', height: 'auto', mixBlendMode: 'multiply' }}
+                src="/images/auth/secure-login.svg"
+                alt="Secure Login"
+                style={{ maxWidth: '100%', height: 'auto' }}
               />
               <Typography
-                variant="h5"
+                variant="h4"
                 sx={{
                   mt: 4,
                   fontWeight: 600,
@@ -207,10 +254,10 @@ const LoginForm = () => {
                   WebkitTextFillColor: 'transparent',
                 }}
               >
-                Welcome Back
+                Welcome Back!
               </Typography>
               <Typography color="text.secondary" sx={{ mt: 2 }}>
-                Sign in to access your account and continue your journey
+                Sign in to your account to continue your journey
               </Typography>
             </Box>
           </Grid>
@@ -232,43 +279,74 @@ const LoginForm = () => {
                 },
               }}
             >
-              <Typography
-                variant="h4"
-                textAlign="center"
-                sx={{
-                  fontWeight: 700,
-                  mb: 4,
-                  background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                  backgroundClip: 'text',
-                  textFillColor: 'transparent',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                }}
-              >
-                Welcome Back
-              </Typography>
-
               {accountLocked ? (
-                <Box sx={{ textAlign: 'center', p: 2 }}>
-                  <Alert severity="error" sx={{ mb: 2 }}>
-                    Your account is temporarily locked due to multiple failed login attempts.
-                  </Alert>
-                  <Typography variant="body1" sx={{ mb: 2 }}>
-                    Please try again in: {getRemainingLockTime()}
+                <Box
+                  sx={{
+                    textAlign: 'center',
+                    py: 4,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 2
+                  }}
+                >
+                  <LockClockIcon color="error" sx={{ fontSize: 60 }} />
+                  
+                  <Typography variant="h4" color="error" gutterBottom>
+                    Account Temporarily Locked
                   </Typography>
-                  <Button
-                    variant="outlined"
-                    onClick={() => {
-                      setAccountLocked(false);
-                      setLockExpires(null);
+                  
+                  <Typography variant="body1" paragraph>
+                    Too many failed login attempts. Please try again in:
+                  </Typography>
+                  
+                  <Paper 
+                    elevation={3} 
+                    sx={{ 
+                      py: 2, 
+                      px: 4, 
+                      borderRadius: 2,
+                      background: theme.palette.error.light,
+                      color: theme.palette.error.contrastText
                     }}
-                    sx={{ mt: 2 }}
                   >
-                    Try Different Account
-                  </Button>
+                    <Typography variant="h3" fontFamily="monospace">
+                      {remainingTime}
+                    </Typography>
+                  </Paper>
+                  
+                  <Box sx={{ mt: 2 }}>
+                    <Typography variant="body2" color="text.secondary">
+                      Forgot your password?{' '}
+                      <Link
+                        component={RouterLink}
+                        to="/auth/forgot-password"
+                        color="primary"
+                        underline="hover"
+                      >
+                        Reset it here
+                      </Link>
+                    </Typography>
+                  </Box>
                 </Box>
               ) : (
                 <form onSubmit={handleSubmit}>
+                  <Typography
+                    variant="h4"
+                    textAlign="center"
+                    sx={{
+                      fontWeight: 700,
+                      mb: 4,
+                      background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                      backgroundClip: 'text',
+                      textFillColor: 'transparent',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    Sign In
+                  </Typography>
+
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <TextField

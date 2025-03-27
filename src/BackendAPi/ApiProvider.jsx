@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://backend.myDomain.local:5000",
+  // baseURL: "http://backend.myDomain.local:5000",
+  baseURL: "https://backend.rtnglobal.site",
   withCredentials: true, // This ensures cookies are sent with requests
 });
 
