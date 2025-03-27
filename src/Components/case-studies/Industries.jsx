@@ -70,8 +70,8 @@ const Industries = () => {
       py={12}
       sx={{
         background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+          ? 'background.default'
+          : 'background.default',
         position: 'relative',
         overflow: 'hidden',
       }}

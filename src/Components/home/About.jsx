@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Paper, Button } from '@mui/material';
+import { Box, Container, Grid, Typography, Paper, Button, useTheme } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
@@ -11,8 +11,28 @@ const achievements = [
 ];
 
 const About = () => {
+  const theme = useTheme();
   return (
-    <Box py={12}>
+    <Box py={12}
+    sx={{
+      position: 'relative',
+      overflow: 'hidden',
+      background: theme.palette.background.default,
+    }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
       <Container>
         <Grid container spacing={8} alignItems="center">
           <Grid item xs={12} md={6}>

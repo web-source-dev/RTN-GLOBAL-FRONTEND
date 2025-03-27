@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const sectionData = [
   {
-    text: "Welcome to RTN Global",
+    text: "Our Projects",
     images: [
       { src: "/images/portfolio/project1.png", width: 500, height: 350, position: 'left' },
       { src: "/images/portfolio/project2.jpg", width: 600, height: 400, position: 'right' },
@@ -17,7 +17,7 @@ const sectionData = [
     images: [
       { src: "/images/portfolio/project5.jpg", width: 500, height: 500, position: 'left' },
       { src: "/images/portfolio/project6.png", width: 300, height: 600, position: 'right' },
-      { src: "/images/portfolio/project1.png", width: 500, height: 200, position: 'left' },
+      { src: "/images/portfolio/project1.png", width: 500, height: 500, position: 'left' },
       { src: "/images/portfolio/project4.png", width: 400, height: 360, position: 'right' }
     ]
   }
@@ -103,7 +103,7 @@ const StickTextSection = () => {
   const [scrollingUp, setScrollingUp] = useState(false);
   const lastScrollTop = useRef(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
-
+  const theme = useTheme();
   // Handle scrolling and animation state calculation
   useEffect(() => {
     const handleScroll = () => {
@@ -212,6 +212,19 @@ const StickTextSection = () => {
 
   return (
     <Container ref={containerRef}>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
       <StickyContainer>
         <StickText sx={{
           opacity: currentSection === 0 ? 1 : 0,

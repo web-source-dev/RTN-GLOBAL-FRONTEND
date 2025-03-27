@@ -58,10 +58,23 @@ const Services = () => {
   
   return (
     <Box py={12} sx={{ 
-      background: theme.palette.mode === 'light' 
-        ? 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)' 
-        : 'linear-gradient(135deg, #121212 0%, #1e1e1e 100%)'
+      position: 'relative',
+      overflow: 'hidden',
+      background: theme.palette.background.default,
     }}>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
       <Container>
         <Box sx={{ textAlign: 'center', mb: 8 }}>
           <Typography

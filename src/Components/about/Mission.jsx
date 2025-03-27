@@ -64,29 +64,22 @@ const Mission = () => {
       sx={{
         py: 12,
         position: 'relative',
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+        background: theme => theme.palette.mode.default,
         overflow: 'hidden'
       }}
     >
-      {/* Background Pattern with enhanced animation */}
-      <Box
+   {/* Background Pattern with enhanced animation */}
+   <Box
         sx={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          opacity: isDark ? 0.15 : 0.08,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 50%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 50%)`,
+          opacity: isDark ? 0.05 : 0.01,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
-          animation: 'pulse 15s infinite alternate',
-          '@keyframes pulse': {
-            '0%': { opacity: isDark ? 0.1 : 0.05 },
-            '100%': { opacity: isDark ? 0.2 : 0.1 }
-          }
         }}
       />
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>

@@ -62,11 +62,23 @@ const Benefits = () => {
     <Box 
       py={12} 
       sx={{ 
-        background: theme.palette.mode === 'dark'
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)'
+            background: theme.palette.background.default
       }}
     >
+       {/* Background Pattern with enhanced animation */}
+       <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
       <Container>
         <Typography
           variant="h2"
@@ -104,6 +116,17 @@ const Benefits = () => {
                   },
                 }}
               >
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '150px',
+                    height: '150px',
+                    background: `radial-gradient(circle at top right, ${benefit.color}15, transparent 70%)`,
+                    borderRadius: '0 0 0 100%',
+                  }}
+                />
                 <CardContent sx={{ p: 4, textAlign: 'center' }}>
                   <IconButton
                     sx={{

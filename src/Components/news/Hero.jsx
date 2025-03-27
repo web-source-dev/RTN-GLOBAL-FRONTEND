@@ -14,12 +14,27 @@ const Hero = () => {
 
   return (
     <Box
-      sx={{
-        backgroundColor: 'background.paper',
-        pt: 12,
-        pb: 8,
-      }}
-    >
+    sx={{
+      position: 'relative',
+      overflow: 'hidden',
+      background:theme.palette.background.default,
+      pt: 8,
+      pb: 8
+    }}
+  >
+     <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
       <Container maxWidth="xl">
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
@@ -56,12 +71,12 @@ const Hero = () => {
           <Grid item xs={12} md={6}>
             <Box
               component="img"
-              src="/images/news-hero.svg"
+              src="/images/news/news-hero.png"
               alt="News Hero"
               sx={{
                 width: '100%',
                 height: 'auto',
-                maxWidth: '600px',
+                maxWidth: '500px',
                 display: 'block',
                 mx: 'auto',
               }}

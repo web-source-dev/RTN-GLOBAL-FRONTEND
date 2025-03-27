@@ -189,7 +189,7 @@ const TestimonialsAnim = () => {
   // Content for left side
   const LeftContent = () => (
     <Box sx={{ height: "fit-content", width: "100%", mt: 10, mb: 10 }}>
-      <Box sx={{ mb: 10 }}>
+      <Box sx={{ mb: 5 }}>
         <Typography
           component="div"
           sx={{
@@ -219,7 +219,7 @@ const TestimonialsAnim = () => {
             color: theme.palette.text.primary,
           }}
         >
-          Clients <span style={{ color: theme.palette.text.secondary }}>Love me</span>
+          Clients <span style={{ color: theme.palette.text.secondary }}>Love us</span>
         </Typography>
 
         <Typography sx={{ color: theme.palette.text.secondary, fontSize: "15px" }}>
@@ -281,6 +281,9 @@ const TestimonialsAnim = () => {
             px: 3,
             py: 1.5,
             borderRadius: 1.5,
+            borderWidth: 1,
+            borderColor: theme.palette.text.primary, // Adjusted for better compatibility
+            borderStyle: "solid", // 🔹 Ensures the border is visible
             textTransform: "none",
             fontSize: "14px",
             "&:hover": { bgcolor: theme.palette.background.paper },
@@ -327,6 +330,21 @@ const TestimonialsAnim = () => {
       {/* Desktop Layout - Modified for better stacking */}
       {!isMobile && (
         <Box sx={{ bgcolor: theme.palette.background.default, position: "relative", minHeight: "100vh" }}>
+           {/* Background Pattern */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.1,
+          background: `radial-gradient(circle at 80% 80%, ${theme.palette.primary.main} 0%, transparent 40%),
+                      radial-gradient(circle at 20% 20%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          zIndex: 1,
+        }}
+      />
+
           <Container maxWidth="xl" sx={{ position: "relative" }}>
             <Box
               sx={{

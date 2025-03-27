@@ -16,7 +16,7 @@ const featuredTools = [
   {
     title: 'E-commerce Platform',
     description: 'Custom Wix website with advanced e-commerce capabilities',
-    image: '/images/tools/ecommerce-platform.jpg',
+    image: '/images/Tools/ecomtool.png',
     features: [
       'Custom product catalog',
       'Secure payment integration',
@@ -29,7 +29,7 @@ const featuredTools = [
   {
     title: 'Enterprise Web Portal',
     description: 'Full-stack MERN application for business process management',
-    image: '/images/tools/enterprise-portal.jpg',
+    image: '/images/Tools/WebPortal.png',
     features: [
       'User authentication',
       'Real-time data sync',
@@ -42,7 +42,7 @@ const featuredTools = [
   {
     title: 'Mobile Delivery App',
     description: 'React Native app for seamless delivery management',
-    image: '/images/tools/mobile-app.jpg',
+    image: '/images/Tools/MobileApp.jpg',
     features: [
       'GPS tracking',
       'Push notifications',
@@ -62,13 +62,24 @@ const FeaturedTools = () => {
     <Box
       py={12}
       sx={{
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+        background: theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden'
       }}
     >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"

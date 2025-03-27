@@ -15,11 +15,24 @@ const Hero = () => {
   return (
     <Box
       sx={{
-        backgroundColor: 'background.paper',
+        backgroundColor: 'background.defualt',
         pt: 12,
-        pb: 8,
+        pb: 12,
       }}
     >
+   <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.1,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          zIndex: 1,
+        }}
+      />
       <Container maxWidth="xl">
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
@@ -54,7 +67,7 @@ const Hero = () => {
           <Grid item xs={12} md={6}>
             <Box
               component="img"
-              src="/images/case-studies-hero.svg"
+              src="/assets/plugin.svg"
               alt="Case Studies Hero"
               sx={{
                 width: '100%',

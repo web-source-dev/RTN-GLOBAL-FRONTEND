@@ -279,7 +279,7 @@ const Footer = () => {
           }}
         >
           <Typography variant="body2" color="text.secondary" sx={{ fontFamily: '"Inter", sans-serif', fontWeight: 400 }}>
-            {new Date().getFullYear()} RTN Global. All rights reserved.
+            @ {new Date().getFullYear()} RTN Global. All rights reserved.
           </Typography>
           <Box
             sx={{
@@ -287,6 +287,23 @@ const Footer = () => {
               gap: 3,
             }}
           >
+             <Link
+              component={RouterLink}
+              to="/sitemap"
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth'
+                });
+              }}
+              color="text.secondary"
+              sx={{
+                textDecoration: 'none',
+                '&:hover': { color: 'primary.main' },
+              }}
+            >
+              Sitemap
+            </Link>
             <Link
               component={RouterLink}
               to="/disclaimer"

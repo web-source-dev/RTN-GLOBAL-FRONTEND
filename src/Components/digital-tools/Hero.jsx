@@ -15,11 +15,26 @@ const Hero = () => {
   return (
     <Box
       sx={{
-        backgroundColor: 'background.paper',
+        backgroundColor: theme.palette.background.default,
+        position: 'relative',
+        overflow: 'hidden',
         pt: 12,
         pb: 8,
       }}
-    >
+        >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
       <Container maxWidth="xl">
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
@@ -56,7 +71,7 @@ const Hero = () => {
           <Grid item xs={12} md={6}>
             <Box
               component="img"
-              src="/images/web-development-hero.svg"
+              src="/images/hero-illustration.png"
               alt="Web Development Services"
               sx={{
                 width: '100%',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Paper } from '@mui/material';
+import { Box, Container, Grid, Typography, Paper, useTheme } from '@mui/material';
 import CountUp from 'react-countup';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import GroupIcon from '@mui/icons-material/Group';
@@ -42,19 +42,29 @@ const stats = [
 ];
 
 const Stats = () => {
+  const theme = useTheme();
   return (
     <Box 
       py={12} 
       sx={{
-        background: (theme) => `linear-gradient(135deg, 
-          ${theme.palette.primary.dark} 0%,
-          ${theme.palette.primary.main} 50%,
-          ${theme.palette.secondary.main} 100%)`,
+        background: theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden',
       }}
     >
-      {/* Animated background elements */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
       {[...Array(3)].map((_, i) => (
         <Box
           key={i}

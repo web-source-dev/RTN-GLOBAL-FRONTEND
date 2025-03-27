@@ -10,63 +10,95 @@ import {
   Chip,
   Button,
   useTheme,
+  CardActions,
+  Stack,
 } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import LaunchIcon from '@mui/icons-material/Launch';
+import { Link } from 'react-router-dom';
 
-const cases = [
+const dummyCaseStudies = [
   {
-    title: 'E-commerce Revenue Growth',
-    client: 'Fashion Retailer',
-    industry: 'Retail',
-    description: 'Increased online sales by 200% through targeted digital marketing and SEO optimization',
-    image: '/images/case-studies/ecommerce.jpg',
-    results: {
-      revenue: '+200%',
-      traffic: '+150%',
-      conversion: '+75%'
-    },
-    tags: ['E-commerce', 'SEO', 'PPC']
+    id: 1,
+    title: 'SEO-Driven Traffic Growth',
+    excerpt: 'How strategic SEO increased organic traffic by 120% for an e-commerce brand.',
+    slug: 'seo-driven-traffic-growth',
+    industries: ['E-commerce', 'Retail'],
+    featuredImage: '/images/services/Seo.jpeg',
+    metrics: { improvement: 120, users: 10000, timeframe: '6 Months' },
   },
   {
-    title: 'B2B Lead Generation',
-    client: 'Software Company',
-    industry: 'Technology',
-    description: 'Generated 500+ qualified leads per month through integrated marketing campaign',
-    image: '/images/case-studies/b2b.jpg',
-    results: {
-      leads: '+300%',
-      meetings: '+200%',
-      roi: '+400%'
-    },
-    tags: ['B2B', 'Lead Gen', 'Content Marketing']
+    id: 2,
+    title: 'Content Marketing Success',
+    excerpt: 'A SaaS company tripled its lead generation with high-quality content.',
+    slug: 'content-marketing-success',
+    industries: ['Technology', 'SaaS'],
+    featuredImage: '/images/services/Content.jpeg',
+    metrics: { improvement: 200, users: 5000, timeframe: '8 Months' },
   },
   {
-    title: 'Brand Awareness Campaign',
-    client: 'Startup',
-    industry: 'Healthcare',
-    description: 'Increased brand visibility and engagement across social media platforms',
-    image: '/images/case-studies/brand.jpg',
-    results: {
-      reach: '+500%',
-      engagement: '+250%',
-      followers: '+300%'
-    },
-    tags: ['Branding', 'Social Media', 'Content']
+    id: 3,
+    title: 'Social Media Engagement Surge',
+    excerpt: 'A fashion brand saw a 300% increase in engagement with a viral campaign.',
+    slug: 'social-media-engagement-surge',
+    industries: ['Fashion', 'Retail'],
+    featuredImage: '/images/services/Socialmedia.jpeg',
+    metrics: { improvement: 300, users: 15000, timeframe: '3 Months' },
   },
   {
-    title: 'Local Business Growth',
-    client: 'Restaurant Chain',
-    industry: 'Food & Beverage',
-    description: 'Boosted local presence and customer acquisition through targeted campaigns',
-    image: '/images/case-studies/local.jpg',
-    results: {
-      customers: '+150%',
-      revenue: '+180%',
-      roi: '+300%'
-    },
-    tags: ['Local SEO', 'PPC', 'Social Media']
-  }
+    id: 4,
+    title: 'PPC Advertising ROI Boost',
+    excerpt: 'A B2B firm doubled its conversion rate using optimized PPC strategies.',
+    slug: 'ppc-advertising-roi-boost',
+    industries: ['B2B', 'Technology'],
+    featuredImage: '/images/services/ppc.jpeg',
+    metrics: { improvement: 100, users: 4000, timeframe: '5 Months' },
+  },
+  {
+    id: 5,
+    title: 'Email Marketing Growth',
+    excerpt: 'A subscription business improved customer retention by 65% through email automation.',
+    slug: 'email-marketing-retention-growth',
+    industries: ['Subscription', 'E-commerce'],
+    featuredImage: '/images/services/emailMarketing.jpeg',
+    metrics: { improvement: 65, users: 8000, timeframe: '7 Months' },
+  },
+  {
+    id: 6,
+    title: 'Web Development Success Story',
+    excerpt: 'A corporate website revamp increased visitor engagement by 85%.',
+    slug: 'web-development-success-story',
+    industries: ['Corporate', 'Finance'],
+    featuredImage: '/images/services/web2.jpeg',
+    metrics: { improvement: 85, users: 12000, timeframe: '4 Months' },
+  },
+  {
+    id: 7,
+    title: 'MERN Stack SaaS Platform',
+    excerpt: 'A startup built a scalable SaaS platform using MERN stack.',
+    slug: 'mern-stack-saas-platform',
+    industries: ['Technology', 'Startups'],
+    featuredImage: '/images/services/mern1.jpeg',
+    metrics: { improvement: 150, users: 20000, timeframe: '1 Year' },
+  },
+  {
+    id: 8,
+    title: 'React Native App Success',
+    excerpt: 'A mobile app startup grew its user base by 250% with a React Native app.',
+    slug: 'react-native-app-success',
+    industries: ['Mobile Apps', 'Startups'],
+    featuredImage: '/images/services/mobile1.jpeg',
+    metrics: { improvement: 250, users: 15000, timeframe: '6 Months' },
+  },
+  {
+    id: 9,
+    title: 'E-commerce Sales Funnel Optimization',
+    excerpt: 'A DTC brand increased sales by 70% with a revamped conversion funnel.',
+    slug: 'ecommerce-sales-funnel-optimization',
+    industries: ['E-commerce', 'Retail'],
+    featuredImage: '/images/services/ecom1.jpeg',
+    metrics: { improvement: 70, users: 9000, timeframe: '5 Months' },
+  },
 ];
 
 const CasesList = () => {
@@ -74,23 +106,39 @@ const CasesList = () => {
   const isDark = theme.palette.mode === 'dark';
   const [filter, setFilter] = useState('All');
 
-  const industries = ['All', ...new Set(cases.map(c => c.industry))];
+  // Extract all unique industries and flatten the array
+  const allIndustries = dummyCaseStudies.flatMap(study => study.industries);
+  const uniqueIndustries = ['All', ...new Set(allIndustries)];
 
   const filteredCases = filter === 'All' 
-    ? cases 
-    : cases.filter(c => c.industry === filter);
+    ? dummyCaseStudies 
+    : dummyCaseStudies.filter(study => study.industries.includes(filter));
 
   return (
     <Box
-      py={12}
+    py={12}
+    sx={{
+      background: isDark
+        ? 'background.default'
+        : 'background.default',
+      position: 'relative',
+      overflow: 'hidden',
+    }}
+  >
+    {/* Background Pattern */}
+    <Box
       sx={{
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
-        position: 'relative',
-        overflow: 'hidden'
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        opacity: isDark ? 0.1 : 0.05,
+        background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
+                    radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+        zIndex: 1,
       }}
-    >
+    />
       <Container maxWidth="lg">
         <Typography
           variant="h2"
@@ -116,129 +164,87 @@ const CasesList = () => {
           Discover how we've helped businesses achieve remarkable growth through digital marketing
         </Typography>
 
-        <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center', gap: 2, flexWrap: 'wrap' }}>
-          {industries.map((industry) => (
-            <Button
+        {/* Industry filters */}
+        <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 1 }}>
+          {uniqueIndustries.map((industry) => (
+            <Chip
               key={industry}
-              variant={filter === industry ? 'contained' : 'outlined'}
+              label={industry}
               onClick={() => setFilter(industry)}
-              sx={{
-                borderRadius: '20px',
-                px: 3,
-                py: 1,
-                '&:hover': {
-                  transform: 'translateY(-2px)',
-                }
-              }}
-            >
-              {industry}
-            </Button>
+              color={filter === industry ? 'primary' : 'default'}
+              variant={filter === industry ? 'filled' : 'outlined'}
+              sx={{ m: 0.5 }}
+            />
           ))}
         </Box>
 
+        {/* Case studies grid */}
         <Grid container spacing={4}>
-          {filteredCases.map((case_, index) => (
-            <Grid item xs={12} md={6} key={index}>
-              <Card
-                sx={{
-                  height: '100%',
-                  transition: 'all 0.3s ease',
+          {filteredCases.map((caseStudy) => (
+            <Grid item xs={12} sm={6} md={4} key={caseStudy.id}>
+              <Card 
+                sx={{ 
+                  height: '100%', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  transition: 'transform 0.3s, box-shadow 0.3s',
                   '&:hover': {
                     transform: 'translateY(-8px)',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                    '& .case-image': {
-                      transform: 'scale(1.1)'
-                    }
-                  },
-                  overflow: 'hidden'
+                    boxShadow: 8,
+                  }
                 }}
               >
-                <Box sx={{ position: 'relative', pt: '56.25%', overflow: 'hidden' }}>
-                  <CardMedia
-                    component="img"
-                    image={case_.image}
-                    alt={case_.title}
-                    className="case-image"
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      width: '100%',
-                      height: '100%',
-                      transition: 'transform 0.6s ease'
-                    }}
-                  />
-                </Box>
-
-                <CardContent sx={{ p: 4 }}>
-                  <Typography
-                    variant="overline"
-                    sx={{ color: theme.palette.primary.main, fontWeight: 600 }}
-                  >
-                    {case_.client} • {case_.industry}
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={caseStudy.featuredImage}
+                  alt={caseStudy.title}
+                />
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
+                    {caseStudy.title}
                   </Typography>
-
-                  <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, my: 2 }}>
-                    {case_.title}
+                  <Typography variant="body1" color="text.secondary" paragraph>
+                    {caseStudy.excerpt}
                   </Typography>
-
-                  <Typography color="text.secondary" paragraph>
-                    {case_.description}
-                  </Typography>
-
-                  <Grid container spacing={2} sx={{ mb: 3 }}>
-                    {Object.entries(case_.results).map(([key, value]) => (
-                      <Grid item xs={4} key={key}>
-                        <Box
-                          sx={{
-                            p: 2,
-                            borderRadius: 2,
-                            bgcolor: `${theme.palette.primary.main}10`,
-                            textAlign: 'center'
-                          }}
-                        >
-                          <Typography
-                            variant="h6"
-                            sx={{ color: theme.palette.primary.main, fontWeight: 700 }}
-                          >
-                            {value}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {key}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    ))}
-                  </Grid>
-
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 3 }}>
-                    {case_.tags.map((tag, idx) => (
-                      <Chip
-                        key={idx}
-                        label={tag}
-                        size="small"
-                        sx={{
-                          bgcolor: `${theme.palette.primary.main}15`,
-                          color: theme.palette.primary.main
-                        }}
+                  <Stack direction="row" spacing={1} sx={{ mt: 2, mb: 1, flexWrap: 'wrap', gap: 0.5 }}>
+                    {caseStudy.industries.map((industry) => (
+                      <Chip 
+                        key={industry} 
+                        label={industry} 
+                        size="small" 
+                        sx={{ mr: 0.5, mb: 0.5 }}
                       />
                     ))}
+                  </Stack>
+                  <Box 
+                    sx={{ 
+                      display: 'flex', 
+                      alignItems: 'center',
+                      mt: 2,
+                      p: 1.5,
+                      bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
+                      borderRadius: 1
+                    }}
+                  >
+                    <TrendingUpIcon color="success" sx={{ mr: 1 }} />
+                    <Typography variant="body2" fontWeight="medium">
+                      {caseStudy.metrics.improvement}% improvement • {caseStudy.metrics.users.toLocaleString()} users • {caseStudy.metrics.timeframe}
+                    </Typography>
                   </Box>
-
-                  <Button
-                    variant="outlined"
+                </CardContent>
+                <CardActions sx={{ p: 2, pt: 0 }}>
+                  <Button 
+                    component={Link} 
+                    to={`/case-studies/${caseStudy.slug}`}
+                    variant="contained" 
+                    color="primary" 
                     endIcon={<LaunchIcon />}
                     fullWidth
-                    sx={{
-                      mt: 2,
-                      borderRadius: 2,
-                      '&:hover': {
-                        transform: 'translateY(-2px)'
-                      }
-                    }}
                   >
                     View Case Study
                   </Button>
-                </CardContent>
+                </CardActions>
               </Card>
             </Grid>
           ))}

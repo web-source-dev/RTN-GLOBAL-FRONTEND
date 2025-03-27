@@ -1,18 +1,16 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import Hero from './Hero';
-import Leadership from './Leadership';
-import TeamMembers from './TeamMembers';
 import Culture from './Culture';
 import JoinTeam from './JoinTeam';
 import CTA from '../home/CTA';
+import Team from '../AnimatedSections/Team';
 
 const TeamPage = () => {
   return (
     <Box>
       <Hero />
-      <Leadership />
-      <TeamMembers />
+      <Team />
       <Culture />
       <JoinTeam />
       <CTA />

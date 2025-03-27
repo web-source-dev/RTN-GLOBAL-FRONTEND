@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box, CardMedia, useMediaQuery, useTheme } from '@mui/material';
 import Hero from './Hero';
 import Features from './Features';
 import Services from './Services';
@@ -14,6 +14,7 @@ import NewsLetter from '../forms/NewsletterForm'
 import Marquee from '../common/Marquee';
 import StickTextSection from '../AnimatedSections/StickText';
 import TestimonialsAnim from '../AnimatedSections/TestimonialsAnim';
+import MegaHero from '../AnimatedSections/Hero';
 
 const HomePage = () => {
   const theme = useTheme();
@@ -22,9 +23,10 @@ const HomePage = () => {
   return (
     <Box>
       <Hero />
+     
       <Features />
-      <Services />
       <Marquee />
+      <Services />
       {isDesktop && <StickTextSection />}
       <About />
       <Stats />

@@ -108,20 +108,20 @@ const Contact = () => {
         }}
       >
         {/* Background Design Elements */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 0.05,
-            background: (theme) =>
-              theme.palette.mode === 'dark'
-                ? 'radial-gradient(circle at 20% 150%, primary.light 0%, transparent 50%)'
-                : 'radial-gradient(circle at 20% 150%, primary.main 0%, transparent 50%)',
-          }}
-        />
+              {/* Background Pattern with enhanced animation */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 5%)`,
+          zIndex: 1,
+        }}
+      />
         <Box
           sx={{
             position: 'absolute',

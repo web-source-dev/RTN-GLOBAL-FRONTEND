@@ -58,8 +58,8 @@ const Results = () => {
       py={12}
       sx={{
         background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+          ? 'background.defualt'
+          : 'background.defualt',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -73,8 +73,8 @@ const Results = () => {
           right: 0,
           bottom: 0,
           opacity: isDark ? 0.1 : 0.05,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          background: `radial-gradient(circle at 80% 80%, ${theme.palette.primary.main} 0%, transparent 40%),
+                      radial-gradient(circle at 20% 20%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
           zIndex: 1,
         }}
       />

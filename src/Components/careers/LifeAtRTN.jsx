@@ -12,40 +12,40 @@ import {
 
 const experiences = [
   {
-    title: 'Collaborative Workspace',
-    description: 'Modern office spaces designed for collaboration and creativity',
-    image: '/images/careers/workspace.jpg',
-    category: 'Environment'
+    title: 'Cutting-Edge Web Development',
+    description: 'A workspace dedicated to crafting high-quality web solutions with the latest technologies.',
+    image: '/images/careers/web-development.jpg',
+    category: 'Technology'
   },
   {
-    title: 'Team Building',
-    description: 'Regular team activities and events to strengthen relationships',
-    image: '/images/careers/team-building.jpg',
+    title: 'Team-Driven Innovation',
+    description: 'A culture of collaboration where developers, designers, and strategists build together.',
+    image: '/images/careers/team-culture.jpg',
     category: 'Culture'
   },
   {
-    title: 'Learning Sessions',
-    description: 'Weekly knowledge sharing and skill development workshops',
-    image: '/images/careers/learning.jpg',
+    title: 'Continuous Learning & Growth',
+    description: 'Workshops, tech talks, and mentorship to stay ahead in the fast-evolving web industry.',
+    image: '/images/careers/learning-growth.jpg',
     category: 'Growth'
   },
   {
-    title: 'Work-Life Balance',
-    description: 'Flexible schedules and remote work options for better balance',
-    image: '/images/careers/work-life.jpg',
+    title: 'Flexible & Remote Work',
+    description: 'A hybrid work environment that prioritizes work-life balance and productivity.',
+    image: '/images/careers/flexible-work.jpg',
     category: 'Lifestyle'
   },
   {
-    title: 'Social Impact',
-    description: 'Community involvement and sustainability initiatives',
-    image: '/images/careers/social-impact.jpg',
+    title: 'Community & Social Impact',
+    description: 'We believe in giving back through open-source contributions and social initiatives.',
+    image: '/images/careers/community-impact.png',
     category: 'Community'
   },
   {
-    title: 'Innovation Hub',
-    description: 'State-of-the-art facilities for creative digital solutions',
-    image: '/images/careers/innovation.jpg',
-    category: 'Technology'
+    title: 'State-of-the-Art Development Hub',
+    description: 'An inspiring workspace equipped with the best tools for web development excellence.',
+    image: '/images/careers/dev-hub.jpg',
+    category: 'Environment'
   }
 ];
 
@@ -57,9 +57,7 @@ const LifeAtRTN = () => {
     <Box
       py={12}
       sx={{
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+        background: theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden'
       }}
@@ -72,9 +70,9 @@ const LifeAtRTN = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          opacity: isDark ? 0.1 : 0.05,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 30%)`,
           zIndex: 1
         }}
       />

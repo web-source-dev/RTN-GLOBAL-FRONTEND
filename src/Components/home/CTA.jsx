@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography, Button, Paper, keyframes } from '@mui/material';
+import { Box, Container, Typography, Button, Paper, keyframes, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 const pulseAnimation = keyframes`
@@ -16,6 +16,8 @@ const floatingAnimation = keyframes`
 
 const CTA = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === 'dark';
 
   const handleConsultationClick = () => {
     navigate('/free-consultation');
@@ -24,7 +26,7 @@ const CTA = () => {
   return (
     <Box sx={{
         position: 'relative',
-        bgcolor: 'primary.main',
+        bgcolor: isDarkMode ? 'background.defualt' : 'primary.main',
         pt: 8,
         pb: 32,
         '&::after': {
@@ -38,6 +40,7 @@ const CTA = () => {
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
           backgroundSize: 'cover',
+          opacity: isDarkMode ? 0.05 : 1
         }
       }}>
       <Container maxWidth="lg">
@@ -46,28 +49,33 @@ const CTA = () => {
           sx={{
             p: { xs: 4, md: 6 },
             textAlign: 'center',
-             backgroundSize: 'cover',
+            backgroundSize: 'cover',
             backgroundPosition: 'center',
-            color: 'white',
+            color: isDarkMode ? 'text.primary' : 'white',
+            backgroundColor: isDarkMode ? 'background.default' : 'background.default',
             position: 'relative',
             overflow: 'hidden',
-            borderRadius: (theme) => theme.shape.borderRadius,
-            boxShadow: '0 10px 40px rgba(0,0,0,0.3)',
+            borderRadius: theme.shape.borderRadius,
+            boxShadow: isDarkMode 
+              ? '0 10px 40px rgba(0,0,0,0.5)' 
+              : '0 10px 40px rgba(0,0,0,0.3)',
             transition: 'transform 0.3s ease-in-out',
             '&:hover': {
               transform: 'translateY(-5px)'
             },
             '&::before': {
               content: '""',
-            background: 'linear-gradient(135deg, rgba(0,0,0,0.9), rgba(0,0,0,0.7)), url(https://cdn.pixabay.com/photo/2018/02/16/10/52/web-design-3157323_1280.jpg)',
+              background: isDarkMode
+                ? 'linear-gradient(135deg, rgba(30,30,30,0.9), rgba(20,20,20,0.7)), url(https://cdn.pixabay.com/photo/2018/02/16/10/52/web-design-3157323_1280.jpg)'
+                : 'linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgb(0, 0, 0)), url(https://cdn.pixabay.com/photo/2018/02/16/10/52/web-design-3157323_1280.jpg)',
               top: '-20px',
               right: '-20px',
               width: '200px',
               height: '200px',
               background: 'url(https://cdn.pixabay.com/photo/2018/04/06/13/46/modern-3295556_1280.png)',
-            borderRadius: 4,
+              borderRadius: 4,
               backgroundRepeat: 'no-repeat',
-              opacity: 0.2,
+              opacity: isDarkMode ? 0.1 : 0.2,
               animation: `${floatingAnimation} 3s ease-in-out infinite`
             },
             '&::after': {
@@ -80,17 +88,34 @@ const CTA = () => {
               background: 'url(https://cdn.pixabay.com/photo/2017/01/29/13/21/mobile-devices-2017978_1280.png)',
               backgroundSize: 'contain',
               backgroundRepeat: 'no-repeat',
-              opacity: 0.2,
+              opacity: isDarkMode ? 0.1 : 0.2,
               animation: `${floatingAnimation} 4s ease-in-out infinite`
             }
           }}
         >
+           {/* Background Pattern */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: isDarkMode ? 0.1 : 0.05,
+          background: `radial-gradient(circle at 80% 80%, ${theme.palette.primary.main} 0%, transparent 40%),
+                      radial-gradient(circle at 20% 20%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          zIndex: 1,
+        }}
+      />
+
           <Typography 
             variant="h2" 
             gutterBottom
             sx={{
               fontWeight: 700,
-              background: (theme) => `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+              background: isDarkMode
+                ? `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`
+                : `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
               backgroundClip: 'text',
               textFillColor: 'transparent',
               WebkitBackgroundClip: 'text',
@@ -104,7 +129,7 @@ const CTA = () => {
             variant="h5" 
             paragraph 
             sx={{ 
-                color: 'text.primary',
+              color: isDarkMode ? 'text.secondary' : 'text.primary',
               fontWeight: 300,
               letterSpacing: 0.5
             }}
@@ -118,15 +143,24 @@ const CTA = () => {
             sx={{
               px: 4,
               py: 1.5,
-              background: (theme) => `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+              background: isDarkMode
+                ? `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`
+                : `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
               fontSize: '1.2rem',
               fontWeight: 600,
               borderRadius: '30px',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.25)',
+              boxShadow: isDarkMode 
+                ? `0 4px 20px ${theme.palette.primary.main}33`
+                : '0 4px 20px rgba(0,0,0,0.25)',
               animation: `${pulseAnimation} 2s infinite`,
               '&:hover': {
+                background: isDarkMode
+                  ? `linear-gradient(45deg, ${theme.palette.primary.light}, ${theme.palette.primary.main})`
+                  : `linear-gradient(45deg, ${theme.palette.secondary.main}, ${theme.palette.primary.main})`,
                 transform: 'scale(1.05)',
-                boxShadow: '0 6px 25px rgba(0,0,0,0.3)'
+                boxShadow: isDarkMode
+                  ? `0 6px 25px ${theme.palette.primary.main}66`
+                  : '0 6px 25px rgba(0,0,0,0.3)'
               }
             }}
           >

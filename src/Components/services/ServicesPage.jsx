@@ -6,15 +6,18 @@ import Benefits from '../roi-calculator/Benefits';
 import CaseStudies from '../case-studies/Industries';
 import Testimonials from '../home/Testimonials';
 import CTA from '../home/CTA';
+import MegaHero from '../AnimatedSections/Hero';
+import TestimonialsAnim from '../AnimatedSections/TestimonialsAnim';
 
 const ServicesPage = () => {
   return (
     <Box>
+      <MegaHero />
       <Hero />
       <ServicesGrid />
       <Benefits />
       <CaseStudies />
-      <Testimonials />
+      <TestimonialsAnim/>
       <CTA />
     </Box>
   );
