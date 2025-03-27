@@ -33,7 +33,7 @@ const About = () => {
           zIndex: 1,
         }}
       />
-      <Container>
+      <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Grid container spacing={8} alignItems="center">
           <Grid item xs={12} md={6}>
             <Box position="relative">

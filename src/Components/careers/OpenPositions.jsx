@@ -45,8 +45,25 @@ const OpenPositions = () => {
   const theme = useTheme();
 
   return (
-    <Box py={12}>
-      <Container>
+    <Box py={12} sx={{ background: theme.palette.background.default ,
+      position: 'relative',
+      overflow: 'hidden',
+    }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.1,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
+      <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
           textAlign="center"

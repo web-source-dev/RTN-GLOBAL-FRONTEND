@@ -1,13 +1,33 @@
 import React from 'react';
-import { Box, Button, Typography, Container, Stack } from '@mui/material';
+import { Box, Button, Typography, Container, Stack, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ChatIcon from '@mui/icons-material/Chat';
 
 const LiveChatSection = () => {
   const navigate = useNavigate();
-
+  const theme = useTheme();
   return (
-    <Container maxWidth="md" sx={{ mb: 15,mt: 15 }}>
+    <Box
+      sx={{
+        background: theme.palette.background.default,
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.1,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
+    <Container maxWidth="md" sx={{ mb: 15,mt: 15, position: 'relative', zIndex: 2 }}>
       <Box
         sx={{
           display: 'flex',
@@ -67,6 +87,7 @@ const LiveChatSection = () => {
         </Stack>
       </Box>
     </Container>
+    </Box>
   );
 };
 

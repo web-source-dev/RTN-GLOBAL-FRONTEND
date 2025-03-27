@@ -95,7 +95,7 @@ const ToolsGrid = () => {
           zIndex: 1,
         }}
       />
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
           align="center"

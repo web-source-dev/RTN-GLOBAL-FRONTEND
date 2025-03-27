@@ -164,7 +164,7 @@ const JoinTeam = () => {
         }}
       />
 
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
         <Box
           component={motion.div}
           initial={{ opacity: 0, y: 50 }}

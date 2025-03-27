@@ -52,7 +52,7 @@ const Leadership = () => {
           : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)'
       }}
     >
-      <Container>
+      <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Box textAlign="center" mb={8}>
           <Typography
             variant="h2"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -12,10 +12,10 @@ import {
   useTheme,
   FormControlLabel,
   Checkbox,
-  Link,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import API from '../../BackendAPi/ApiProvider';
+import { useAuth } from '../../contexts/AuthContext';
 
 const PRIORITY_LEVELS = [
   'Low',
@@ -23,7 +23,6 @@ const PRIORITY_LEVELS = [
   'High',
   'Critical'
 ];
-
 
 const ISSUE_CATEGORIES = [
   'Technical Issue',
@@ -37,8 +36,9 @@ const ISSUE_CATEGORIES = [
 const SupportForm = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
-
-  const navigate = useNavigate()
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -49,6 +49,17 @@ const SupportForm = () => {
     attachments: null,
     subscribeToUpdates: true
   });
+
+  useEffect(() => {
+    // Pre-fill user information if logged in
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.firstName ? `${user.firstName} ${user.lastName || ''}` : prev.name,
+        email: user.email || prev.email
+      }));
+    }
+  }, [user]);
 
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({
@@ -93,14 +104,16 @@ const SupportForm = () => {
           },
         });
 
+        // Updated to use ticketNumber from the response
         setSnackbar({
           open: true,
-          message: `Support ticket #${response.data.ticketId} created successfully! We'll respond as soon as possible.`,
+          message: `Support ticket #${response.data.ticketNumber} created successfully! We'll respond as soon as possible.`,
           severity: 'success'
         });
 
+        // Navigate to the user's support tickets page after successful submission
         setTimeout(() => {
-          navigate(`/support/ticket/${response.data.ticketId}`);
+          navigate('/dashboard/user/support-tickets');
         }, 2000);
       } catch (error) {
         setSnackbar({
@@ -181,6 +194,7 @@ const SupportForm = () => {
                 error={!!errors.name}
                 helperText={errors.name}
                 required
+                disabled={!!user} // Disable if user is logged in
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -194,6 +208,7 @@ const SupportForm = () => {
                 error={!!errors.email}
                 helperText={errors.email}
                 required
+                disabled={!!user} // Disable if user is logged in
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -315,7 +330,6 @@ const SupportForm = () => {
                 >
                   Submit Support Ticket
                 </Button>
-               
               </Box>
             </Grid>
           </Grid>

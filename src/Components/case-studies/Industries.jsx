@@ -69,9 +69,7 @@ const Industries = () => {
     <Box
       py={12}
       sx={{
-        background: isDark
-          ? 'background.default'
-          : 'background.default',
+        background: theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -84,9 +82,9 @@ const Industries = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          opacity: isDark ? 0.1 : 0.05,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
       />

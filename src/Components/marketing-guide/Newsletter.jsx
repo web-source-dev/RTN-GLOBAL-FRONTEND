@@ -41,9 +41,7 @@ const Newsletter = () => {
     <Box
       py={12}
       sx={{
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+        background: theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden'
       }}
@@ -56,7 +54,7 @@ const Newsletter = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          opacity: isDark ? 0.1 : 0.05,
+          opacity: 0.1,
           background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
           zIndex: 1
@@ -66,9 +64,7 @@ const Newsletter = () => {
       <Container maxWidth="md" sx={{ position: 'relative', zIndex: 2 }}>
         <Card
           sx={{
-            background: isDark
-              ? 'rgba(255,255,255,0.05)'
-              : 'rgba(255,255,255,0.8)',
+            background: theme.palette.background.paper,
             backdropFilter: 'blur(20px)',
             borderRadius: 4,
             overflow: 'hidden',

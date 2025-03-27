@@ -103,9 +103,7 @@ const Testimonials = () => {
       py={12} 
       sx={{ 
         bgcolor: 'background.default',
-        background: theme.palette.mode === 'dark' 
-          ? 'linear-gradient(to bottom, #1a1a1a, #2d2d2d)'
-          : 'linear-gradient(to bottom, #f5f5f5, #ffffff)',
+        background: theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -124,7 +122,7 @@ const Testimonials = () => {
         }}
       />
 
-      <Container maxWidth="lg" sx={{ position: 'relative' }}>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Box textAlign="center" mb={8}>
           <Typography
             component="span"

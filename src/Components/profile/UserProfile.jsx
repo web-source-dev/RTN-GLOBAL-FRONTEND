@@ -161,25 +161,31 @@ const UserProfile = () => {
     const formData = new FormData();
     formData.append('avatar', file);
     
-    // Add all other fields to formData
-    Object.keys(userData).forEach(key => {
-      if (key === 'skills' || key === 'experience' || key === 'education' || key === 'socialLinks' || key === 'businessDetails') {
-        formData.append(key, JSON.stringify(userData[key]));
-      } else {
-        formData.append(key, userData[key]);
-      }
-    });
-
     try {
-      const response = await API.put('/api/user/profile', formData);
-
-      if (response.ok) {
-        const updatedUser = await response.json();
-        setUserData(updatedUser);
-        setIsEditing(false);
-      }
+      setLoading(true);
+      const response = await API.post('/api/user/profile/avatar', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      // Update the avatar in the local state
+      setUserData(prevData => ({
+        ...prevData,
+        avatar: response.data.avatar
+      }));
+      
+      setSuccess('Avatar uploaded successfully');
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccess(null);
+      }, 3000);
     } catch (error) {
       console.error('Error uploading image:', error);
+      setError(error.response?.data?.message || 'Failed to upload image');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -465,7 +471,7 @@ const UserProfile = () => {
             {userData.businessDetails?.businessName && (
               <Box>
                 <Typography variant="subtitle2" color="text.secondary">Business Name</Typography>
-                <Typography variant="body1">{userData.businessDetails.businessName}</Typography>
+                <Typography variant="body1">{userData.businessDetails.businessName} {userData.businessDetails.businessName ? 'Yes' : 'No'}</Typography>
               </Box>
             )}
             
@@ -757,25 +763,36 @@ const UserProfile = () => {
     <Box
       py={6}
       sx={{
-        background: theme.palette.mode === 'dark'
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
-        minHeight: '100vh'
+        background: theme.palette.background.default,
+        position: 'relative',
+        overflow: 'auto',
       }}
     >
-      <Container maxWidth="lg">
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.1,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Grid container spacing={4}>
           {/* Left Column - Profile Image and Tabs */}
-          <Grid item xs={12} md={4}>
+          {/* stick left column with right column */}
+          <Grid item xs={12} md={4} sx={{ position: 'sticky', top: 40 }}>
             <Card 
               elevation={0}
               sx={{ 
-                position: 'sticky',
+                  position: 'sticky',
                 top: 40,
                 borderRadius: 2,
-                background: theme.palette.mode === 'dark'
-                  ? 'linear-gradient(145deg, #2d2d2d 0%, #1a1a1a 100%)'
-                  : 'linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)',
+                background: theme.palette.background.paper,
               }}
             >
               <CardContent>
@@ -833,7 +850,6 @@ const UserProfile = () => {
                   <Tab icon={<PersonIcon />} label="Profile" iconPosition="start" />
                   <Tab icon={<BusinessIcon />} label="Business" iconPosition="start" />
                   <Tab icon={<LanguageIcon />} label="Social" iconPosition="start" />
-                  <Tab icon={<SettingsIcon />} label="Settings" iconPosition="start" />
                   <Tab icon={<SecurityIcon />} label="Security" iconPosition="start" />
                 </Tabs>
               </CardContent>
@@ -888,9 +904,6 @@ const UserProfile = () => {
                   {renderSocialLinks()}
                 </TabPanel>
                 <TabPanel value={activeTab} index={3}>
-                  <UserSettings />
-                </TabPanel>
-                <TabPanel value={activeTab} index={4}>
                   {renderSecuritySettings()}
                 </TabPanel>
               </CardContent>

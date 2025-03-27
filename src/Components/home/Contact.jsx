@@ -137,7 +137,7 @@ const Contact = () => {
           }}
         />
 
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
           {/* Ready to Grow Section */}
           <Box mb={12} textAlign="center">
             <Typography

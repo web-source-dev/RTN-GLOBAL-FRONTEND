@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, Alert, CircularProgress } from '@mui/material';
 import { useAuth } from '../../contexts/AuthContext';
 import API from '../../BackendAPi/ApiProvider';
-
+import { useNavigate } from 'react-router-dom';
 const UserSupportTickets = () => {
   const { user } = useAuth();
   const [tickets, setTickets] = useState([]);
@@ -15,6 +15,8 @@ const UserSupportTickets = () => {
     subject: '',
     description: ''
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchTickets();
@@ -29,35 +31,6 @@ const UserSupportTickets = () => {
       setMessage({ 
         type: 'error', 
         text: error.response?.data?.message || 'Error fetching tickets' 
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const response = await API.post('/api/support/create', {
-        ...newTicket,
-        name: `${user.firstName} ${user.lastName}`,
-        email: user.email
-      });
-
-      setMessage({ type: 'success', text: 'Ticket created successfully' });
-      setOpenDialog(false);
-      fetchTickets();
-      setNewTicket({
-        issueCategory: '',
-        priority: '',
-        subject: '',
-        description: ''
-      });
-    } catch (error) {
-      setMessage({ 
-        type: 'error', 
-        text: error.response?.data?.message || 'Error creating ticket' 
       });
     } finally {
       setLoading(false);
@@ -93,7 +66,7 @@ const UserSupportTickets = () => {
   }
 
   return (
-    <Box>
+    <Box sx={{ position: 'relative', zIndex: 2 ,p:3}}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h5" sx={{ fontWeight: 'medium' }}>
           Support Tickets
@@ -101,7 +74,7 @@ const UserSupportTickets = () => {
         <Button 
           variant="contained" 
           color="primary"
-          onClick={() => setOpenDialog(true)}
+          onClick={() => navigate('/support')}
           sx={{
             borderRadius: 2,
             transition: 'all 0.3s ease-in-out',
@@ -189,95 +162,6 @@ const UserSupportTickets = () => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      <Dialog 
-        open={openDialog} 
-        onClose={() => setOpenDialog(false)} 
-        maxWidth="sm" 
-        fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: 2,
-            boxShadow: 3
-          }
-        }}
-      >
-        <DialogTitle sx={{ pb: 1 }}>Create New Support Ticket</DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <DialogContent sx={{ pb: 2 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <TextField
-                select
-                label="Issue Category"
-                value={newTicket.issueCategory}
-                onChange={(e) => setNewTicket({ ...newTicket, issueCategory: e.target.value })}
-                required
-                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
-              >
-                <MenuItem value="Technical">Technical</MenuItem>
-                <MenuItem value="Billing">Billing</MenuItem>
-                <MenuItem value="Account">Account</MenuItem>
-                <MenuItem value="Other">Other</MenuItem>
-              </TextField>
-
-              <TextField
-                select
-                label="Priority"
-                value={newTicket.priority}
-                onChange={(e) => setNewTicket({ ...newTicket, priority: e.target.value })}
-                required
-                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
-              >
-                <MenuItem value="Low">Low</MenuItem>
-                <MenuItem value="Medium">Medium</MenuItem>
-                <MenuItem value="High">High</MenuItem>
-                <MenuItem value="Critical">Critical</MenuItem>
-              </TextField>
-
-              <TextField
-                label="Subject"
-                value={newTicket.subject}
-                onChange={(e) => setNewTicket({ ...newTicket, subject: e.target.value })}
-                required
-                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
-              />
-
-              <TextField
-                label="Description"
-                value={newTicket.description}
-                onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })}
-                multiline
-                rows={4}
-                required
-                sx={{ '& .MuiOutlinedInput-root': { borderRadius: 1 } }}
-              />
-            </Box>
-          </DialogContent>
-          <DialogActions sx={{ px: 3, pb: 2 }}>
-            <Button 
-              onClick={() => setOpenDialog(false)}
-              sx={{ borderRadius: 1 }}
-            >
-              Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              variant="contained" 
-              color="primary"
-              sx={{
-                borderRadius: 1,
-                transition: 'all 0.3s ease-in-out',
-                '&:hover': {
-                  transform: 'translateY(-1px)',
-                  boxShadow: 2
-                }
-              }}
-            >
-              Create Ticket
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
     </Box>
   );
 };

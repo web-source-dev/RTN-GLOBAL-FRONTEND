@@ -62,6 +62,10 @@ import FreeConsultationForm from './Components/forms/FreeConsultationForm';
 import ManageConsultation from './Components/admin/ManageConsultation';
 import UserProfile from './Components/profile/UserProfile';
 import SessionExpired from './Components/error/SessionExpired';
+import PaymentPage from './Pages/PaymentPage';
+import VerifyInvoice from './Pages/VerifyInvoice';
+import VerifyReceipt from './Pages/VerifyReceipt';
+import EmailVerificationForm from './Components/auth/EmailVerificationForm';
 
 function App() {
   return (
@@ -137,6 +141,10 @@ function App() {
                   <Route path="/pricing" element={<Pricing />} />
                   <Route path="/error/server-error" element={<ServerError />} />
                   <Route path="/error/session-expired" element={<SessionExpired />} />
+                  <Route path="/payment/:id" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
+                  <Route path="/verify-invoice/:invoiceNumber" element={<VerifyInvoice />} />
+                  <Route path="/verify-receipt/:receiptNumber" element={<VerifyReceipt />} />
+                  <Route path="/auth/verify-email" element={<EmailVerificationForm />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>

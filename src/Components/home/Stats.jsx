@@ -87,7 +87,7 @@ const Stats = () => {
         />
       ))}
 
-      <Container>
+      <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Grid container spacing={4} justifyContent="center">
           {stats.map((stat, index) => (
             <Grid item xs={12} sm={6} md={3} key={index}>
@@ -97,7 +97,7 @@ const Stats = () => {
                   p: 4,
                   height: '100%',
                   textAlign: 'center',
-                  background: 'rgba(255,255,255,0.05)',
+                  background: theme.palette.background.alternate,
                   backdropFilter: 'blur(10px)',
                   borderRadius: 2,
                   position: 'relative',
@@ -130,7 +130,7 @@ const Stats = () => {
                   variant="h2"
                   sx={{
                     fontWeight: 700,
-                    color: 'white',
+                    color: theme.palette.text.primary,
                     mb: 1,
                     fontSize: { xs: '2.5rem', md: '3rem' },
                   }}
@@ -147,7 +147,7 @@ const Stats = () => {
                   variant="h5"
                   sx={{
                     fontWeight: 500,
-                    color: 'white',
+                    color: theme.palette.text.primary,
                     mb: 2,
                   }}
                 >
@@ -155,7 +155,7 @@ const Stats = () => {
                 </Typography>
                 <Typography
                   sx={{
-                    color: 'rgba(255,255,255,0.7)',
+                    color: theme.palette.text.secondary,
                     fontSize: '0.9rem',
                   }}
                 >

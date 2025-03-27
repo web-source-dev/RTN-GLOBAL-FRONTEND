@@ -139,7 +139,7 @@ const CasesList = () => {
         zIndex: 1,
       }}
     />
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
           textAlign="center"

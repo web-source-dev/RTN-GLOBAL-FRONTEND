@@ -152,9 +152,9 @@ const UserSettings = () => {
         alignItems="center"
         minHeight="100vh"
         sx={{
-          background: theme.palette.mode === 'dark'
-            ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-            : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+          background: theme.palette.background.default,
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
         <CircularProgress />
@@ -167,12 +167,12 @@ const UserSettings = () => {
       <Box
         py={12}
         sx={{
-          background: theme.palette.mode === 'dark'
-            ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-            : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+          background: theme.palette.background.default,
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
           <Typography
             variant="h2"
             textAlign="center"
@@ -266,10 +266,10 @@ const UserSettings = () => {
                 px: 6,
                 py: 2,
                 borderRadius: 3,
-                background: theme.palette.mode === 'dark'
-                  ? 'linear-gradient(45deg, #90caf9, #ce93d8)'
-                  : 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                color: theme.palette.mode === 'dark' ? '#000' : '#fff',
+                  background: theme.palette.mode === 'dark'
+                    ? 'linear-gradient(45deg, #90caf9, #ce93d8)'
+                    : 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                  color: theme.palette.mode === 'dark' ? '#000' : '#fff',
                 fontWeight: 600,
                 textTransform: 'none',
                 fontSize: '1.1rem',

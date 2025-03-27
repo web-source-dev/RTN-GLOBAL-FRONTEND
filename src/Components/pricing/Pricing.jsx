@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography, Grid, Paper, Button, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Button, List, ListItem, ListItemIcon, ListItemText, useTheme } from '@mui/material';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const PricingTier = ({ title, price, features, isPopular }) => (
@@ -62,6 +62,7 @@ const PricingTier = ({ title, price, features, isPopular }) => (
 );
 
 const Pricing = () => {
+  const theme = useTheme();
     const pricingTiers = [
         {
           title: 'Basic Maintenance',
@@ -208,7 +209,20 @@ const Pricing = () => {
       
   return (
     <Box sx={{ py: 8, backgroundColor: 'background.default' }}>
-      <Container maxWidth="lg">
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Box sx={{ textAlign: 'center', mb: 8 }}>
           <Typography variant="h2" component="h1" gutterBottom>
             Simple, Transparent Pricing

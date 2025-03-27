@@ -69,12 +69,26 @@ const FaqCategories = () => {
     <Box
       py={8}
       sx={{
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+        background: theme.palette.background.default,
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
-      <Container>
+      {/* Background Pattern */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
+      <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
           textAlign="center"

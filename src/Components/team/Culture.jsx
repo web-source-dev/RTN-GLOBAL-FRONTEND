@@ -317,7 +317,7 @@ const Culture = () => {
         }}
       />
 
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Box sx={{ mb: 6, textAlign: 'center' }}>
           <Typography
             variant="overline"

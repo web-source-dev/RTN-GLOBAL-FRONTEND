@@ -15,38 +15,32 @@ import LaunchIcon from '@mui/icons-material/Launch';
 
 const cases = [
   {
-    title: 'E-commerce Growth',
-    company: 'Fashion Retailer',
-    description: 'Achieved 300% ROI through targeted digital marketing campaigns',
-    image: '/images/case-studies/fashion-roi.jpg',
-    metrics: {
-      roi: '+300%',
-      revenue: '+150%',
-      conversion: '+75%'
-    }
+    id: 1,
+    title: 'SEO-Driven Traffic Growth',
+    excerpt: 'How strategic SEO increased organic traffic by 120% for an e-commerce brand.',
+    slug: 'seo-driven-traffic-growth',
+    industries: ['E-commerce', 'Retail'],
+    featuredImage: '/images/services/Seo.jpeg',
+    metrics: { improvement: 120, users: 10000, timeframe: '6 Months' },
   },
   {
-    title: 'B2B Lead Generation',
-    company: 'Tech Solutions',
-    description: 'Generated 500% ROI with integrated marketing strategy',
-    image: '/images/case-studies/tech-roi.jpg',
-    metrics: {
-      roi: '+500%',
-      leads: '+200%',
-      sales: '+180%'
-    }
+    id: 2,
+    title: 'Content Marketing Success',
+    excerpt: 'A SaaS company tripled its lead generation with high-quality content.',
+    slug: 'content-marketing-success',
+    industries: ['Technology', 'SaaS'],
+    featuredImage: '/images/services/Content.jpeg',
+    metrics: { improvement: 200, users: 5000, timeframe: '8 Months' },
   },
   {
-    title: 'Local Business Success',
-    company: 'Restaurant Chain',
-    description: 'Increased ROI by 250% through local marketing optimization',
-    image: '/images/case-studies/restaurant-roi.jpg',
-    metrics: {
-      roi: '+250%',
-      customers: '+120%',
-      revenue: '+160%'
-    }
-  }
+    id: 3,
+    title: 'Social Media Engagement Surge',
+    excerpt: 'A fashion brand saw a 300% increase in engagement with a viral campaign.',
+    slug: 'social-media-engagement-surge',
+    industries: ['Fashion', 'Retail'],
+    featuredImage: '/images/services/Socialmedia.jpeg',
+    metrics: { improvement: 300, users: 15000, timeframe: '3 Months' },
+  },
 ];
 
 const CaseStudies = () => {
@@ -57,9 +51,7 @@ const CaseStudies = () => {
     <Box
       py={12}
       sx={{
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%)',
+        background: theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden'
       }}
@@ -72,9 +64,9 @@ const CaseStudies = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          opacity: isDark ? 0.1 : 0.05,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1
         }}
       />
@@ -124,7 +116,7 @@ const CaseStudies = () => {
                 <Box sx={{ position: 'relative', pt: '56.25%', overflow: 'hidden' }}>
                   <CardMedia
                     component="img"
-                    image={case_.image}
+                    image={case_.featuredImage}
                     alt={case_.title}
                     className="case-image"
                     sx={{
@@ -137,12 +129,12 @@ const CaseStudies = () => {
                   />
                 </Box>
 
-                <CardContent sx={{ p: 4 }}>
+                <CardContent sx={{ p: 2 }}>
                   <Typography
                     variant="overline"
                     sx={{ color: theme.palette.primary.main, fontWeight: 600 }}
                   >
-                    {case_.company}
+                    {case_.industries}
                   </Typography>
 
                   <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, my: 2 }}>
@@ -150,15 +142,15 @@ const CaseStudies = () => {
                   </Typography>
 
                   <Typography color="text.secondary" paragraph>
-                    {case_.description}
+                    {case_.excerpt}
                   </Typography>
 
-                  <Grid container spacing={2} sx={{ mb: 3 }}>
+                  <Grid container spacing={1} sx={{ mb: 3 }}>
                     {Object.entries(case_.metrics).map(([key, value]) => (
                       <Grid item xs={4} key={key}>
                         <Box
                           sx={{
-                            p: 2,
+                            p: 1,
                             borderRadius: 2,
                             bgcolor: `${theme.palette.primary.main}10`,
                             textAlign: 'center'

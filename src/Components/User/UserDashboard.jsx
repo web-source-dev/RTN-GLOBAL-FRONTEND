@@ -133,7 +133,7 @@ const UserDashboard = () => {
         </AppBar>
 
         {/* Content */}
-        <Box sx={{ p: 3, mt: 8 }}>
+        <Box sx={{mt: 8 }}>
           <Paper
             elevation={0}
             sx={{

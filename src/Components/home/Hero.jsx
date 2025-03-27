@@ -53,7 +53,7 @@ const Hero = () => {
         />
       ))}
 
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Grid container spacing={4} alignItems="center">
           <Grid item xs={12} md={6}>
             <Box>

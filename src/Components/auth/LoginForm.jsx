@@ -12,16 +12,19 @@ import {
   useTheme,
   InputAdornment,
   IconButton,
+  CircularProgress,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import API from '../../BackendAPi/ApiProvider';
+
 const LoginForm = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -30,6 +33,9 @@ const LoginForm = () => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [accountLocked, setAccountLocked] = useState(false);
+  const [lockExpires, setLockExpires] = useState(null);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
@@ -55,13 +61,11 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
+      setLoading(true);
       try {
         const response = await API.post('/api/auth/login', formData);
         
-        // No need to store token in localStorage anymore
-        // Cookies are handled automatically by the browser
-        
-        // Store user data in localStorage (if needed)
+        // Store user data in localStorage
         localStorage.setItem('user', JSON.stringify(response.data.user));
 
         setSnackbar({
@@ -74,11 +78,45 @@ const LoginForm = () => {
           window.location.href = '/';
         }, 1500);
       } catch (error) {
+        console.error('Login error:', error.response);
+        
+        // Handle account locked scenario
+        if (error.response?.data?.accountLocked) {
+          setAccountLocked(true);
+          setLockExpires(new Date(error.response.data.lockExpires));
+          
+          setSnackbar({
+            open: true,
+            message: error.response.data.message,
+            severity: 'error',
+          });
+          return;
+        }
+        
+        // Handle unverified email scenario
+        if (error.response?.data?.requireVerification) {
+          setSnackbar({
+            open: true,
+            message: 'Email not verified. Redirecting to verification page...',
+            severity: 'warning',
+          });
+          
+          // Redirect to verification page with email as state
+          setTimeout(() => {
+            navigate('/auth/verify-email', { 
+              state: { email: error.response.data.email || formData.email } 
+            });
+          }, 1500);
+          return;
+        }
+        
         setSnackbar({
           open: true,
           message: error.response?.data?.message || 'Login failed. Please try again.',
           severity: 'error',
         });
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -95,6 +133,18 @@ const LoginForm = () => {
         [name]: '',
       }));
     }
+  };
+
+  // Calculate remaining lock time
+  const getRemainingLockTime = () => {
+    if (!lockExpires) return '';
+    
+    const now = new Date();
+    const diff = Math.max(0, lockExpires - now);
+    const minutes = Math.floor(diff / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -198,135 +248,161 @@ const LoginForm = () => {
                 Welcome Back
               </Typography>
 
-              <form onSubmit={handleSubmit}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      error={!!errors.email}
-                      helperText={errors.email}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <EmailIcon color="action" />
-                          </InputAdornment>
-                        ),
-                        sx: {
-                          '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+              {accountLocked ? (
+                <Box sx={{ textAlign: 'center', p: 2 }}>
+                  <Alert severity="error" sx={{ mb: 2 }}>
+                    Your account is temporarily locked due to multiple failed login attempts.
+                  </Alert>
+                  <Typography variant="body1" sx={{ mb: 2 }}>
+                    Please try again in: {getRemainingLockTime()}
+                  </Typography>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      setAccountLocked(false);
+                      setLockExpires(null);
+                    }}
+                    sx={{ mt: 2 }}
+                  >
+                    Try Different Account
+                  </Button>
+                </Box>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        error={!!errors.email}
+                        helperText={errors.email}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <EmailIcon color="action" />
+                            </InputAdornment>
+                          ),
+                          sx: {
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                            },
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                              borderColor: theme.palette.primary.main,
+                            },
                           },
-                          '&:hover .MuiOutlinedInput-notchedOutline': {
-                            borderColor: theme.palette.primary.main,
-                          },
-                        },
-                      }}
-                    />
-                  </Grid>
+                        }}
+                      />
+                    </Grid>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Password"
-                      name="password"
-                      type={showPassword ? 'text' : 'password'}
-                      value={formData.password}
-                      onChange={handleChange}
-                      error={!!errors.password}
-                      helperText={errors.password}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <LockIcon color="action" />
-                          </InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              onClick={() => setShowPassword(!showPassword)}
-                              edge="end"
-                              sx={{
-                                color: theme.palette.primary.main,
-                                '&:hover': {
-                                  backgroundColor: `${theme.palette.primary.main}15`,
-                                },
-                              }}
-                            >
-                              {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                        sx: {
-                          '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Password"
+                        name="password"
+                        type={showPassword ? 'text' : 'password'}
+                        value={formData.password}
+                        onChange={handleChange}
+                        error={!!errors.password}
+                        helperText={errors.password}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <LockIcon color="action" />
+                            </InputAdornment>
+                          ),
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                onClick={() => setShowPassword(!showPassword)}
+                                edge="end"
+                                sx={{
+                                  color: theme.palette.primary.main,
+                                  '&:hover': {
+                                    backgroundColor: `${theme.palette.primary.main}15`,
+                                  },
+                                }}
+                              >
+                                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                          sx: {
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                            },
+                            '&:hover .MuiOutlinedInput-notchedOutline': {
+                              borderColor: theme.palette.primary.main,
+                            },
                           },
-                          '&:hover .MuiOutlinedInput-notchedOutline': {
-                            borderColor: theme.palette.primary.main,
-                          },
-                        },
-                      }}
-                    />
-                  </Grid>
+                        }}
+                      />
+                    </Grid>
 
-                  <Grid item xs={12}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        mb: 2,
-                      }}
-                    >
-                      <Link
-                        component={RouterLink}
-                        to="/auth/forgot-password"
-                        color="primary"
-                        underline="hover"
+                    <Grid item xs={12}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          mb: 2,
+                        }}
                       >
-                        Forgot Password?
-                      </Link>
-                    </Box>
-
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      fullWidth
-                      size="large"
-                      sx={{
-                        borderRadius: 2,
-                        textTransform: 'none',
-                        fontSize: '1rem',
-                        background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                        transition: 'all 0.3s ease-in-out',
-                        '&:hover': {
-                          background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
-                          transform: 'scale(1.02)',
-                        },
-                      }}
-                    >
-                      Log In
-                    </Button>
-
-                    <Box sx={{ mt: 2, textAlign: 'center' }}>
-                      <Typography variant="body2" color="text.secondary">
-                        Don't have an account?{' '}
                         <Link
                           component={RouterLink}
-                          to="/auth/register"
+                          to="/auth/forgot-password"
                           color="primary"
                           underline="hover"
                         >
-                          Sign up
+                          Forgot Password?
                         </Link>
-                      </Typography>
-                    </Box>
+                      </Box>
+
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        disabled={loading}
+                        sx={{
+                          borderRadius: 2,
+                          textTransform: 'none',
+                          fontSize: '1rem',
+                          background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                          transition: 'all 0.3s ease-in-out',
+                          '&:hover': {
+                            background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
+                            transform: 'scale(1.02)',
+                          },
+                        }}
+                      >
+                        {loading ? (
+                          <CircularProgress size={24} color="inherit" />
+                        ) : (
+                          'Log In'
+                        )}
+                      </Button>
+
+                      <Box sx={{ mt: 2, textAlign: 'center' }}>
+                        <Typography variant="body2" color="text.secondary">
+                          Don't have an account?{' '}
+                          <Link
+                            component={RouterLink}
+                            to="/auth/register"
+                            color="primary"
+                            underline="hover"
+                          >
+                            Sign up
+                          </Link>
+                        </Typography>
+                      </Box>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </form>
+                </form>
+              )}
             </Box>
           </Grid>
         </Grid>

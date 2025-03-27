@@ -43,7 +43,7 @@ const CTA = () => {
           opacity: isDarkMode ? 0.05 : 1
         }
       }}>
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Paper
           elevation={24}
           sx={{
@@ -56,57 +56,12 @@ const CTA = () => {
             position: 'relative',
             overflow: 'hidden',
             borderRadius: theme.shape.borderRadius,
-            boxShadow: isDarkMode 
-              ? '0 10px 40px rgba(0,0,0,0.5)' 
-              : '0 10px 40px rgba(0,0,0,0.3)',
             transition: 'transform 0.3s ease-in-out',
             '&:hover': {
               transform: 'translateY(-5px)'
             },
-            '&::before': {
-              content: '""',
-              background: isDarkMode
-                ? 'linear-gradient(135deg, rgba(30,30,30,0.9), rgba(20,20,20,0.7)), url(https://cdn.pixabay.com/photo/2018/02/16/10/52/web-design-3157323_1280.jpg)'
-                : 'linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgb(0, 0, 0)), url(https://cdn.pixabay.com/photo/2018/02/16/10/52/web-design-3157323_1280.jpg)',
-              top: '-20px',
-              right: '-20px',
-              width: '200px',
-              height: '200px',
-              background: 'url(https://cdn.pixabay.com/photo/2018/04/06/13/46/modern-3295556_1280.png)',
-              borderRadius: 4,
-              backgroundRepeat: 'no-repeat',
-              opacity: isDarkMode ? 0.1 : 0.2,
-              animation: `${floatingAnimation} 3s ease-in-out infinite`
-            },
-            '&::after': {
-              content: '""',
-              position: 'absolute',
-              bottom: '-20px',
-              left: '-20px',
-              width: '150px',
-              height: '150px',
-              background: 'url(https://cdn.pixabay.com/photo/2017/01/29/13/21/mobile-devices-2017978_1280.png)',
-              backgroundSize: 'contain',
-              backgroundRepeat: 'no-repeat',
-              opacity: isDarkMode ? 0.1 : 0.2,
-              animation: `${floatingAnimation} 4s ease-in-out infinite`
-            }
           }}
         >
-           {/* Background Pattern */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          opacity: isDarkMode ? 0.1 : 0.05,
-          background: `radial-gradient(circle at 80% 80%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 20% 20%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
-          zIndex: 1,
-        }}
-      />
 
           <Typography 
             variant="h2" 

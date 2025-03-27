@@ -49,7 +49,7 @@ const UserJobApplications = () => {
   }
 
   return (
-    <Box>
+    <Box sx={{ position: 'relative', zIndex: 2 ,p:3}}>
       <Typography variant="h5" sx={{ mb: 3, fontWeight: 'medium' }}>
         Job Applications
       </Typography>

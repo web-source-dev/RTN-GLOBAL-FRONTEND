@@ -68,7 +68,7 @@ const Features = () => {
           zIndex: 1,
         }}
       />
-      <Container>
+      <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography 
           variant="h2" 
           textAlign="center" 

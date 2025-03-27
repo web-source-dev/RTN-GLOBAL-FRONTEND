@@ -117,17 +117,17 @@ const TicketStatus = () => {
     setLoading(true);
     setError('');
     setTicket(null);
+    
     try {
       const response = await API.get(`/api/forms/support/ticket/${ticketNumber}`);
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to fetch ticket details");
+      if (response.data.success) {
+        setTicket(response.data.data);
+      } else {
+        throw new Error(response.data.message || "Failed to fetch ticket details");
       }
-      
-      const data = await response.json();
-      setTicket(data.data);
     } catch (error) {
+      console.error("Error fetching ticket:", error);
       setError(error.response?.data?.message || 'Failed to retrieve ticket information. Please check the ticket ID and try again.');
     } finally {
       setLoading(false);

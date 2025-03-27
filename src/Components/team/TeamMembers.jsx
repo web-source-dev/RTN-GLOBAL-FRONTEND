@@ -48,7 +48,7 @@ const TeamMembers = () => {
         backgroundColor: 'background.default',
       }}
     >
-      <Container maxWidth="lg">
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h3"
           align="center"

@@ -14,8 +14,9 @@ import {
   IconButton,
   FormControlLabel,
   Checkbox,
+  CircularProgress,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EmailIcon from '@mui/icons-material/Email';
@@ -28,6 +29,7 @@ import API from '../../BackendAPi/ApiProvider';
 const RegisterForm = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -43,6 +45,7 @@ const RegisterForm = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: '',
@@ -60,12 +63,12 @@ const RegisterForm = () => {
       newErrors.email = 'Please enter a valid email address';
     }
 
+    // Enhanced password validation
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters long';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Password must contain uppercase, lowercase, and numbers';
+    } else if (!passwordRegex.test(formData.password)) {
+      newErrors.password = 'Password must be at least 8 characters and include uppercase, lowercase, numbers, and special characters';
     }
 
     if (!formData.confirmPassword) {
@@ -86,8 +89,6 @@ const RegisterForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
@@ -95,31 +96,46 @@ const RegisterForm = () => {
       try {
         const response = await API.post('/api/auth/register', formData);
         
-        // Remove token storage in localStorage since cookies are now used
-        // Store only user data in localStorage if needed
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        
-        setSnackbar({
-          open: true,
-          message: 'Registration successful! Redirecting to dashboard...',
-          severity: 'success',
-        });
-        
-        // Reset form
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          company: '',
-          phone: '',
-          acceptTerms: false,
-        });
-        
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 2000);
+        // Check if verification is required
+        if (response.data.requireVerification) {
+          setSnackbar({
+            open: true,
+            message: 'Registration successful! Please verify your email.',
+            severity: 'success',
+          });
+          
+          // Redirect to verification page
+          setTimeout(() => {
+            navigate('/auth/verify-email', { 
+              state: { email: formData.email } 
+            });
+          }, 1500);
+        } else {
+          // Regular success flow
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+          
+          setSnackbar({
+            open: true,
+            message: 'Registration successful! Redirecting to dashboard...',
+            severity: 'success',
+          });
+          
+          // Reset form
+          setFormData({
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            company: '',
+            phone: '',
+            acceptTerms: false,
+          });
+          
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 2000);
+        }
       } catch (error) {
         console.error('Registration error:', error);
         setSnackbar({
@@ -442,9 +458,15 @@ const RegisterForm = () => {
                         borderRadius: 2,
                         textTransform: 'none',
                         fontSize: '1rem',
+                        background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                        transition: 'all 0.3s ease-in-out',
+                        '&:hover': {
+                          background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
+                          transform: 'scale(1.02)',
+                        },
                       }}
                     >
-                      {isLoading ? 'Creating Account...' : 'Create Account'}
+                      {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Create Account'}
                     </Button>
 
                     <Box sx={{ mt: 2, textAlign: 'center' }}>

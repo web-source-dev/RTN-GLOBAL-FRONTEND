@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -12,8 +12,11 @@ import {
   useTheme,
   FormControlLabel,
   Checkbox,
+  Paper,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import API from '../../BackendAPi/ApiProvider';
+import { useAuth } from '../../contexts/AuthContext'; // Assuming you have an auth context
 
 const DEPARTMENTS = [
   'Engineering',
@@ -37,6 +40,8 @@ const EXPERIENCE_LEVELS = [
 const JobApplicationForm = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useAuth(); // Get auth status and user info
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -62,6 +67,40 @@ const JobApplicationForm = () => {
     severity: 'success'
   });
 
+  // Check authentication and redirect if not logged in
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setSnackbar({
+        open: true,
+        message: 'Please login to apply for jobs',
+        severity: 'warning'
+      });
+      
+      // Redirect to login after a short delay
+      const timeout = setTimeout(() => {
+        navigate('/login', { state: { from: '/job-application', message: 'Please login to apply for jobs' } });
+      }, 2000);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Pre-fill form with user data if authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setFormData(prevData => ({
+        ...prevData,
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        email: user.email || '',
+        phone: user.phone || '',
+        currentCompany: user.company || '',
+        linkedInProfile: user.socialLinks?.linkedin || '',
+        portfolioUrl: user.socialLinks?.website || '',
+      }));
+    }
+  }, [isAuthenticated, user]);
+
   const validateForm = () => {
     const newErrors = {};
     if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
@@ -85,6 +124,15 @@ const JobApplicationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      setSnackbar({
+        open: true,
+        message: 'You must be logged in to apply for jobs',
+        severity: 'error'
+      });
+      return;
+    }
+    
     if (validateForm()) {
       try {
         const formDataToSend = new FormData();
@@ -108,22 +156,10 @@ const JobApplicationForm = () => {
           severity: 'success'
         });
 
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          phone: '',
-          department: '',
-          position: '',
-          experienceLevel: '',
-          currentCompany: '',
-          linkedInProfile: '',
-          portfolioUrl: '',
-          coverLetter: '',
-          resume: null,
-          willingToRelocate: false,
-          agreeToTerms: false
-        });
+        // Clear form or redirect
+        setTimeout(() => {
+          navigate('/user/applications');
+        }, 3000);
       } catch (error) {
         setSnackbar({
           open: true,
@@ -147,6 +183,47 @@ const JobApplicationForm = () => {
       }));
     }
   };
+
+  // If not authenticated, show a message instead of the form
+  if (!isAuthenticated) {
+    return (
+      <Box
+        sx={{
+          py: 8,
+          background: isDark
+            ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
+            : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
+        }}
+      >
+        <Container maxWidth="md">
+          <Paper
+            elevation={3}
+            sx={{
+              p: 4,
+              textAlign: 'center',
+              backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'white',
+            }}
+          >
+            <Typography variant="h4" gutterBottom>
+              Authentication Required
+            </Typography>
+            <Typography variant="body1" paragraph>
+              You need to be logged in to apply for jobs at RTN Global.
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              onClick={() => navigate('/login', { state: { from: '/job-application' } })}
+              sx={{ mt: 2 }}
+            >
+              Go to Login
+            </Button>
+          </Paper>
+        </Container>
+      </Box>
+    );
+  }
 
   return (
     <Box

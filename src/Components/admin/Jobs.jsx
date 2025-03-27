@@ -55,6 +55,7 @@ const Jobs = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     fetchApplications();
@@ -62,14 +63,15 @@ const Jobs = () => {
 
   const fetchApplications = async () => {
     try {
+      setLoading(true);
       const response = await API.get(
         `/api/admin/jobs?page=${page + 1}&limit=${rowsPerPage}&status=${statusFilter}`
       );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      
+      setApplications(response.data.applications || []);
+      if (response.data.total) {
+        setTotalCount(response.data.total);
       }
-      const data = await response.json();
-      setApplications(data.applications || []);
     } catch (error) {
       console.error('Error fetching applications:', error);
       setApplications([]);
@@ -262,7 +264,7 @@ const Jobs = () => {
         </Table>
         <TablePagination
           component="div"
-          count={100}
+          count={totalCount}
           page={page}
           onPageChange={(e, newPage) => setPage(newPage)}
           rowsPerPage={rowsPerPage}

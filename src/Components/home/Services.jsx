@@ -75,7 +75,7 @@ const Services = () => {
           zIndex: 1,
         }}
       />
-      <Container>
+      <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Box sx={{ textAlign: 'center', mb: 8 }}>
           <Typography
             component="span"

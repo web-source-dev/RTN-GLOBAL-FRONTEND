@@ -6,9 +6,7 @@ import { Box, Typography, Container, useTheme } from '@mui/material';
 
 // Styled components using MUI's styled API
 const HeroContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'light' 
-    ? '#f5f5f5' 
-    : '#111',
+  backgroundColor: theme.palette.background.default,
   color: theme.palette.mode === 'light' ? theme.palette.text.primary : 'white',
   minHeight: '100vh',
   marginBottom: '50px',
@@ -39,10 +37,7 @@ const WaveBottom = styled(Box)(({ theme }) => ({
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundImage: theme.palette.mode === 'light'
-      ? `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 180' preserveAspectRatio='none'%3E%3Cpath d='M0,30 C200,150 400,0 600,100 C800,200 1000,30 1200,70 L1200,180 L0,180 Z' fill='white' /%3E%3C/svg%3E")`
-      : `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 180' preserveAspectRatio='none'%3E%3Cpath d='M0,30 C200,150 400,0 600,100 C800,200 1000,30 1200,70 L1200,180 L0,180 Z' fill='%232323' /%3E%3C/svg%3E")`,
-    backgroundSize: '100% 100%',
+   backgroundSize: '100% 100%',
     backgroundPosition: 'bottom',
     backgroundRepeat: 'no-repeat',
     transform: 'scale(1.2) translateY(5%)',
@@ -127,52 +122,6 @@ const ScrollDown = styled(Link)(({ theme }) => ({
   },
 }));
 
-const Logo = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: theme.spacing(4),
-  left: theme.spacing(4),
-  fontWeight: 'bold',
-  fontSize: '1.75rem',
-  zIndex: 10,
-  [theme.breakpoints.down('md')]: {
-    top: theme.spacing(2),
-    left: theme.spacing(2),
-    fontSize: '1.5rem',
-  },
-}));
-
-const MenuButton = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: theme.spacing(4),
-  right: theme.spacing(4),
-  width: '2.5rem',
-  height: '2.5rem',
-  backgroundColor: 'transparent',
-  borderRadius: '50%',
-  zIndex: 10,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  cursor: 'pointer',
-  '&::after': {
-    content: '""',
-    position: 'absolute',
-    width: '0.4rem',
-    height: '0.4rem',
-    backgroundColor: theme.palette.mode === 'light' ? theme.palette.text.primary : '#fff',
-    borderRadius: '50%',
-    boxShadow: theme.palette.mode === 'light' 
-      ? `0 0.7rem 0 ${theme.palette.text.primary}, 0 1.4rem 0 ${theme.palette.text.primary}` 
-      : '0 0.7rem 0 #fff, 0 1.4rem 0 #fff',
-  },
-  [theme.breakpoints.down('md')]: {
-    top: theme.spacing(2),
-    right: theme.spacing(2),
-    width: '2rem',
-    height: '2rem',
-  },
-}));
-
 const MegaHero = () => {
   const theme = useTheme();
   
@@ -214,6 +163,20 @@ const MegaHero = () => {
 
   return (
     <HeroContainer component="section">
+      {/* Background Pattern */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
       <ContentWrapper maxWidth="lg">
         <motion.div
           initial="hidden"
