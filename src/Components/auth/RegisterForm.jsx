@@ -24,6 +24,9 @@ import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
 import BusinessIcon from '@mui/icons-material/Business';
 import PhoneIcon from '@mui/icons-material/Phone';
+import GoogleIcon from '@mui/icons-material/Google';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import Divider from '@mui/material/Divider';
 import API from '../../BackendAPi/ApiProvider';
 
 const RegisterForm = () => {
@@ -163,6 +166,14 @@ const RegisterForm = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.REACT_APP_API_URL}/api/auth/google`;
+  };
+
+  const handleFacebookLogin = () => {
+    window.location.href = `${process.env.REACT_APP_API_URL}/api/auth/facebook`;
+  };
+
   return (
     <Box
       sx={{
@@ -263,6 +274,64 @@ const RegisterForm = () => {
               >
                 Create Account
               </Typography>
+
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    startIcon={<GoogleIcon />}
+                    onClick={handleGoogleLogin}
+                    sx={{
+                      py: 1.2,
+                      borderRadius: 2,
+                      borderColor: '#DBDBDB',
+                      color: theme.palette.text.primary,
+                      textTransform: 'none',
+                      fontSize: '1rem',
+                      '&:hover': {
+                        borderColor: '#ABABAB',
+                        backgroundColor: 'rgba(0,0,0,0.01)'
+                      }
+                    }}
+                  >
+                    Continue with Google
+                  </Button>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    startIcon={<FacebookIcon style={{ color: '#1877F2' }} />}
+                    onClick={handleFacebookLogin}
+                    sx={{
+                      py: 1.2,
+                      borderRadius: 2,
+                      borderColor: '#DBDBDB',
+                      color: theme.palette.text.primary,
+                      textTransform: 'none',
+                      fontSize: '1rem',
+                      '&:hover': {
+                        borderColor: '#ABABAB',
+                        backgroundColor: 'rgba(0,0,0,0.01)'
+                      }
+                    }}
+                  >
+                    Continue with Facebook
+                  </Button>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
+                    <Divider sx={{ flexGrow: 1 }} />
+                    <Typography variant="body2" color="text.secondary" sx={{ mx: 2 }}>
+                      or register with email
+                    </Typography>
+                    <Divider sx={{ flexGrow: 1 }} />
+                  </Box>
+                </Grid>
+              </Grid>
 
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>

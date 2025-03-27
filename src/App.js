@@ -66,6 +66,7 @@ import PaymentPage from './Pages/PaymentPage';
 import VerifyInvoice from './Pages/VerifyInvoice';
 import VerifyReceipt from './Pages/VerifyReceipt';
 import EmailVerificationForm from './Components/auth/EmailVerificationForm';
+import SocialAuthSuccess from './Components/auth/SocialAuthSuccess';
 
 function App() {
   return (
@@ -145,6 +146,7 @@ function App() {
                   <Route path="/verify-invoice/:invoiceNumber" element={<VerifyInvoice />} />
                   <Route path="/verify-receipt/:receiptNumber" element={<VerifyReceipt />} />
                   <Route path="/auth/verify-email" element={<EmailVerificationForm />} />
+                  <Route path="/auth/social-success" element={<SocialAuthSuccess />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>

@@ -21,6 +21,9 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import LockClockIcon from '@mui/icons-material/LockClock';
+import GoogleIcon from '@mui/icons-material/Google';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import Divider from '@mui/material/Divider';
 import API from '../../BackendAPi/ApiProvider';
 
 const LoginForm = () => {
@@ -195,6 +198,14 @@ const LoginForm = () => {
     }
   };
 
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.REACT_APP_API_URL}/api/auth/google`;
+  };
+
+  const handleFacebookLogin = () => {
+    window.location.href = `${process.env.REACT_APP_API_URL}/api/auth/facebook`;
+  };
+
   return (
     <Box
       sx={{
@@ -348,6 +359,62 @@ const LoginForm = () => {
                   </Typography>
 
                   <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        startIcon={<GoogleIcon />}
+                        onClick={handleGoogleLogin}
+                        sx={{
+                          py: 1.2,
+                          borderRadius: 2,
+                          borderColor: '#DBDBDB',
+                          color: theme.palette.text.primary,
+                          textTransform: 'none',
+                          fontSize: '1rem',
+                          '&:hover': {
+                            borderColor: '#ABABAB',
+                            backgroundColor: 'rgba(0,0,0,0.01)'
+                          }
+                        }}
+                      >
+                        Continue with Google
+                      </Button>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        startIcon={<FacebookIcon style={{ color: '#1877F2' }} />}
+                        onClick={handleFacebookLogin}
+                        sx={{
+                          py: 1.2,
+                          borderRadius: 2,
+                          borderColor: '#DBDBDB',
+                          color: theme.palette.text.primary,
+                          textTransform: 'none',
+                          fontSize: '1rem',
+                          '&:hover': {
+                            borderColor: '#ABABAB',
+                            backgroundColor: 'rgba(0,0,0,0.01)'
+                          }
+                        }}
+                      >
+                        Continue with Facebook
+                      </Button>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
+                        <Divider sx={{ flexGrow: 1 }} />
+                        <Typography variant="body2" color="text.secondary" sx={{ mx: 2 }}>
+                          or
+                        </Typography>
+                        <Divider sx={{ flexGrow: 1 }} />
+                      </Box>
+                    </Grid>
+
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
