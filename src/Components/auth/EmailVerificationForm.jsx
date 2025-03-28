@@ -96,8 +96,8 @@ const EmailVerificationForm = () => {
       
       // Redirect to dashboard/home after successful verification
       setTimeout(() => {
-        navigate('/');
-      }, 1500);
+        navigate('/dashboard/user');
+      }, 10000);
     } catch (error) {
       console.error('Verification error:', error);
       setError(error.response?.data?.message || 'Failed to verify email. Please try again.');
@@ -166,53 +166,72 @@ const EmailVerificationForm = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
+        background:theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden',
+        py: { xs: 4, md: 0 },
       }}
     >
-      {/* Decorative Background Elements */}
-      <Box
+               {/* Background Pattern with enhanced animation */}
+       <Box
         sx={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          opacity: 0.1,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
       />
-      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={4} alignItems="center">
-          {/* Left side - Illustration */}
+    
+      
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
+        <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center" justifyContent="center">
+          {/* Left side - Enhanced Illustration with animated elements */}
           <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
             <Box
               sx={{
-                p: 4,
+                p: { md: 3, lg: 4 },
                 textAlign: 'center',
-                animation: 'float 6s ease-in-out infinite',
-                '@keyframes float': {
-                  '0%, 100%': { transform: 'translateY(0)' },
-                  '50%': { transform: 'translateY(-20px)' },
-                },
+                position: 'relative',
               }}
             >
-              <img
-                src="/images/auth/verification.svg"
-                alt="Email Verification"
-                style={{ maxWidth: '100%', height: 'auto' }}
-              />
+              <Box
+                sx={{
+                  position: 'relative',
+                  animation: 'float 6s ease-in-out infinite',
+                  '@keyframes float': {
+                    '0%, 100%': { transform: 'translateY(0)' },
+                    '50%': { transform: 'translateY(-20px)' },
+                  },
+                }}
+              >
+                <img
+                  src="/images/auth/email-verify.png"
+                  alt="Email Verification"
+                  style={{ 
+                    maxWidth: '90%', 
+                    height: 'auto',
+                    filter: isDark ? 'drop-shadow(0 0 8px rgba(0, 150, 255, 0.3))' : 'drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1))'
+                  }}
+                />
+              </Box>
               <Typography
-                variant="h5"
+                variant="h4"
                 sx={{
                   mt: 4,
-                  fontWeight: 600,
+                  fontWeight: 700,
                   background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                  backgroundSize: '200% 200%',
+                  animation: 'gradientAnimation 5s ease infinite',
+                  '@keyframes gradientAnimation': {
+                    '0%': { backgroundPosition: '0% 50%' },
+                    '50%': { backgroundPosition: '100% 50%' },
+                    '100%': { backgroundPosition: '0% 50%' },
+                  },
                   backgroundClip: 'text',
                   textFillColor: 'transparent',
                   WebkitBackgroundClip: 'text',
@@ -221,45 +240,104 @@ const EmailVerificationForm = () => {
               >
                 Verify Your Email
               </Typography>
-              <Typography color="text.secondary" sx={{ mt: 2 }}>
-                Please enter the 6-digit code sent to your email to complete registration
+              
+              <Typography 
+                color="text.secondary" 
+                sx={{ 
+                  mt: 2, 
+                  fontSize: { xs: '0.9rem', md: '1rem' },
+                  maxWidth: '80%',
+                  mx: 'auto',
+                  lineHeight: 1.6,
+                }}
+              >
+                We've sent a 6-digit verification code to your email.
+                Enter it below to activate your account.
               </Typography>
             </Box>
           </Grid>
 
-          {/* Right side - Form */}
+          {/* Right side - Enhanced Form with animations and improved layout */}
           <Grid item xs={12} md={6}>
             <Paper
-              elevation={6}
+              elevation={isDark ? 4 : 6}
               sx={{
-                p: 4,
-                borderRadius: 2,
+                p: { xs: 3, sm: 4 },
+                borderRadius: 3,
                 backdropFilter: 'blur(10px)',
-                background: isDark 
-                  ? 'rgba(30, 30, 30, 0.9)' 
-                  : 'rgba(255, 255, 255, 0.9)',
+                background: theme.palette.background.default,
                 border: '1px solid',
-                borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                borderColor:theme.palette.background.default,
+                transform: 'translateZ(0)',
+                transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'translateY(-5px) translateZ(0)',
+                  boxShadow: isDark 
+                    ? '0 15px 30px rgba(0, 0, 0, 0.5)' 
+                    : '0 15px 30px rgba(0, 0, 0, 0.1)',
+                },
+                animation: 'fadeInUp 0.6s ease-out',
+                '@keyframes fadeInUp': {
+                  '0%': { opacity: 0, transform: 'translateY(20px)' },
+                  '100%': { opacity: 1, transform: 'translateY(0)' },
+                },
               }}
             >
               <Box sx={{ textAlign: 'center', mb: 3 }}>
-                <VerifiedIcon 
-                  color="primary" 
-                  sx={{ 
-                    fontSize: 60,
+                <Box
+                  sx={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: '50%',
+                    background: isDark 
+                      ? 'rgba(25, 118, 210, 0.2)' 
+                      : 'rgba(25, 118, 210, 0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    mx: 'auto',
                     mb: 2,
-                    animation: 'pulse 2s infinite',
-                    '@keyframes pulse': {
-                      '0%': { opacity: 0.6, transform: 'scale(0.95)' },
-                      '50%': { opacity: 1, transform: 'scale(1.05)' },
-                      '100%': { opacity: 0.6, transform: 'scale(0.95)' },
-                    },
-                  }} 
-                />
-                <Typography variant="h4" fontWeight="bold" gutterBottom>
+                  }}
+                >
+                  <VerifiedIcon 
+                    color="primary" 
+                    sx={{ 
+                      fontSize: 45,
+                      animation: 'pulse 2s infinite',
+                      '@keyframes pulse': {
+                        '0%': { opacity: 0.8, transform: 'scale(0.95)' },
+                        '50%': { opacity: 1, transform: 'scale(1.05)' },
+                        '100%': { opacity: 0.8, transform: 'scale(0.95)' },
+                      },
+                    }} 
+                  />
+                </Box>
+                
+                <Typography 
+                  variant="h4" 
+                  fontWeight="bold" 
+                  gutterBottom
+                  sx={{
+                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                    backgroundClip: 'text',
+                    textFillColor: 'transparent',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    letterSpacing: '0.5px',
+                  }}
+                >
                   Email Verification
                 </Typography>
-                <Typography color="text.secondary">
+                
+                <Typography 
+                  color="text.secondary"
+                  sx={{
+                    fontSize: '0.95rem',
+                    maxWidth: '85%',
+                    mx: 'auto',
+                    mb: 3,
+                  }}
+                >
                   Check your inbox for the verification code
                 </Typography>
               </Box>
@@ -279,9 +357,30 @@ const EmailVerificationForm = () => {
                             <EmailIcon color="action" />
                           </InputAdornment>
                         ),
+                        sx: {
+                          borderRadius: 2,
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '1.5px',
+                            transition: 'border-color 0.3s',
+                          },
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '2px',
+                          },
+                        }
+                      }}
+                      sx={{ 
+                        '& label': { fontSize: '0.95rem' },
+                        '& label.Mui-focused': { 
+                          background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                          backgroundClip: 'text',
+                          textFillColor: 'transparent',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                        },
                       }}
                     />
                   </Grid>
+                  
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
@@ -296,9 +395,30 @@ const EmailVerificationForm = () => {
                             <LockIcon color="action" />
                           </InputAdornment>
                         ),
+                        sx: {
+                          borderRadius: 2,
+                          '& .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '1.5px',
+                            transition: 'border-color 0.3s',
+                          },
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '2px',
+                          },
+                        }
+                      }}
+                      sx={{ 
+                        '& label': { fontSize: '0.95rem' },
+                        '& label.Mui-focused': { 
+                          background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                          backgroundClip: 'text',
+                          textFillColor: 'transparent',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                        },
                       }}
                     />
                   </Grid>
+                  
                   <Grid item xs={12}>
                     <Button
                       type="submit"
@@ -309,24 +429,55 @@ const EmailVerificationForm = () => {
                         borderRadius: 2,
                         textTransform: 'none',
                         fontSize: '1rem',
+                        py: 1.5,
+                        fontWeight: 600,
                         background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                        backgroundSize: '200% 200%',
+                        animation: 'gradientBtnAnimation 5s ease infinite',
+                        '@keyframes gradientBtnAnimation': {
+                          '0%': { backgroundPosition: '0% 50%' },
+                          '50%': { backgroundPosition: '100% 50%' },
+                          '100%': { backgroundPosition: '0% 50%' },
+                        },
                         transition: 'all 0.3s ease-in-out',
                         '&:hover': {
-                          background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
-                          transform: 'scale(1.02)',
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 7px 15px rgba(25, 118, 210, 0.3)',
+                        },
+                        '&:active': {
+                          transform: 'translateY(-1px)',
                         },
                       }}
                     >
-                      {loading ? <CircularProgress size={24} color="inherit" /> : 'Verify Email'}
+                      {loading ? (
+                        <CircularProgress size={24} color="inherit" />
+                      ) : (
+                        'Verify Email'
+                      )}
                     </Button>
                   </Grid>
+                  
                   <Grid item xs={12} sx={{ textAlign: 'center' }}>
                     <Box sx={{ mt: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {countdown > 0 ? (
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                          <TimerIcon fontSize="small" sx={{ mr: 1 }} />
-                          <Typography variant="body2">
-                            Resend code in {Math.floor(countdown / 60)}:
+                        <Box 
+                          sx={{ 
+                            display: 'flex', 
+                            alignItems: 'center',
+                            p: 1,
+                            borderRadius: 2,
+                            background: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.05)',
+                          }}
+                        >
+                          <TimerIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} />
+                          <Typography 
+                            variant="body2"
+                            sx={{
+                              fontFamily: 'monospace',
+                              fontWeight: 600,
+                            }}
+                          >
+                            Resend in {Math.floor(countdown / 60)}:
                             {String(countdown % 60).padStart(2, '0')}
                           </Typography>
                         </Box>
@@ -334,9 +485,15 @@ const EmailVerificationForm = () => {
                         <Button
                           onClick={handleResendCode}
                           disabled={loading}
-                          color="primary"
-                          variant="text"
-                          sx={{ textTransform: 'none' }}
+                          sx={{
+                            textTransform: 'none',
+                            borderRadius: 2,
+                            color: theme.palette.primary.main,
+                            '&:hover': {
+                              backgroundColor: `${theme.palette.primary.main}15`,
+                            },
+                            transition: 'all 0.2s',
+                          }}
                         >
                           Didn't receive code? Resend
                         </Button>
@@ -349,15 +506,23 @@ const EmailVerificationForm = () => {
           </Grid>
         </Grid>
       </Container>
+      
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{ mb: 4 }}
       >
         <Alert
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           severity={snackbar.severity}
-          sx={{ width: '100%' }}
+          variant="filled"
+          sx={{ 
+            width: '100%',
+            borderRadius: 2,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          }}
         >
           {snackbar.message}
         </Alert>

@@ -12,12 +12,15 @@ import {
   InputAdornment,
   IconButton,
   CircularProgress,
+  Paper,
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import LockIcon from '@mui/icons-material/Lock';
+import KeyIcon from '@mui/icons-material/Key';
 import API from '../../BackendAPi/ApiProvider';
+
 const ResetPasswordForm = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
@@ -93,6 +96,7 @@ const ResetPasswordForm = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
+        setLoading(true);
         const params = new URLSearchParams(location.search);
         const token = params.get('token');
         
@@ -115,6 +119,8 @@ const ResetPasswordForm = () => {
           message: error.response?.data?.message || 'Password reset failed. Please try again.',
           severity: 'error',
         });
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -146,7 +152,14 @@ const ResetPasswordForm = () => {
             : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
         }}
       >
-        <CircularProgress />
+        <CircularProgress 
+          size={60} 
+          thickness={4}
+          sx={{ 
+            color: theme.palette.primary.main,
+            boxShadow: '0 0 20px rgba(25, 118, 210, 0.3)',
+          }} 
+        />
       </Box>
     );
   }
@@ -156,42 +169,115 @@ const ResetPasswordForm = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          pt: 15,
-          pb: 8,
-          background: isDark
-            ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-            : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: theme.palette.background.default,
+          position: 'relative',
         }}
       >
-        <Container maxWidth="sm">
+             {/* Background Pattern with enhanced animation */}
+             <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          zIndex: 1,
+        }}
+      />
+        <Paper
+          elevation={6}
+          sx={{
+            p: { xs: 3, sm: 5 },
+            borderRadius: 3,
+            maxWidth: '90%',
+            width: 500,
+            textAlign: 'center',
+            position: 'relative',
+            zIndex: 2,
+            background: theme.palette.background.default,
+            backdropFilter: 'blur(10px)',
+            border: '1px solid',
+            borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+            animation: 'fadeIn 0.6s ease-out',
+            '@keyframes fadeIn': {
+              '0%': { opacity: 0, transform: 'translateY(20px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            },
+          }}
+        >
           <Box
             sx={{
-              backgroundColor: theme.palette.background.paper,
-              borderRadius: 2,
-              p: 4,
-              textAlign: 'center',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+              width: 80,
+              height: 80,
+              borderRadius: '50%',
+              mx: 'auto',
+              mb: 3,
+              background: isDark 
+                ? 'rgba(211, 47, 47, 0.2)' 
+                : 'rgba(211, 47, 47, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            <Typography variant="h5" gutterBottom>
-              Invalid or Expired Link
-            </Typography>
-            <Typography color="text.secondary" paragraph>
-              The password reset link is invalid or has expired. Please request a new one.
-            </Typography>
-            <Button
-              variant="contained"
-              onClick={() => navigate('/auth/forgot-password')}
-              sx={{
-                mt: 2,
-                borderRadius: 2,
-                textTransform: 'none',
-              }}
-            >
-              Request New Link
-            </Button>
+            <KeyIcon 
+              color="error" 
+              sx={{ 
+                fontSize: 40,
+                animation: 'pulse 2s infinite',
+                '@keyframes pulse': {
+                  '0%': { opacity: 0.6, transform: 'scale(0.9)' },
+                  '50%': { opacity: 1, transform: 'scale(1.1)' },
+                  '100%': { opacity: 0.6, transform: 'scale(0.9)' },
+                },
+              }} 
+            />
           </Box>
-        </Container>
+          
+          <Typography 
+            variant="h4" 
+            gutterBottom
+            sx={{ 
+              fontWeight: 700,
+              color: theme.palette.error.main,
+            }}
+          >
+            Link Expired
+          </Typography>
+          
+          <Typography variant="body1" color="text.secondary" paragraph>
+            This password reset link is invalid or has expired. Please request a new one.
+          </Typography>
+          
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => navigate('/auth/forgot-password')}
+            sx={{
+              mt: 2,
+              borderRadius: 2,
+              textTransform: 'none',
+              fontSize: '1rem',
+              py: 1.2,
+              px: 3,
+              fontWeight: 600,
+              transition: 'all 0.3s ease-in-out',
+              background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+              '&:hover': {
+                transform: 'translateY(-3px)',
+                boxShadow: '0 7px 15px rgba(25, 118, 210, 0.3)',
+              },
+            }}
+          >
+            Request New Link
+          </Button>
+        </Paper>
       </Box>
     );
   }
@@ -208,9 +294,10 @@ const ResetPasswordForm = () => {
           : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
         position: 'relative',
         overflow: 'hidden',
+        py: { xs: 4, md: 0 },
       }}
     >
-      {/* Decorative Background Elements */}
+      {/* Enhanced background with animated elements */}
       <Box
         sx={{
           position: 'absolute',
@@ -218,95 +305,165 @@ const ResetPasswordForm = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          opacity: 0.1,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          opacity: 0.07,
+          background: `
+            radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
+            radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%),
+            radial-gradient(circle at 40% 60%, ${theme.palette.success.main} 0%, transparent 30%)
+          `,
+          animation: 'gradientShift 15s ease infinite alternate',
+          '@keyframes gradientShift': {
+            '0%': { backgroundPosition: '0% 0%' },
+            '100%': { backgroundPosition: '100% 100%' },
+          },
           zIndex: 1,
         }}
       />
-    <Box
-      sx={{
-        minHeight: '100vh',
-        pt: 15,
-        pb: 8,
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Decorative Background Elements */}
-      <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          opacity: 0.1,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
-          zIndex: 1,
-        }}
-      />
+
+      {/* Decorative shapes */}
+      {[...Array(6)].map((_, i) => (
+        <Box
+          key={i}
+          sx={{
+            position: 'absolute',
+            width: `${30 + i * 15}px`,
+            height: `${30 + i * 15}px`,
+            borderRadius: i % 2 === 0 ? '50%' : '30%',
+            background: `${theme.palette.primary.main}10`,
+            border: `1px solid ${theme.palette.primary.main}20`,
+            top: `${10 + i * 15}%`,
+            left: `${70 - i * 10}%`,
+            animation: `float ${3 + i * 0.5}s infinite ease-in-out alternate`,
+            '@keyframes float': {
+              '0%': { transform: 'translateY(0) rotate(0deg)' },
+              '100%': { transform: 'translateY(-20px) rotate(10deg)' },
+            },
+            zIndex: 1,
+            opacity: 0.7,
+          }}
+        />
+      ))}
+      
       <Container maxWidth="md" sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={4} alignItems="center" justifyContent="center">
-          {/* Left side - Illustration */}
+        <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center" justifyContent="center">
+          {/* Left side - Enhanced Illustration with animations */}
           <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
             <Box
               sx={{
-                p: 4,
+                p: { md: 3, lg: 4 },
                 textAlign: 'center',
-                animation: 'float 6s ease-in-out infinite',
-                '@keyframes float': {
-                  '0%, 100%': { transform: 'translateY(0)' },
-                  '50%': { transform: 'translateY(-20px)' },
-                },
+                position: 'relative',
               }}
             >
-              <img
-                src="/images/auth/forget.svg"
-                alt="Reset Password"
-                style={{ maxWidth: '100%', height: 'auto' }}
-              />
+              <Box
+                sx={{
+                  position: 'relative',
+                  animation: 'float 6s ease-in-out infinite',
+                  '@keyframes float': {
+                    '0%, 100%': { transform: 'translateY(0)' },
+                    '50%': { transform: 'translateY(-20px)' },
+                  },
+                  transition: 'transform 0.3s ease-in-out',
+                  '&:hover': {
+                    transform: 'scale(1.03)',
+                  },
+                }}
+              >
+                <img
+                  src="/images/auth/reset.svg"
+                  alt="Reset Password"
+                  style={{ 
+                    maxWidth: '85%', 
+                    height: 'auto',
+                    filter: isDark ? 'drop-shadow(0 0 8px rgba(25, 118, 210, 0.3))' : 'drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1))',
+                    mixBlendMode: isDark ? 'lighten' : 'multiply'  
+                  }}
+                />
+              </Box>
+              
               <Typography
-                variant="h5"
+                variant="h4"
                 sx={{
                   mt: 4,
-                  fontWeight: 600,
+                  fontWeight: 700,
                   background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                  backgroundSize: '200% 200%',
+                  animation: 'gradientAnimation 5s ease infinite',
+                  '@keyframes gradientAnimation': {
+                    '0%': { backgroundPosition: '0% 50%' },
+                    '50%': { backgroundPosition: '100% 50%' },
+                    '100%': { backgroundPosition: '0% 50%' },
+                  },
                   backgroundClip: 'text',
                   textFillColor: 'transparent',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
+                  letterSpacing: '0.5px',
                 }}
               >
-                Secure Password Reset
+                Reset Password
               </Typography>
-              <Typography color="text.secondary" sx={{ mt: 2 }}>
-                Create a strong new password to keep your account protected
+              
+              <Typography 
+                color="text.secondary" 
+                sx={{ 
+                  mt: 2, 
+                  fontSize: { xs: '0.9rem', md: '1rem' },
+                  maxWidth: '85%',
+                  mx: 'auto',
+                  lineHeight: 1.6,
+                }}
+              >
+                Create a new, secure password for your account.
+                Make sure it's strong and different from previous passwords.
               </Typography>
             </Box>
           </Grid>
 
-          {/* Right side - Form */}
+          {/* Right side - Enhanced Form */}
           <Grid item xs={12} md={6}>
-            <Box
+            <Paper
+              elevation={isDark ? 4 : 6}
               sx={{
-                backgroundColor: theme.palette.background.paper,
-                borderRadius: 2,
-                p: 4,
-                boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                p: { xs: 3, sm: 4 },
+                borderRadius: 3,
                 backdropFilter: 'blur(10px)',
+                background: isDark 
+                  ? 'rgba(30, 30, 30, 0.9)' 
+                  : 'rgba(255, 255, 255, 0.9)',
                 border: '1px solid',
-                borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
-                transition: 'transform 0.3s ease-in-out',
+                borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                 '&:hover': {
                   transform: 'translateY(-5px)',
+                  boxShadow: isDark 
+                    ? '0 10px 30px rgba(0, 0, 0, 0.5)' 
+                    : '0 10px 30px rgba(0, 0, 0, 0.1)',
                 },
               }}
             >
+              <Box sx={{ textAlign: 'center', mb: 3 }}>
+                <KeyIcon 
+                  color="primary" 
+                  sx={{ 
+                    fontSize: 45,
+                    mb: 1,
+                    animation: 'keyRotate 3s infinite',
+                    '@keyframes keyRotate': {
+                      '0%': { transform: 'rotateY(0deg)' },
+                      '50%': { transform: 'rotateY(180deg)' },
+                      '100%': { transform: 'rotateY(360deg)' },
+                    },
+                  }} 
+                />
+                <Typography variant="h5" fontWeight="bold" gutterBottom>
+                  Create New Password
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Your password must be at least 8 characters with uppercase, lowercase, numbers, and special characters
+                </Typography>
+              </Box>
+
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
@@ -342,12 +499,24 @@ const ResetPasswordForm = () => {
                           </InputAdornment>
                         ),
                         sx: {
+                          borderRadius: 2,
                           '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                            borderWidth: '1.5px',
+                            transition: 'border-color 0.3s',
                           },
-                          '&:hover .MuiOutlinedInput-notchedOutline': {
-                            borderColor: theme.palette.primary.main,
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '2px',
                           },
+                        }
+                      }}
+                      sx={{ 
+                        '& label': { fontSize: '0.95rem' },
+                        '& label.Mui-focused': { 
+                          background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                          backgroundClip: 'text',
+                          textFillColor: 'transparent',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
                         },
                       }}
                     />
@@ -386,12 +555,24 @@ const ResetPasswordForm = () => {
                           </InputAdornment>
                         ),
                         sx: {
+                          borderRadius: 2,
                           '& .MuiOutlinedInput-notchedOutline': {
-                            borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                            borderWidth: '1.5px',
+                            transition: 'border-color 0.3s',
                           },
-                          '&:hover .MuiOutlinedInput-notchedOutline': {
-                            borderColor: theme.palette.primary.main,
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderWidth: '2px',
                           },
+                        }
+                      }}
+                      sx={{ 
+                        '& label': { fontSize: '0.95rem' },
+                        '& label.Mui-focused': { 
+                          background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                          backgroundClip: 'text',
+                          textFillColor: 'transparent',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
                         },
                       }}
                     />
@@ -403,38 +584,57 @@ const ResetPasswordForm = () => {
                       variant="contained"
                       fullWidth
                       size="large"
+                      disabled={loading}
                       sx={{
                         borderRadius: 2,
                         textTransform: 'none',
                         fontSize: '1rem',
+                        py: 1.5,
+                        fontWeight: 600,
                         background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                        backgroundSize: '200% 200%',
+                        animation: 'gradientBtnAnimation 5s ease infinite',
+                        '@keyframes gradientBtnAnimation': {
+                          '0%': { backgroundPosition: '0% 50%' },
+                          '50%': { backgroundPosition: '100% 50%' },
+                          '100%': { backgroundPosition: '0% 50%' },
+                        },
                         transition: 'all 0.3s ease-in-out',
                         '&:hover': {
-                          background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
-                          transform: 'scale(1.02)',
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 7px 15px rgba(25, 118, 210, 0.3)',
+                        },
+                        '&:active': {
+                          transform: 'translateY(-1px)',
                         },
                       }}
                     >
-                      Reset Password
+                      {loading ? <CircularProgress size={24} color="inherit" /> : 'Reset Password'}
                     </Button>
                   </Grid>
                 </Grid>
               </form>
-            </Box>
+            </Paper>
           </Grid>
         </Grid>
       </Container>
-    </Box>
 
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{ mb: 4 }}
       >
         <Alert
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           severity={snackbar.severity}
-          sx={{ width: '100%' }}
+          variant="filled"
+          sx={{ 
+            width: '100%',
+            borderRadius: 2,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          }}
         >
           {snackbar.message}
         </Alert>

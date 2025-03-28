@@ -75,193 +75,300 @@ const ForgotPasswordForm = () => {
   };
 
   return (
-<>
-<Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: isDark
-          ? 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)'
-          : 'linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%)',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
-    >
-      {/* Decorative Background Elements */}
+    <>
       <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: theme.palette.background.default,
+          position: 'relative',
+          overflow: 'hidden',
+          py: { xs: 4, md: 0 },
+        }}
+      >
+              {/* Background Pattern with enhanced animation */}
+              <Box
         sx={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          opacity: 0.1,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
       />
-      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={4} alignItems="center">
-          {/* Left side - Illustration */}
-          <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
-            <Box
-              sx={{
-                p: 4,
-                textAlign: 'center',
-                animation: 'float 6s ease-in-out infinite',
-                '@keyframes float': {
-                  '0%, 100%': { transform: 'translateY(0)' },
-                  '50%': { transform: 'translateY(-20px)' },
-                },
-              }}
-            >
-              <img
-                src="/images/auth/forget.svg"
-                alt="Forgot Password"
-                style={{ maxWidth: '100%', height: 'auto' ,mixBlendMode: 'multiply' }}
-              />
-              <Typography
-                variant="h5"
+        
+        <Container maxWidth="md" sx={{ position: 'relative', zIndex: 2 }}>
+          <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center">
+            {/* Left side - Enhanced Illustration with animations */}
+            <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
+              <Box
                 sx={{
-                  mt: 4,
-                  fontWeight: 600,
-                  background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                  backgroundClip: 'text',
-                  textFillColor: 'transparent',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
+                  p: { md: 3, lg: 4 },
+                  textAlign: 'center',
+                  position: 'relative',
                 }}
               >
-                Password Recovery
-              </Typography>
-              <Typography color="text.secondary" sx={{ mt: 2 }}>
-                Don't worry, we'll help you reset your password securely
-              </Typography>
-            </Box>
-          </Grid>
+                <Box
+                  sx={{
+                    position: 'relative',
+                    animation: 'float 6s ease-in-out infinite',
+                    '@keyframes float': {
+                      '0%, 100%': { transform: 'translateY(0)' },
+                      '50%': { transform: 'translateY(-20px)' },
+                    },
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'scale(1.03)',
+                    },
+                  }}
+                >
+                  <img
+                    src="/images/auth/forget.svg"
+                    alt="Forgot Password"
+                    style={{ 
+                      maxWidth: '85%', 
+                      height: 'auto',
+                      filter: isDark ? 'drop-shadow(0 0 8px rgba(25, 118, 210, 0.3))' : 'drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1))',
+                      mixBlendMode: isDark ? 'lighten' : 'multiply'  
+                    }}
+                  />
+                </Box>
+                
+                <Typography
+                  variant="h4"
+                  sx={{
+                    mt: 4,
+                    fontWeight: 700,
+                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                    backgroundSize: '200% 200%',
+                    animation: 'gradientAnimation 5s ease infinite',
+                    '@keyframes gradientAnimation': {
+                      '0%': { backgroundPosition: '0% 50%' },
+                      '50%': { backgroundPosition: '100% 50%' },
+                      '100%': { backgroundPosition: '0% 50%' },
+                    },
+                    backgroundClip: 'text',
+                    textFillColor: 'transparent',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    letterSpacing: '0.5px',
+                  }}
+                >
+                  Password Recovery
+                </Typography>
+                
+                <Typography 
+                  color="text.secondary" 
+                  sx={{ 
+                    mt: 2, 
+                    fontSize: { xs: '0.9rem', md: '1rem' },
+                    maxWidth: '85%',
+                    mx: 'auto',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Don't worry, we'll help you reset your password securely
+                </Typography>
+              </Box>
+            </Grid>
 
-          {/* Right side - Form */}
-          <Grid item xs={12} md={6}>
-            <Box
-              sx={{
-                backgroundColor: theme.palette.background.paper,
-                borderRadius: 2,
-                p: 4,
-                boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid',
-                borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
-                transition: 'transform 0.3s ease-in-out',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                },
-              }}
-            >
-              <Typography
-                variant="h4"
-                textAlign="center"
+            {/* Right side - Enhanced Form with animations */}
+            <Grid item xs={12} md={6}>
+              <Box
                 sx={{
-                  fontWeight: 700,
-                  mb: 2,
-                  background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                  backgroundClip: 'text',
-                  textFillColor: 'transparent',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
+                  backgroundColor: theme.palette.background.paper,
+                  borderRadius: 3,
+                  p: { xs: 3, sm: 4 },
+                  boxShadow: isDark ? '0 10px 40px rgba(0,0,0,0.3)' : '0 10px 40px rgba(0,0,0,0.1)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid',
+                  borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                  '&:hover': {
+                    transform: 'translateY(-5px)',
+                    boxShadow: isDark ? '0 15px 40px rgba(0,0,0,0.4)' : '0 15px 40px rgba(0,0,0,0.15)',
+                  },
+                  animation: 'fadeInUp 0.6s ease-out',
+                  '@keyframes fadeInUp': {
+                    '0%': { opacity: 0, transform: 'translateY(20px)' },
+                    '100%': { opacity: 1, transform: 'translateY(0)' },
+                  },
                 }}
               >
-                Forgot Password
-              </Typography>
+                <Typography
+                  variant="h4"
+                  textAlign="center"
+                  sx={{
+                    fontWeight: 700,
+                    mb: 1.5,
+                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                    backgroundClip: 'text',
+                    textFillColor: 'transparent',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    letterSpacing: '0.5px',
+                  }}
+                >
+                  Forgot Password
+                </Typography>
 
-              <Typography
-                color="text.secondary"
-                textAlign="center"
-                sx={{ mb: 4 }}
-              >
-                Enter your email address and we'll send you instructions to reset your password.
-              </Typography>
+                <Typography
+                  color="text.secondary"
+                  textAlign="center"
+                  sx={{ 
+                    mb: 4, 
+                    fontSize: '0.95rem',
+                    maxWidth: '90%',
+                    mx: 'auto',
+                    lineHeight: 1.5,
+                  }}
+                >
+                  Enter your email address and we'll send you instructions to reset your password.
+                </Typography>
 
-              <form onSubmit={handleSubmit}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Email"
-                      type="email"
-                      value={email}
-                      onChange={handleChange}
-                      error={!!error}
-                      helperText={error}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <EmailIcon color="action" />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
+                <form onSubmit={handleSubmit}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Email"
+                        type="email"
+                        value={email}
+                        onChange={handleChange}
+                        error={!!error}
+                        helperText={error}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <EmailIcon color="action" />
+                            </InputAdornment>
+                          ),
+                          sx: {
+                            borderRadius: 2,
+                            '& .MuiOutlinedInput-notchedOutline': {
+                              borderWidth: '1.5px',
+                              transition: 'border-color 0.3s',
+                            },
+                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                              borderWidth: '2px',
+                            },
+                          }
+                        }}
+                        sx={{ 
+                          '& label': { fontSize: '0.95rem' },
+                          '& label.Mui-focused': { 
+                            background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                            backgroundClip: 'text',
+                            textFillColor: 'transparent',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                          },
+                        }}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        sx={{
+                          borderRadius: 2,
+                          textTransform: 'none',
+                          fontSize: '1rem',
+                          py: 1.5,
+                          fontWeight: 600,
+                          background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                          backgroundSize: '200% 200%',
+                          animation: 'gradientBtnAnimation 5s ease infinite',
+                          '@keyframes gradientBtnAnimation': {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' },
+                          },
+                          transition: 'all 0.3s ease-in-out',
+                          '&:hover': {
+                            transform: 'translateY(-3px)',
+                            boxShadow: '0 7px 15px rgba(25, 118, 210, 0.3)',
+                          },
+                          '&:active': {
+                            transform: 'translateY(-1px)',
+                          },
+                        }}
+                      >
+                        Send Reset Instructions
+                      </Button>
+
+                      <Box sx={{ mt: 2, textAlign: 'center' }}>
+                        <Typography variant="body2" color="text.secondary">
+                          Remember your password?{' '}
+                          <Link
+                            component={RouterLink}
+                            to="/auth/login"
+                            sx={{
+                              color: theme.palette.primary.main,
+                              fontWeight: 600,
+                              textDecoration: 'none',
+                              position: 'relative',
+                              '&:after': {
+                                content: '""',
+                                position: 'absolute',
+                                width: '100%',
+                                height: '2px',
+                                bottom: -2,
+                                left: 0,
+                                background: 'linear-gradient(90deg, #1976d2, #9c27b0)',
+                                transform: 'scaleX(0)',
+                                transformOrigin: 'bottom right',
+                                transition: 'transform 0.3s',
+                              },
+                              '&:hover:after': {
+                                transform: 'scaleX(1)',
+                                transformOrigin: 'bottom left',
+                              },
+                            }}
+                          >
+                            Back to login
+                          </Link>
+                        </Typography>
+                      </Box>
+                    </Grid>
                   </Grid>
-
-                  <Grid item xs={12}>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      fullWidth
-                      size="large"
-                      sx={{
-                        borderRadius: 2,
-                        textTransform: 'none',
-                        fontSize: '1rem',
-                        background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                        transition: 'all 0.3s ease-in-out',
-                        '&:hover': {
-                          background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
-                          transform: 'scale(1.02)',
-                        },
-                      }}
-                    >
-                      Send Reset Instructions
-                    </Button>
-
-                    <Box sx={{ mt: 2, textAlign: 'center' }}>
-                      <Typography variant="body2" color="text.secondary">
-                        Remember your password?{' '}
-                        <Link
-                          component={RouterLink}
-                          to="/auth/login"
-                          color="primary"
-                          underline="hover"
-                        >
-                          Back to login
-                        </Link>
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </Grid>
-              </form>
-            </Box>
+                </form>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
 
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{ mb: 4 }}
       >
         <Alert
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           severity={snackbar.severity}
-          sx={{ width: '100%' }}
+          variant="filled"
+          sx={{ 
+            width: '100%',
+            borderRadius: 2,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          }}
         >
           {snackbar.message}
         </Alert>
       </Snackbar>
-</>
+    </>
   );
 };
 

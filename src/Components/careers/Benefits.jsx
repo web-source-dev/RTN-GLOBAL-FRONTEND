@@ -62,7 +62,10 @@ const Benefits = () => {
     <Box 
       py={12} 
       sx={{ 
-            background: theme.palette.background.default
+            background: theme.palette.background.default,
+            position: 'relative',
+            overflow: 'hidden',
+            py: { xs: 4, md: 0 },
       }}
     >
        {/* Background Pattern with enhanced animation */}

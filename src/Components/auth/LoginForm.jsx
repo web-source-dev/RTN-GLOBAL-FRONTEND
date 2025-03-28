@@ -14,6 +14,7 @@ import {
   IconButton,
   CircularProgress,
   Paper,
+  Divider,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -23,7 +24,6 @@ import LockIcon from '@mui/icons-material/Lock';
 import LockClockIcon from '@mui/icons-material/LockClock';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import Divider from '@mui/material/Divider';
 import API from '../../BackendAPi/ApiProvider';
 
 const LoginForm = () => {
@@ -51,14 +51,28 @@ const LoginForm = () => {
   useEffect(() => {
     const lockInfo = localStorage.getItem('accountLockInfo');
     if (lockInfo) {
-      const { email, lockExpires } = JSON.parse(lockInfo);
-      const expireTime = new Date(lockExpires);
-      
-      if (expireTime > new Date()) {
-        setAccountLocked(true);
-        setFormData(prev => ({ ...prev, email }));
-      } else {
-        // Lock has expired, clear it
+      try {
+        const { email, lockExpires } = JSON.parse(lockInfo);
+        const expireTime = new Date(lockExpires);
+        
+        if (expireTime > new Date()) {
+          console.log("Found active account lock in localStorage");
+          setAccountLocked(true);
+          setFormData(prev => ({ ...prev, email }));
+          
+          // Initialize timer immediately
+          const now = new Date();
+          const diff = Math.max(0, expireTime - now);
+          const minutes = Math.floor(diff / 60000);
+          const seconds = Math.floor((diff % 60000) / 1000);
+          setRemainingTime(`${minutes}:${seconds.toString().padStart(2, '0')}`);
+        } else {
+          // Lock has expired, clear it
+          console.log("Found expired account lock in localStorage");
+          localStorage.removeItem('accountLockInfo');
+        }
+      } catch (error) {
+        console.error("Error parsing account lock info:", error);
         localStorage.removeItem('accountLockInfo');
       }
     }
@@ -88,6 +102,13 @@ const LoginForm = () => {
             setAccountLocked(false);
             setRemainingTime('');
             localStorage.removeItem('accountLockInfo');
+            
+            // Add notification when lock expires
+            setSnackbar({
+              open: true,
+              message: 'Account has been unlocked, you can try logging in again',
+              severity: 'info',
+            });
           }
         }
       }, 1000);
@@ -136,8 +157,9 @@ const LoginForm = () => {
       } catch (error) {
         console.error('Login error:', error.response);
         
-        // Handle account locked scenario
-        if (error.response?.data?.accountLocked) {
+        // More robust error detection for account locked scenario
+        if (error.response?.status === 403 && error.response?.data?.accountLocked) {
+          console.log("Account locked response detected", error.response.data);
           const lockExpires = new Date(error.response.data.lockExpires);
           
           // Save lock info to localStorage
@@ -148,9 +170,24 @@ const LoginForm = () => {
           
           setAccountLocked(true);
           
+          // Calculate initial remaining time
+          const now = new Date();
+          const diff = Math.max(0, lockExpires - now);
+          const minutes = Math.floor(diff / 60000);
+          const seconds = Math.floor((diff % 60000) / 1000);
+          setRemainingTime(`${minutes}:${seconds.toString().padStart(2, '0')}`);
+          
           setSnackbar({
             open: true,
             message: error.response.data.message || 'Account is temporarily locked due to too many failed attempts',
+            severity: 'error',
+          });
+          return;
+        } else if (error.response?.data?.message?.includes("Too many attempts from this IP")) {
+          // Handle IP rate limiting separately
+          setSnackbar({
+            open: true,
+            message: "Too many login attempts detected. Please try again later or reset your password.",
             severity: 'error',
           });
           return;
@@ -212,81 +249,121 @@ const LoginForm = () => {
         minHeight: '100vh',
         display: 'flex',
         position: 'relative',
-        background: isDark
-          ? 'linear-gradient(to right bottom, #121212, #1a1a1a)'
-          : 'linear-gradient(to right bottom, #f5f5f5, #e0e0e0)',
+        background: theme.palette.background.default,
         overflow: 'hidden',
+        py: { xs: 4, md: 0 },
       }}
     >
-      {/* Decorative Background Elements */}
-      <Box
+          {/* Background Pattern with enhanced animation */}
+          <Box
         sx={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          opacity: 0.1,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
-                     radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
+          opacity: 0.2,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
       />
-
+      
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={4} alignItems="center" sx={{ minHeight: '100vh' }}>
-          {/* Left side - Illustration */}
+        <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center" sx={{ minHeight: '100vh' }}>
+          {/* Left side - Enhanced Illustration */}
           <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
             <Box
               sx={{
-                p: 4,
+                p: { md: 3, lg: 4 },
                 textAlign: 'center',
-                animation: 'float 6s ease-in-out infinite',
-                '@keyframes float': {
-                  '0%, 100%': { transform: 'translateY(0)' },
-                  '50%': { transform: 'translateY(-20px)' },
-                },
+                position: 'relative',
               }}
             >
-              <img
-                src="/images/auth/secure-login.svg"
-                alt="Secure Login"
-                style={{ maxWidth: '100%', height: 'auto' }}
-              />
+              <Box
+                sx={{
+                  position: 'relative',
+                  animation: 'float 6s ease-in-out infinite',
+                  '@keyframes float': {
+                    '0%, 100%': { transform: 'translateY(0)' },
+                    '50%': { transform: 'translateY(-20px)' },
+                  },
+                  transition: 'transform 0.3s ease',
+                  '&:hover': {
+                    transform: 'scale(1.03)',
+                  },
+                }}
+              >
+                <img
+                  src="/images/auth/login.svg"
+                  alt="Secure Login"
+                  style={{ 
+                    maxWidth: '85%', 
+                    height: 'auto',
+                    filter: isDark ? 'drop-shadow(0 0 10px rgba(25, 118, 210, 0.4))' : 'drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1))'
+                  }}
+                />
+              </Box>
+              
               <Typography
                 variant="h4"
                 sx={{
-                  mt: 4,
-                  fontWeight: 600,
+                  fontWeight: 700,
                   background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                  backgroundSize: '200% 200%',
+                  animation: 'gradientAnimation 5s ease infinite',
+                  '@keyframes gradientAnimation': {
+                    '0%': { backgroundPosition: '0% 50%' },
+                    '50%': { backgroundPosition: '100% 50%' },
+                    '100%': { backgroundPosition: '0% 50%' },
+                  },
                   backgroundClip: 'text',
                   textFillColor: 'transparent',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
+                  letterSpacing: '0.5px',
                 }}
               >
                 Welcome Back!
               </Typography>
-              <Typography color="text.secondary" sx={{ mt: 2 }}>
-                Sign in to your account to continue your journey
+              
+              <Typography 
+                color="text.secondary" 
+                sx={{ 
+                  mt: 2, 
+                  fontSize: { xs: '0.9rem', md: '1rem' },
+                  maxWidth: '85%', 
+                  mx: 'auto',
+                  lineHeight: 1.6,
+                }}
+              >
+                Sign in to your account to continue your journey with us
               </Typography>
             </Box>
           </Grid>
 
-          {/* Right side - Form */}
+          {/* Right side - Enhanced Form */}
           <Grid item xs={12} md={6}>
-            <Box
+            <Paper
+              elevation={isDark ? 4 : 6}
               sx={{
-                backgroundColor: theme.palette.background.paper,
-                borderRadius: 2,
-                p: 4,
-                boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+                p: { xs: 3, sm: 4 },
+                borderRadius: 3,
+                background: theme.palette.background.default,
                 backdropFilter: 'blur(10px)',
                 border: '1px solid',
-                borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
-                transition: 'transform 0.3s ease-in-out',
+                borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                 '&:hover': {
                   transform: 'translateY(-5px)',
+                  boxShadow: isDark 
+                    ? '0 15px 30px rgba(0, 0, 0, 0.5)' 
+                    : '0 15px 30px rgba(0, 0, 0, 0.1)',
+                },
+                animation: 'fadeInUp 0.6s ease-out',
+                '@keyframes fadeInUp': {
+                  '0%': { opacity: 0, transform: 'translateY(20px)' },
+                  '100%': { opacity: 1, transform: 'translateY(0)' },
                 },
               }}
             >
@@ -301,13 +378,56 @@ const LoginForm = () => {
                     gap: 2
                   }}
                 >
-                  <LockClockIcon color="error" sx={{ fontSize: 60 }} />
+                  <Box
+                    sx={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: '50%',
+                      background: isDark 
+                        ? 'rgba(211, 47, 47, 0.2)' 
+                        : 'rgba(211, 47, 47, 0.1)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      mb: 2,
+                      animation: 'pulse 2s infinite',
+                      '@keyframes pulse': {
+                        '0%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0.4)' },
+                        '70%': { boxShadow: '0 0 0 15px rgba(211, 47, 47, 0)' },
+                        '100%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0)' },
+                      },
+                    }}
+                  >
+                    <LockClockIcon
+                      sx={{ 
+                        fontSize: 60,
+                        color: theme.palette.error.main,
+                        animation: 'shake 1.5s ease infinite',
+                        '@keyframes shake': {
+                          '0%, 100%': { transform: 'rotate(0)' },
+                          '10%, 30%, 50%, 70%, 90%': { transform: 'rotate(-5deg)' },
+                          '20%, 40%, 60%, 80%': { transform: 'rotate(5deg)' },
+                        },
+                      }}
+                    />
+                  </Box>
                   
-                  <Typography variant="h4" color="error" gutterBottom>
-                    Account Temporarily Locked
+                  <Typography 
+                    variant="h4" 
+                    sx={{
+                      fontWeight: 700,
+                      background: 'linear-gradient(45deg, #d32f2f, #f44336)',
+                      backgroundClip: 'text',
+                      textFillColor: 'transparent',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      letterSpacing: '0.5px',
+                    }}
+                  >
+                    Account Locked
                   </Typography>
                   
-                  <Typography variant="body1" paragraph>
+                  <Typography variant="body1" color="text.secondary" paragraph>
                     Too many failed login attempts. Please try again in:
                   </Typography>
                   
@@ -317,11 +437,19 @@ const LoginForm = () => {
                       py: 2, 
                       px: 4, 
                       borderRadius: 2,
-                      background: theme.palette.error.light,
-                      color: theme.palette.error.contrastText
+                      background: isDark ? 'rgba(211, 47, 47, 0.2)' : 'rgba(211, 47, 47, 0.1)',
+                      border: '1px solid',
+                      borderColor: isDark ? 'rgba(211, 47, 47, 0.3)' : 'rgba(211, 47, 47, 0.2)',
                     }}
                   >
-                    <Typography variant="h3" fontFamily="monospace">
+                    <Typography 
+                      variant="h3" 
+                      fontFamily="monospace"
+                      sx={{
+                        color: theme.palette.error.main,
+                        animation: 'pulse 1s infinite ease-in-out',
+                      }}
+                    >
                       {remainingTime}
                     </Typography>
                   </Paper>
@@ -332,8 +460,28 @@ const LoginForm = () => {
                       <Link
                         component={RouterLink}
                         to="/auth/forgot-password"
-                        color="primary"
-                        underline="hover"
+                        sx={{
+                          color: theme.palette.primary.main,
+                          fontWeight: 600,
+                          textDecoration: 'none',
+                          position: 'relative',
+                          '&:after': {
+                            content: '""',
+                            position: 'absolute',
+                            width: '100%',
+                            height: '2px',
+                            bottom: -2,
+                            left: 0,
+                            background: 'linear-gradient(90deg, #1976d2, #9c27b0)',
+                            transform: 'scaleX(0)',
+                            transformOrigin: 'bottom right',
+                            transition: 'transform 0.3s',
+                          },
+                          '&:hover:after': {
+                            transform: 'scaleX(1)',
+                            transformOrigin: 'bottom left',
+                          },
+                        }}
                       >
                         Reset it here
                       </Link>
@@ -347,73 +495,20 @@ const LoginForm = () => {
                     textAlign="center"
                     sx={{
                       fontWeight: 700,
-                      mb: 4,
+                      mb: 2,
                       background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
                       backgroundClip: 'text',
                       textFillColor: 'transparent',
                       WebkitBackgroundClip: 'text',
                       WebkitTextFillColor: 'transparent',
+                      letterSpacing: '0.5px',
                     }}
                   >
                     Sign In
                   </Typography>
 
                   <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        startIcon={<GoogleIcon />}
-                        onClick={handleGoogleLogin}
-                        sx={{
-                          py: 1.2,
-                          borderRadius: 2,
-                          borderColor: '#DBDBDB',
-                          color: theme.palette.text.primary,
-                          textTransform: 'none',
-                          fontSize: '1rem',
-                          '&:hover': {
-                            borderColor: '#ABABAB',
-                            backgroundColor: 'rgba(0,0,0,0.01)'
-                          }
-                        }}
-                      >
-                        Continue with Google
-                      </Button>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        startIcon={<FacebookIcon style={{ color: '#1877F2' }} />}
-                        onClick={handleFacebookLogin}
-                        sx={{
-                          py: 1.2,
-                          borderRadius: 2,
-                          borderColor: '#DBDBDB',
-                          color: theme.palette.text.primary,
-                          textTransform: 'none',
-                          fontSize: '1rem',
-                          '&:hover': {
-                            borderColor: '#ABABAB',
-                            backgroundColor: 'rgba(0,0,0,0.01)'
-                          }
-                        }}
-                      >
-                        Continue with Facebook
-                      </Button>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
-                        <Divider sx={{ flexGrow: 1 }} />
-                        <Typography variant="body2" color="text.secondary" sx={{ mx: 2 }}>
-                          or
-                        </Typography>
-                        <Divider sx={{ flexGrow: 1 }} />
-                      </Box>
-                    </Grid>
+        
 
                     <Grid item xs={12}>
                       <TextField
@@ -432,12 +527,24 @@ const LoginForm = () => {
                             </InputAdornment>
                           ),
                           sx: {
+                            borderRadius: 2,
                             '& .MuiOutlinedInput-notchedOutline': {
-                              borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                              borderWidth: '1.5px',
+                              transition: 'border-color 0.3s',
                             },
-                            '&:hover .MuiOutlinedInput-notchedOutline': {
-                              borderColor: theme.palette.primary.main,
+                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                              borderWidth: '2px',
                             },
+                          }
+                        }}
+                        sx={{ 
+                          '& label': { fontSize: '0.95rem' },
+                          '& label.Mui-focused': { 
+                            background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                            backgroundClip: 'text',
+                            textFillColor: 'transparent',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
                           },
                         }}
                       />
@@ -465,9 +572,11 @@ const LoginForm = () => {
                                 onClick={() => setShowPassword(!showPassword)}
                                 edge="end"
                                 sx={{
-                                  color: theme.palette.primary.main,
+                                  color: showPassword ? theme.palette.primary.main : 'inherit',
+                                  transition: 'all 0.2s',
                                   '&:hover': {
-                                    backgroundColor: `${theme.palette.primary.main}15`,
+                                    background: `${theme.palette.primary.main}15`,
+                                    transform: 'scale(1.05)',
                                   },
                                 }}
                               >
@@ -476,16 +585,122 @@ const LoginForm = () => {
                             </InputAdornment>
                           ),
                           sx: {
+                            borderRadius: 2,
                             '& .MuiOutlinedInput-notchedOutline': {
-                              borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
+                              borderWidth: '1.5px',
+                              transition: 'border-color 0.3s',
                             },
-                            '&:hover .MuiOutlinedInput-notchedOutline': {
-                              borderColor: theme.palette.primary.main,
+                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                              borderWidth: '2px',
                             },
+                          }
+                        }}
+                        sx={{ 
+                          '& label': { fontSize: '0.95rem' },
+                          '& label.Mui-focused': { 
+                            background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                            backgroundClip: 'text',
+                            textFillColor: 'transparent',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
                           },
                         }}
                       />
                     </Grid>
+                    
+                    <Grid item xs={12}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
+                        <Divider sx={{ flexGrow: 1 }} />
+                        <Typography variant="body2" color="text.secondary" sx={{ mx: 2 }}>
+                          or
+                        </Typography>
+                        <Divider sx={{ flexGrow: 1 }} />
+                      </Box>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        startIcon={<GoogleIcon sx={{ color: '#DB4437' }} />}
+                        onClick={handleGoogleLogin}
+                        sx={{
+                          py: 1.2,
+                          borderRadius: 2,
+                          borderColor: isDark ? 'rgba(255,255,255,0.2)' : '#DBDBDB',
+                          color: theme.palette.text.primary,
+                          textTransform: 'none',
+                          fontSize: '1rem',
+                          position: 'relative',
+                          overflow: 'hidden',
+                          '&:before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: '-100%',
+                            width: '100%',
+                            height: '100%',
+                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+                            transition: 'left 0.7s',
+                          },
+                          '&:hover': {
+                            borderColor: isDark ? 'rgba(255,255,255,0.3)' : '#ABABAB',
+                            transform: 'translateY(-2px)',
+                            boxShadow: isDark 
+                              ? '0 4px 12px rgba(0,0,0,0.3)' 
+                              : '0 4px 12px rgba(0,0,0,0.1)',
+                            '&:before': {
+                              left: '100%',
+                            },
+                          },
+                          transition: 'all 0.3s ease',
+                        }}
+                      >
+                        Continue with Google
+                      </Button>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        startIcon={<FacebookIcon style={{ color: '#1877F2' }} />}
+                        onClick={handleFacebookLogin}
+                        sx={{
+                          py: 1.2,
+                          borderRadius: 2,
+                          borderColor: isDark ? 'rgba(255,255,255,0.2)' : '#DBDBDB',
+                          color: theme.palette.text.primary,
+                          textTransform: 'none',
+                          fontSize: '1rem',
+                          position: 'relative',
+                          overflow: 'hidden',
+                          '&:before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: '-100%',
+                            width: '100%',
+                            height: '100%',
+                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+                            transition: 'left 0.7s',
+                          },
+                          '&:hover': {
+                            borderColor: isDark ? 'rgba(255,255,255,0.3)' : '#ABABAB',
+                            transform: 'translateY(-2px)',
+                            boxShadow: isDark 
+                              ? '0 4px 12px rgba(0,0,0,0.3)' 
+                              : '0 4px 12px rgba(0,0,0,0.1)',
+                            '&:before': {
+                              left: '100%',
+                            },
+                          },
+                          transition: 'all 0.3s ease',
+                        }}
+                      >
+                        Continue with Facebook
+                      </Button>
+                    </Grid>
+
 
                     <Grid item xs={12}>
                       <Box
@@ -499,8 +714,28 @@ const LoginForm = () => {
                         <Link
                           component={RouterLink}
                           to="/auth/forgot-password"
-                          color="primary"
-                          underline="hover"
+                          sx={{
+                            color: theme.palette.primary.main,
+                            fontWeight: 600,
+                            textDecoration: 'none',
+                            position: 'relative',
+                            '&:after': {
+                              content: '""',
+                              position: 'absolute',
+                              width: '100%',
+                              height: '2px',
+                              bottom: -2,
+                              left: 0,
+                              background: 'linear-gradient(90deg, #1976d2, #9c27b0)',
+                              transform: 'scaleX(0)',
+                              transformOrigin: 'bottom right',
+                              transition: 'transform 0.3s',
+                            },
+                            '&:hover:after': {
+                              transform: 'scaleX(1)',
+                              transformOrigin: 'bottom left',
+                            },
+                          }}
                         >
                           Forgot Password?
                         </Link>
@@ -516,11 +751,23 @@ const LoginForm = () => {
                           borderRadius: 2,
                           textTransform: 'none',
                           fontSize: '1rem',
+                          py: 1.5,
+                          fontWeight: 600,
                           background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                          backgroundSize: '200% 200%',
+                          animation: 'gradientBtnAnimation 5s ease infinite',
+                          '@keyframes gradientBtnAnimation': {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' },
+                          },
                           transition: 'all 0.3s ease-in-out',
                           '&:hover': {
-                            background: 'linear-gradient(45deg, #1565c0, #7b1fa2)',
-                            transform: 'scale(1.02)',
+                            transform: 'translateY(-3px)',
+                            boxShadow: '0 7px 15px rgba(25, 118, 210, 0.3)',
+                          },
+                          '&:active': {
+                            transform: 'translateY(-1px)',
                           },
                         }}
                       >
@@ -537,18 +784,39 @@ const LoginForm = () => {
                           <Link
                             component={RouterLink}
                             to="/auth/register"
-                            color="primary"
-                            underline="hover"
+                            sx={{
+                              color: theme.palette.primary.main,
+                              fontWeight: 600,
+                              textDecoration: 'none',
+                              position: 'relative',
+                              '&:after': {
+                                content: '""',
+                                position: 'absolute',
+                                width: '100%',
+                                height: '2px',
+                                bottom: -2,
+                                left: 0,
+                                background: 'linear-gradient(90deg, #1976d2, #9c27b0)',
+                                transform: 'scaleX(0)',
+                                transformOrigin: 'bottom right',
+                                transition: 'transform 0.3s',
+                              },
+                              '&:hover:after': {
+                                transform: 'scaleX(1)',
+                                transformOrigin: 'bottom left',
+                              },
+                            }}
                           >
                             Sign up
                           </Link>
                         </Typography>
                       </Box>
                     </Grid>
+
                   </Grid>
                 </form>
               )}
-            </Box>
+            </Paper>
           </Grid>
         </Grid>
       </Container>
@@ -557,11 +825,18 @@ const LoginForm = () => {
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{ mb: 4 }}
       >
         <Alert
           onClose={() => setSnackbar({ ...snackbar, open: false })}
           severity={snackbar.severity}
-          sx={{ width: '100%' }}
+          variant="filled"
+          sx={{ 
+            width: '100%',
+            borderRadius: 2,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          }}
         >
           {snackbar.message}
         </Alert>

@@ -85,7 +85,12 @@ function App() {
             </Route>
             <Route path="/livechat" element={<LiveChat />} />
             <Route path="/Community" element={<GlobalLiveChat />} />
-
+            <Route path="/auth/login" element={<LoginForm />} />
+                  <Route path="/auth/register" element={<RegisterForm />} />
+                  <Route path="/auth/forgot-password" element={<ForgotPasswordForm />} />
+                  <Route path="/auth/reset-password" element={<ResetPasswordForm />} />
+                  <Route path="/auth/social-success" element={<SocialAuthSuccess />} />
+                  <Route path="/auth/verify-email" element={<EmailVerificationForm />} />
             <Route path="/*" element={
               <Layout>
                 <Routes>
@@ -128,10 +133,7 @@ function App() {
                   <Route path="/news/letter/form" element={<NewsletterForm />} />
                   <Route path="/job/application/form" element={<JobApplicationForm />} />
                   <Route path="/support/form" element={<SupportForm />} />
-                  <Route path="/auth/login" element={<LoginForm />} />
-                  <Route path="/auth/register" element={<RegisterForm />} />
-                  <Route path="/auth/forgot-password" element={<ForgotPasswordForm />} />
-                  <Route path="/auth/reset-password" element={<ResetPasswordForm />} />
+
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/terms-of-service" element={<TermsOfService />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -145,8 +147,6 @@ function App() {
                   <Route path="/payment/:id" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
                   <Route path="/verify-invoice/:invoiceNumber" element={<VerifyInvoice />} />
                   <Route path="/verify-receipt/:receiptNumber" element={<VerifyReceipt />} />
-                  <Route path="/auth/verify-email" element={<EmailVerificationForm />} />
-                  <Route path="/auth/social-success" element={<SocialAuthSuccess />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Layout>
