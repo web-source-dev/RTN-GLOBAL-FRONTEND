@@ -78,6 +78,10 @@ const ChatRoomsList = () => {
   useEffect(() => {
     fetchChatRooms();
   }, []);
+  // redirect if not logged in
+  if (!user) {
+    navigate('/login');
+  }
 
   const fetchChatRooms = async () => {
     try {
