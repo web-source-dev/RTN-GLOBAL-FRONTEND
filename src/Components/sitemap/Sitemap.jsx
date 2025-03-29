@@ -152,13 +152,10 @@ const Sitemap = () => {
       ],
     },
     {
-      title: 'User',
+      title: 'Auth',
       links: [
         { label: 'Login', path: '/auth/login' },
         { label: 'Register', path: '/auth/register' },
-        { label: 'Dashboard', path: '/dashboard/user' },
-        { label: 'Settings', path: '/settings' },
-        { label: 'Live Chat', path: '/livechat' },
       ],
     },
     {

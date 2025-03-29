@@ -94,41 +94,90 @@ const GlobalLiveChat = () => {
       // Get or create global chat room
       const roomResponse = await API.get('/api/global/chat/global');
       setChatRoom(roomResponse.data);
+      console.log('Chat room initialized:', roomResponse.data);
 
-      // Initialize socket connection
-      const token = localStorage.getItem('token');
+      // Initialize socket connection - using withCredentials to send cookies
+      console.log('Initializing socket connection with cookies...');
       const newSocket = io(process.env.REACT_APP_API_URL, {
-        auth: { token }
+        withCredentials: true,
+        transports: ['websocket', 'polling']
       });
 
+      // Add connection listeners
+      newSocket.on('connect', () => {
+        console.log('Socket connected successfully');
+      });
+      
+      newSocket.on('connect_error', (err) => {
+        console.error('Socket connection error:', err.message);
+        setError(`Connection error: ${err.message}`);
+      });
+      
       setupSocketListeners(newSocket);
       setSocket(newSocket);
+      
+      // After setting up socket, fetch messages for the room
+      if (roomResponse.data && roomResponse.data._id) {
+        fetchMessagesForRoom(roomResponse.data._id);
+      }
     } catch (error) {
-      setError('Error connecting to chat');
       console.error('Chat initialization error:', error);
+      setError(`Error connecting to chat: ${error.message}`);
+    }
+  };
+
+  const fetchMessagesForRoom = async (roomId) => {
+    try {
+      setLoading(true);
+      console.log(`Fetching messages for room: ${roomId}`);
+      const response = await API.get(`/api/global/chat/messages/${roomId}`, {
+        params: { page, limit: 20 }
+      });
+      
+      console.log('Messages response:', response.data);
+      
+      if (response.data && Array.isArray(response.data.messages)) {
+        setMessages(response.data.messages);
+        setHasMore(response.data.currentPage < response.data.totalPages);
+      } else {
+        console.warn('Unexpected message format:', response.data);
+        setMessages([]);
+        setHasMore(false);
+      }
+    } catch (err) {
+      console.error('Error fetching messages:', err);
+      setError(`Failed to load messages: ${err.message}`);
+      setMessages([]); 
+    } finally {
+      setLoading(false);
     }
   };
 
   const setupSocketListeners = (socket) => {
     socket.on('connect', () => {
       console.log('Connected to chat');
-      socket.emit('loadMessages', { page: 1, limit: 20 });
+      // Don't need to call loadMessages here as we're already fetching them in initializeChat
     });
 
     socket.on('messages', ({ messages: newMessages, page }) => {
-      setMessages(prev => {
-        if (page === 1) {
-          return newMessages;
-        }
-        const existingIds = new Set(prev.map(msg => msg._id));
-        const uniqueNewMessages = newMessages.filter(msg => !existingIds.has(msg._id));
-        return [...uniqueNewMessages, ...prev];
-      });
-      setHasMore(newMessages.length === 20);
+      if (Array.isArray(newMessages)) {
+        setMessages(prev => {
+          if (page === 1) {
+            return newMessages;
+          }
+          const existingIds = new Set(prev.map(msg => msg._id));
+          const uniqueNewMessages = newMessages.filter(msg => !existingIds.has(msg._id));
+          return [...uniqueNewMessages, ...prev];
+        });
+        setHasMore(newMessages.length === 20);
+      }
     });
 
     socket.on('newMessage', (message) => {
       setMessages(prev => {
+        if (!Array.isArray(prev)) {
+          return [message];
+        }
         if (prev.some(msg => msg._id === message._id)) {
           return prev;
         }
@@ -423,22 +472,12 @@ const GlobalLiveChat = () => {
     }
   });
 
-  useEffect(() => {
-    fetchMessages();
-    // Set up polling if needed
-    const interval = setInterval(fetchMessages, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
   const fetchMessages = async () => {
-    try {
-      setLoading(true);
-      const response = await API.get('/api/chat/global');
-      setMessages(response.data);
-    } catch (err) {
-      console.error('Error fetching messages:', err);
-    } finally {
-      setLoading(false);
+    if (chatRoom && chatRoom._id) {
+      fetchMessagesForRoom(chatRoom._id);
+    } else {
+      // If no chat room exists yet, initialize the chat
+      initializeChat();
     }
   };
 
@@ -519,7 +558,7 @@ const GlobalLiveChat = () => {
               ref={messagesContainerRef}
               onScroll={handleScroll}
             >
-              {messages.map((message, index) => (
+              {Array.isArray(messages) ? messages.map((message, index) => (
                 <ListItem
                   key={index}
                   sx={{
@@ -658,7 +697,11 @@ const GlobalLiveChat = () => {
                     </Typography>
                   </Box>
                 </ListItem>
-              ))}
+              )) : (
+                <ListItem>
+                  <Typography>No messages yet</Typography>
+                </ListItem>
+              )}
               <div ref={messagesEndRef} />
             </List>
 
