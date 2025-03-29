@@ -76,13 +76,13 @@ const ChatRoomsList = () => {
   const isAdmin = user?.role === 'admin';
 
   useEffect(() => {
+    if (!user) {
+      navigate('/auth/login');
+      return;
+    }
     fetchChatRooms();
   }, []);
   // redirect if not logged in
-  if (!user) {
-    navigate('/auth/login');
-    return;
-  }
 
   const fetchChatRooms = async () => {
     try {
