@@ -24,7 +24,7 @@ import StarIcon from '@mui/icons-material/Star';
 import FiberNewIcon from '@mui/icons-material/FiberNew';
 import API from '../../../BackendAPi/ApiProvider';
 
-const BlogMegaMenu = () => {
+const BlogMegaMenu = ({ onItemClick }) => {
   const theme = useTheme();
   const isExtraSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const isSmall = useMediaQuery(theme.breakpoints.down('md'));
@@ -121,6 +121,7 @@ const BlogMegaMenu = () => {
                 elevation={0}
                 component={Link}
                 to={`/blog/post/${blog._id}`}
+                onClick={onItemClick}
                 onMouseEnter={() => setHoveredBlog(blog._id)}
                 onMouseLeave={() => setHoveredBlog(null)}
                 sx={{
@@ -226,6 +227,7 @@ const BlogMegaMenu = () => {
                 key={blog._id}
                 component={Link}
                 to={`/blog/post/${blog._id}`}
+                onClick={onItemClick}
                 onMouseEnter={() => setHoveredBlog(blog._id)}
                 onMouseLeave={() => setHoveredBlog(null)}
                 sx={{
@@ -339,6 +341,7 @@ const BlogMegaMenu = () => {
                 key={blog._id}
                 component={Link}
                 to={`/blog/post/${blog._id}`}
+                onClick={onItemClick}
                 onMouseEnter={() => setHoveredBlog(blog._id)}
                 onMouseLeave={() => setHoveredBlog(null)}
                 sx={{

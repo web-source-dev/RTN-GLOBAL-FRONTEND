@@ -112,6 +112,7 @@ const TestimonialsAnim = () => {
         <Box
           component="img"
           src={client.avatar}
+          loading="lazy"
           sx={{
             width: 56,
             height: 56,
@@ -285,9 +286,11 @@ const TestimonialsAnim = () => {
             borderColor: theme.palette.text.primary, // Adjusted for better compatibility
             borderStyle: "solid", // 🔹 Ensures the border is visible
             textTransform: "none",
+            cursor: 'pointer',
             fontSize: "14px",
             "&:hover": { bgcolor: theme.palette.background.paper },
           }}
+          onClick={() => window.location.href = '/case-studies'}
         >
           See All Projects
         </Button>
@@ -300,7 +303,9 @@ const TestimonialsAnim = () => {
             borderRadius: 1.5,
             textTransform: "none",
             fontSize: "14px",
-          }}
+            cursor: 'pointer',
+            }}
+          onClick={() => window.location.href = '/contact'}
         >
           Contact Now
         </Button>
@@ -345,7 +350,7 @@ const TestimonialsAnim = () => {
         }}
       />
 
-          <Container maxWidth="xl" sx={{ position: "relative" }}>
+          <Container maxWidth="xl" sx={{ position: "relative" ,zIndex: 2}}>
             <Box
               sx={{
                 display: "flex",

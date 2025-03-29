@@ -23,18 +23,17 @@ const HomePage = () => {
   return (
     <Box>
       <Hero />
-     
       <Features />
       <Marquee />
       <Services />
       {isDesktop && <StickTextSection />}
       <About />
-      <Stats />
+      {isDesktop && <Stats />}
       <Portfolio />
       <TestimonialsAnim />
       <Blog />
       <Contact />
-      <NewsLetter />
+      {isDesktop && <NewsLetter />}
       <CTA />
     </Box>
   );

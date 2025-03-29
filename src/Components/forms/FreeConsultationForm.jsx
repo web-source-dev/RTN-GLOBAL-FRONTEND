@@ -33,14 +33,14 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  LinearProgress
+  LinearProgress,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import BusinessIcon from '@mui/icons-material/Business';
-import SecurityIcon from '@mui/icons-material/Security';
-import GroupIcon from '@mui/icons-material/Group';
 import Contact from '../home/Contact';
+import { Star, School, AttachMoney } from "@mui/icons-material";
 import { CheckCircleOutline, Assessment, TipsAndUpdates, SettingsSuggest, Schedule } from "@mui/icons-material";
 import API from '../../BackendAPi/ApiProvider';
 import { useAuth } from '../../contexts/AuthContext';
@@ -179,7 +179,13 @@ const FreeConsultationForm = () => {
       .required('Phone number is required'),
     companyName: Yup.string(),
     consultationType: Yup.string().required('Consultation type is required'),
-    duration: Yup.number().required('Duration is required'),
+    duration: Yup.number()
+      .required('Duration is required')
+      .test('free-consultation-duration', 'Free consultations are only available for 30 minutes', 
+        function(value) {
+          // Only apply this validation for first-time consultations
+          return !isFirstConsultation || value === 30;
+        }),
     preferredDate: Yup.date().required('Date is required').min(new Date(), 'Date cannot be in the past'),
     preferredTime: Yup.string().required('Time slot is required'),
     message: Yup.string().max(500, 'Message cannot exceed 500 characters')
@@ -414,6 +420,7 @@ const FreeConsultationForm = () => {
     }
   };
 
+
   const renderLoginMessage = () => {
     if (!isAuthenticated) {
       return (
@@ -569,15 +576,24 @@ const FreeConsultationForm = () => {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             label="Session Duration"
+            disabled={isFirstConsultation} // Disable for first-time consultations
           >
             {durationOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
+              <MenuItem 
+                key={option.value} 
+                value={option.value}
+                disabled={isFirstConsultation && option.value !== 30} // Disable non-30min options for first consultation
+              >
                 {option.label} {!isFirstConsultation && `- $${option.price}`}
+                {isFirstConsultation && option.value === 30 && " (Free first consultation)"}
               </MenuItem>
             ))}
           </Select>
           {formik.touched.duration && formik.errors.duration && (
             <FormHelperText>{formik.errors.duration}</FormHelperText>
+          )}
+          {isFirstConsultation && (
+            <FormHelperText>Your first consultation is free and limited to 30 minutes</FormHelperText>
           )}
         </FormControl>
       </Grid>
@@ -711,7 +727,7 @@ const FreeConsultationForm = () => {
           </Typography>
           {!isFirstConsultation && (
             <Typography variant="body2" sx={{ mt: 1 }}>
-              Payment will be handled manually. Our team will contact you to arrange payment after booking.
+              Our team will contact you to arrange payment after booking.
             </Typography>
           )}
         </Paper>
@@ -749,15 +765,15 @@ const FreeConsultationForm = () => {
   
   return (
     <Box sx={{ py: 8 }}>
-      <Container maxWidth="lg">
-        <Grid container spacing={4}>
+      <Container maxWidth="xl">
+        <Grid container spacing={4} position="relative">
           <Grid item xs={12} md={8}>
             <Typography variant="h4" gutterBottom>
               Schedule Your {isFirstConsultation ? 'Free' : 'Paid'} Consultation
             </Typography>
             <Typography variant="body1" color="text.secondary" paragraph>
               {isFirstConsultation 
-                ? "Book your complimentary consultation session with our experts today. Let's discuss how we can help you achieve your goals."
+                ? "Book your complimentary 30-minute consultation session with our experts today. Let's discuss how we can help you achieve your goals."
                 : "Book your follow-up consultation session. Choose the duration that works best for your needs."}
             </Typography>
             
@@ -876,13 +892,13 @@ const FreeConsultationForm = () => {
                 </TableBody>
               </Table>
               <Alert severity="info" sx={{ mt: 3 }}>
-                Payment is handled manually. After booking, our team will contact you to arrange payment.
+                After booking, our team will contact you to arrange payment.
               </Alert>
             </Paper>
             )}
             
             {/* Additional Sections */}
-            <Grid container spacing={4} sx={{ mt: 2 }}>
+            <Grid container spacing={4} sx={{ my: 3 }}>
               {/* Our Process Section */}
               <Grid item xs={12}>
                 <Typography variant="h4" mb={5} align="center" color="primary" gutterBottom>
@@ -940,50 +956,56 @@ const FreeConsultationForm = () => {
                   ))}
                 </Grid>
               </Grid>
-
-              {/* Service Guarantees Section */}
-              <Grid item xs={12} sx={{ mt: 8 }}>
-                <Paper elevation={3} sx={{ p: 4, background: (theme) =>
-                        theme.palette.mode === 'dark'
-                          ? 'linear-gradient(45deg, #90CAF9, #CE93D8)'
-                          : 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                }}>
-                  <Typography variant="h4" mb={5} align="center" color="primary.contrastText" gutterBottom>
-                    Our Service Guarantees
-                  </Typography>
-                  <Grid container spacing={3} justifyContent="center">
-                    {[
-                      {
-                        title: "100% Confidentiality",
-                        description: "Your business information is always protected with strict confidentiality agreements."
-                      },
-                      {
-                        title: "Expert Consultants",
-                        description: "Work with industry-leading experts with proven track records."
-                      },
-                      {
-                        title: "Tailored Solutions",
-                        description: "Get customized recommendations specific to your business needs."
-                      }
-                    ].map((guarantee, index) => (
-                      <Grid item xs={12} md={4} key={index}>
-                        <Box sx={{ backgroundColor: 'white', p: 3, borderRadius: 1, height: '100%' }}>
-                          <Typography variant="h6" gutterBottom color="primary">
-                            {guarantee.title}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {guarantee.description}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Paper>
-              </Grid>
             </Grid>
           </Grid>
-          
-          {/* Sidebar remains unchanged */}
+          <Grid item xs={12} md={4}>
+          <Box sx={{ position: 'sticky', top: '100px', right: '0', zIndex: 1000 }}>
+          <Paper elevation={4} sx={{ p: 4, mt: 4, borderRadius: 3, bgcolor: theme.palette.background.paper }}>
+      <Typography variant="h5" color={theme.palette.primary.main} fontWeight="bold" gutterBottom>
+        Why Choose Our Consultation?
+      </Typography>
+      <Typography variant="body1" color={theme.palette.text.secondary} paragraph>
+        <strong>RTN Global</strong> offers expert guidance tailored to your needs. Whether you're looking for 
+        strategic advice, professional insights, or a roadmap for success, we provide consultations that deliver 
+        real results.
+      </Typography>
+
+      <Box sx={{ mt: 2 }}>
+        <List>
+          <ListItem>
+            <ListItemIcon>
+              <Star color="secondary" />
+            </ListItemIcon>
+            <ListItemText 
+              primary="Personalized Approach" 
+              secondary="Get advice tailored to your goals and challenges." 
+            />
+          </ListItem>
+
+          <ListItem>
+            <ListItemIcon>
+              <School color="primary" />
+            </ListItemIcon>
+            <ListItemText 
+              primary="Experienced Professionals" 
+              secondary="Work with industry experts who understand your needs." 
+            />
+          </ListItem>
+
+          <ListItem>
+            <ListItemIcon>
+              <AttachMoney color="success" />
+            </ListItemIcon>
+            <ListItemText 
+              primary="Flexible & Affordable" 
+              secondary="Choose a consultation length that suits your budget." 
+            />
+          </ListItem>
+        </List>
+      </Box>
+    </Paper>
+          </Box>
+          </Grid>
         </Grid>
       </Container>
       <Contact />

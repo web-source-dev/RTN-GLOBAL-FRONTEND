@@ -1,52 +1,99 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Box, Container, Typography, Button } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Box, Container, Typography, Button, Card, CardContent, Divider, LinearProgress } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
+import { motion } from 'framer-motion';
 
 const SessionExpired = () => {
+  const [countdown, setCountdown] = useState(10);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      navigate('/auth/login');
+    }
+  }, [countdown, navigate]);
+
+  const progressValue = (countdown / 10) * 100;
+
   return (
     <Box
       sx={{
-        minHeight: '80vh',
+        minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
-        backgroundColor: 'background.default'
+        justifyContent: 'center',
+        backgroundColor: 'background.default',
+        px: 2,
       }}
     >
-      <Container maxWidth="sm">
-        <Box sx={{ textAlign: 'center' }}>
-          <LockIcon sx={{ fontSize: 100, color: 'warning.main', mb: 4 }} />
-          <Typography variant="h1" component="h1" gutterBottom>
-            401
-          </Typography>
-          <Typography variant="h4" gutterBottom>
-            Session Expired
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-            Your session has expired or you are not authorized to access this resource.
-            Please log in again to continue.
-          </Typography>
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-            <Button
-              component={Link}
-              to="/auth/login"
-              variant="contained"
-              color="primary"
-              size="large"
+      <Container maxWidth="sm" sx={{position:'relative',zIndex:1}}>
+        <Card sx={{ textAlign: 'center', borderRadius: 2,border:'none',boxShadow:0 }}>
+          <CardContent>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
             >
-              Log In
-            </Button>
-            <Button
-              component={Link}
-              to="/"
-              variant="outlined"
-              color="primary"
-              size="large"
+              <LockIcon sx={{ fontSize: 100, color: 'warning.main', mb: 3 }} />
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
             >
-              Back to Home
-            </Button>
-          </Box>
-        </Box>
+              <Typography variant="h1" fontWeight="bold" sx={{ fontSize: { xs: '4rem', md: '6rem' } }} gutterBottom>
+                401
+              </Typography>
+              <Typography variant="h4" fontWeight="medium" gutterBottom>
+                Session Expired
+              </Typography>
+              <Divider sx={{ my: 3, width: '40%', mx: 'auto' }} />
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 2, maxWidth: '90%', mx: 'auto' }}>
+                Your session has expired or you are not authorized to access this resource.
+                Please log in again to continue.
+              </Typography>
+              
+              <Box sx={{ mt: 3, mb: 4, mx: 'auto', width: '80%' }}>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  Redirecting to login in {countdown} seconds
+                </Typography>
+                <LinearProgress 
+                  variant="determinate" 
+                  value={progressValue} 
+                  sx={{ height: 8, borderRadius: 2 }} 
+                />
+              </Box>
+
+              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 3, flexWrap: 'wrap' }}>
+                <Button
+                  component={Link}
+                  to="/auth/login"
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  sx={{ px: 4, py: 1.2, borderRadius: 2 }}
+                >
+                  Log In Now
+                </Button>
+                <Button
+                  component={Link}
+                  to="/"
+                  variant="outlined"
+                  color="primary"
+                  size="large"
+                  sx={{ px: 4, py: 1.2, borderRadius: 2 }}
+                >
+                  Back to Home
+                </Button>
+              </Box>
+            </motion.div>
+          </CardContent>
+        </Card>
       </Container>
     </Box>
   );

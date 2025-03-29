@@ -91,6 +91,8 @@ function App() {
                   <Route path="/auth/reset-password" element={<ResetPasswordForm />} />
                   <Route path="/auth/social-success" element={<SocialAuthSuccess />} />
                   <Route path="/auth/verify-email" element={<EmailVerificationForm />} />
+                  <Route path="/error/server-error" element={<ServerError />} />
+                  <Route path="/error/session-expired" element={<SessionExpired />} />
             <Route path="/*" element={
               <Layout>
                 <Routes>
@@ -133,7 +135,7 @@ function App() {
                   <Route path="/news/letter/form" element={<NewsletterForm />} />
                   <Route path="/job/application/form" element={<JobApplicationForm />} />
                   <Route path="/support/form" element={<SupportForm />} />
-
+                  <Route path="*" element={<NotFound />} />
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/terms-of-service" element={<TermsOfService />} />
                   <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -142,12 +144,10 @@ function App() {
                   <Route path="/free-consultation" element={<FreeConsultationForm />} />
                   <Route path="/sitemap" element={<Sitemap />} />
                   <Route path="/pricing" element={<Pricing />} />
-                  <Route path="/error/server-error" element={<ServerError />} />
-                  <Route path="/error/session-expired" element={<SessionExpired />} />
                   <Route path="/payment/:id" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
                   <Route path="/verify-invoice/:invoiceNumber" element={<VerifyInvoice />} />
                   <Route path="/verify-receipt/:receiptNumber" element={<VerifyReceipt />} />
-                  <Route path="*" element={<NotFound />} />
+
                 </Routes>
               </Layout>
             } />

@@ -107,7 +107,7 @@ const dummyCaseStudies = [
 ];
 
   
-const CaseStudiesMegaMenu = () => {
+const CaseStudiesMegaMenu = ({ onItemClick }) => {
   const theme = useTheme();
   const [caseStudies, setCaseStudies] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -263,6 +263,7 @@ const CaseStudiesMegaMenu = () => {
                       key={study.id}
                       component={Link}
                       to={`/case-studies/${study.slug}`}
+                      onClick={onItemClick}
                       onMouseEnter={() => setActiveStudy(study)}
                       sx={{
                         width: sizePattern.width,

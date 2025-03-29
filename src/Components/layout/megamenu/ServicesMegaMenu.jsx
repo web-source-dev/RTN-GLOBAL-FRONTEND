@@ -105,7 +105,7 @@ const featuredServices = [
 ];
 
 
-const ServicesMegaMenu = () => {
+const ServicesMegaMenu = ({ onItemClick }) => {
   const theme = useTheme();
   const isExtraSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const isSmall = useMediaQuery(theme.breakpoints.down('md'));
@@ -147,6 +147,7 @@ const ServicesMegaMenu = () => {
                   <Card
                     component={Link}
                     to={service.path}
+                    onClick={onItemClick}
                     sx={{
                       height: '100%',
                       textDecoration: 'none',
@@ -278,6 +279,7 @@ const ServicesMegaMenu = () => {
                   key={service.id}
                   component={Link}
                   to={service.path}
+                  onClick={onItemClick}
                   sx={{
                     display: 'flex',
                     textDecoration: 'none',

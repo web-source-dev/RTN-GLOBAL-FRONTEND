@@ -132,15 +132,29 @@ const Header = () => {
   };
 
   const [menuCloseTimer, setMenuCloseTimer] = useState(null);
+  const [menuHoverIntent, setMenuHoverIntent] = useState(false);
 
   const handleMegaMenuOpen = (event, menuId) => {
+    clearTimeout(menuCloseTimer);
     setMegaMenuAnchor(event.currentTarget);
     setActiveMenu(menuId);
+    setMenuHoverIntent(true);
   };
 
   const handleMegaMenuClose = () => {
     setMegaMenuAnchor(null);
     setActiveMenu(null);
+    setMenuHoverIntent(false);
+  };
+
+  const handleHeaderItemMouseLeave = () => {
+    // Don't close menu immediately, give time to move to the menu
+    const timer = setTimeout(() => {
+      if (!menuHoverIntent) {
+        handleMegaMenuClose();
+      }
+    }, 300);
+    setMenuCloseTimer(timer);
   };
 
   const handleMenuMouseEnter = () => {
@@ -148,9 +162,11 @@ const Header = () => {
       clearTimeout(menuCloseTimer);
       setMenuCloseTimer(null);
     }
+    setMenuHoverIntent(true);
   };
 
   const handleMenuMouseLeave = () => {
+    setMenuHoverIntent(false);
     handleMegaMenuClose();
   };
 
@@ -241,10 +257,11 @@ const renderMegaMenu = (
       }}
       transformOrigin={{ horizontal: 'center', vertical: 'top' }}
       anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
+      keepMounted
     >
-      {activeMenu === 'Services' && <ServicesMegaMenu />}
-      {activeMenu === 'Case Studies' && <CaseStudiesMegaMenu />}
-      {activeMenu === 'Blog' && <BlogMegaMenu />}
+      {activeMenu === 'Services' && <ServicesMegaMenu onItemClick={handleMegaMenuClose} />}
+      {activeMenu === 'Case Studies' && <CaseStudiesMegaMenu onItemClick={handleMegaMenuClose} />}
+      {activeMenu === 'Blog' && <BlogMegaMenu onItemClick={handleMegaMenuClose} />}
     </Menu>
   );
 
@@ -254,9 +271,11 @@ const renderMegaMenu = (
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
         <CardMedia
           component="img"
+          loading="lazy"
+          onClick={() => window.location.href = '/'}
           image="/rtnglobal-logo.png"
           alt="Logo"
-          sx={{width: 50, height: 50,ml:2 }}
+          sx={{width: 60, height: 50,ml:2 ,cursor:'pointer'}}
         />
 
           {!isMobile && (
@@ -269,6 +288,7 @@ const renderMegaMenu = (
                     handleMegaMenuOpen(e, page.title)}
                   onMouseEnter={(e) => ['Services', 'Case Studies', 'Blog'].includes(page.title) && 
                     handleMegaMenuOpen(e, page.title)}
+                  onMouseLeave={handleHeaderItemMouseLeave}
                   sx={{
                     color: activeMenu === page.title ? 'primary.main' : 'inherit',
                     position: 'relative',
@@ -338,6 +358,7 @@ const renderMegaMenu = (
             <>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <ThemeSwitcher />
+                {isLoggedIn && <NotificationComponent />}
                 <IconButton
                   color="inherit"
                   aria-label="open drawer"
@@ -364,6 +385,31 @@ const renderMegaMenu = (
                   </IconButton>
                 </Box>
                 <Divider />
+                
+                {isLoggedIn && (
+                  <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      {user?.avatar ? (
+                        <Avatar
+                          alt={user.name}
+                          src={`${process.env.REACT_APP_API_URL}${user.avatar}`}
+                          sx={{ width: 48, height: 48, border: '1px solid #000', mr: 2 }}
+                        />
+                      ) : (
+                        <AccountCircleIcon sx={{ width: 48, height: 48, mr: 2 }} />
+                      )}
+                      <Box>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          {user?.fullName}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {user?.email}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </Box>
+                )}
+                
                 <List>
                   {pages.map((page) => (
                     <ListItem
@@ -380,19 +426,67 @@ const renderMegaMenu = (
                       <ListItemText primary={page.title} />
                     </ListItem>
                   ))}
-                  <ListItem sx={{ mt: 2 }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      fullWidth
-                      sx={{ borderRadius: '50px' }}
-                      component="a"
-                      href="/auth/login"
-                    >
-                      Get Started
-                    </Button>
-
-                  </ListItem>
+                  
+                  {isLoggedIn ? (
+                    <>
+                      <Divider sx={{ my: 1 }} />
+                      <ListItem 
+                        component={Link} 
+                        to="/dashboard/user/profile"
+                        onClick={handleDrawerToggle}
+                      >
+                        <ListItemIcon>
+                          <AccountCircleIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="Profile" />
+                      </ListItem>
+                      <ListItem 
+                        component={Link} 
+                        to="/dashboard/user"
+                        onClick={handleDrawerToggle}
+                      >
+                        <ListItemIcon>
+                          <DashboardIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="Dashboard" />
+                      </ListItem>
+                      <ListItem 
+                        component={Link} 
+                        to="/dashboard/user/profile"
+                        onClick={handleDrawerToggle}
+                      >
+                        <ListItemIcon>
+                          <SettingsIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="Settings" />
+                      </ListItem>
+                      <ListItem 
+                        onClick={() => {
+                          handleLogout();
+                          handleDrawerToggle();
+                        }}
+                        sx={{ cursor: 'pointer' }}
+                      >
+                        <ListItemIcon>
+                          <LogoutIcon fontSize="small" />
+                        </ListItemIcon>
+                        <ListItemText primary="Logout" />
+                      </ListItem>
+                    </>
+                  ) : (
+                    <ListItem sx={{ mt: 2 }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        sx={{ borderRadius: '50px' }}
+                        component="a"
+                        href="/auth/login"
+                      >
+                        Get Started
+                      </Button>
+                    </ListItem>
+                  )}
                 </List>
               </Drawer>
             </>
