@@ -67,6 +67,7 @@ import VerifyInvoice from './Pages/VerifyInvoice';
 import VerifyReceipt from './Pages/VerifyReceipt';
 import EmailVerificationForm from './Components/auth/EmailVerificationForm';
 import SocialAuthSuccess from './Components/auth/SocialAuthSuccess';
+import ChatRoomsList from './Components/support/ChatRoomsList';
 
 function App() {
   return (
@@ -84,7 +85,6 @@ function App() {
 
             </Route>
             <Route path="/livechat" element={<LiveChat />} />
-            <Route path="/Community" element={<GlobalLiveChat />} />
             <Route path="/auth/login" element={<LoginForm />} />
                   <Route path="/auth/register" element={<RegisterForm />} />
                   <Route path="/auth/forgot-password" element={<ForgotPasswordForm />} />
@@ -171,6 +171,10 @@ function App() {
               <Route path="settings" element={<AdminSettings />} />
               <Route path="consultation" element={<ManageConsultation />} />
             </Route>
+
+            {/* New Chat Rooms Routes */}
+            <Route path="/chat" element={<ChatRoomsList />} />
+            <Route path="/chat/room/:roomId" element={<GlobalLiveChat />} />
           </Routes>
         </Router>
       </ThemeProvider>
