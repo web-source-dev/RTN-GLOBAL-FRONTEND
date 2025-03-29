@@ -18,7 +18,7 @@ const AboutPage = () => {
       <Mission />
       <Values />
       <Expertise />
-      <Team />
+      {/* <Team /> */}
     </Box>
   );
 };

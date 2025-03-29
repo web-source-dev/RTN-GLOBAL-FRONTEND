@@ -116,7 +116,7 @@ function App() {
                       <ManageBlog />
                     </ProtectedRoute>
                   } />
-                  <Route path="/team" element={<TeamPage />} />
+                  {/* <Route path="/team" element={<TeamPage />} /> */}
                   <Route path="/careers" element={<CareersPage />} />
                   <Route path="/news" element={<NewsPage />} />
                   <Route path="/marketing-guide" element={<MarketingGuidePage />} />
