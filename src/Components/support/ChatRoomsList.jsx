@@ -81,6 +81,7 @@ const ChatRoomsList = () => {
   // redirect if not logged in
   if (!user) {
     navigate('/auth/login');
+    return;
   }
 
   const fetchChatRooms = async () => {
