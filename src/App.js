@@ -1,8 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import UserDashboard from './Components/User/UserDashboard';
-import UserSupportTickets from './Components/User/UserSupportTickets';
-import UserJobApplications from './Components/User/UserJobApplications';
-import UserConsultations from './Components/User/UserConsultations';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Sitemap from './Components/sitemap/Sitemap';
@@ -37,37 +33,21 @@ import LoginForm from './Components/auth/LoginForm';
 import RegisterForm from './Components/auth/RegisterForm';
 import ForgotPasswordForm from './Components/auth/ForgotPasswordForm';
 import ResetPasswordForm from './Components/auth/ResetPasswordForm';
-import CreateBlog from './Components/blog/CreateBlog';
-import ManageBlog from './Components/blog/ManageBlog';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './Components/common/ProtectedRoute';
 import AboutPage from './Components/about/AboutPage';
 import TermsOfService from './Components/legal/TermsOfService';
 import PrivacyPolicy from './Components/legal/PrivacyPolicy';
 import Disclaimer from './Components/legal/Disclaimer';
-import UserSettings from './Components/profile/UserSettings';
-import ChatDashboard from './Components/admin/ChatDashboard';
 import LiveChat from './Components/support/LiveChat';
-import GlobalLiveChat from './Components/support/GlobalLiveChat';
-import AdminDashboard from './Components/admin/AdminDashboard';
-import AdminOverview from './Components/admin/Overview';
-import AdminUsers from './Components/admin/Users';
-import AdminBlogs from './Components/admin/Blogs';
-import AdminJobs from './Components/admin/Jobs';
-import AdminNewsletter from './Components/admin/Newsletter';
-import AdminSupport from './Components/admin/Support';
-import AdminSettings from './Components/admin/Settings';
 import TicketStatus from './Components/forms/TicketStatus';
 import FreeConsultationForm from './Components/forms/FreeConsultationForm';
-import ManageConsultation from './Components/admin/ManageConsultation';
-import UserProfile from './Components/profile/UserProfile';
 import SessionExpired from './Components/error/SessionExpired';
 import PaymentPage from './Pages/PaymentPage';
 import VerifyInvoice from './Pages/VerifyInvoice';
 import VerifyReceipt from './Pages/VerifyReceipt';
 import EmailVerificationForm from './Components/auth/EmailVerificationForm';
 import SocialAuthSuccess from './Components/auth/SocialAuthSuccess';
-import ChatRoomsList from './Components/support/ChatRoomsList';
 
 function App() {
   return (
@@ -76,14 +56,7 @@ function App() {
         <CssBaseline />
         <Router>
           <Routes>
-            {/* User Dashboard Routes */}
-            <Route path="/dashboard/user" element={<UserDashboard />}>
-              <Route path="support" element={<UserSupportTickets />} />
-              <Route path="applications" element={<UserJobApplications />} />
-              <Route path="consultations" element={<UserConsultations />} />
-                  <Route path="profile" element={<UserProfile />} />
-
-            </Route>
+          
             <Route path="/livechat" element={<LiveChat />} />
             <Route path="/auth/login" element={<LoginForm />} />
                   <Route path="/auth/register" element={<RegisterForm />} />
@@ -101,29 +74,13 @@ function App() {
                   <Route path="/case-studies" element={<CaseStudiesPage />} />
                   <Route path="/blog" element={<BlogPage />} />
                   <Route path="/blog/post/:id" element={<BlogPost />} />
-                  <Route path="/blog/create" element={
-                    <ProtectedRoute adminOnly>
-                      <CreateBlog />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/blog/edit/:id" element={
-                    <ProtectedRoute adminOnly>
-                      <CreateBlog />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/blog/manage" element={
-                    <ProtectedRoute adminOnly>
-                      <ManageBlog />
-                    </ProtectedRoute>
-                  } />
-                  {/* <Route path="/team" element={<TeamPage />} /> */}
+                  <Route path="/team" element={<TeamPage />} />
                   <Route path="/careers" element={<CareersPage />} />
                   <Route path="/news" element={<NewsPage />} />
                   <Route path="/marketing-guide" element={<MarketingGuidePage />} />
                   <Route path="/digital-tools" element={<DigitalToolsPage />} />
                   <Route path="/roi-calculator" element={<RoiCalculatorPage />} />
                   <Route path="/faq" element={<FaqPage />} />
-                  <Route path="/settings" element={<UserSettings />} />
                   <Route path="/support" element={<SupportPage />} />
                   <Route path="/services/digital-strategy" element={<DigitalStrategy />} />
                   <Route path="/services/seo-optimization" element={<SeoOptimization />} />
@@ -151,30 +108,6 @@ function App() {
                 </Routes>
               </Layout>
             } />
-
-            {/* Admin Routes */}
-            <Route
-              path="/admin/*"
-              element={
-                <ProtectedRoute adminOnly>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<AdminOverview />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="blogs" element={<AdminBlogs />} />
-              <Route path="jobs" element={<AdminJobs />} />
-              <Route path="newsletter" element={<AdminNewsletter />} />
-              <Route path="chat" element={<ChatDashboard />} />
-              <Route path="support" element={<AdminSupport />} />
-              <Route path="settings" element={<AdminSettings />} />
-              <Route path="consultation" element={<ManageConsultation />} />
-            </Route>
-
-            {/* New Chat Rooms Routes */}
-            <Route path="/chat" element={<ChatRoomsList />} />
-            <Route path="/chat/room/:roomId" element={<GlobalLiveChat />} />
           </Routes>
         </Router>
       </ThemeProvider>

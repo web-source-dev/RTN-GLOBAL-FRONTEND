@@ -207,19 +207,19 @@ const Header = () => {
               {user?.email}
             </Typography>
           </Box>
-          <MenuItem component={Link} to="/dashboard/user/profile">
+          <MenuItem component={Link} to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/profile`}>
             <ListItemIcon>
               <AccountCircleIcon fontSize="small" />
             </ListItemIcon>
             Profile
           </MenuItem>
-          <MenuItem component={Link} to="/dashboard/user">
+          <MenuItem component={Link} to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user`}>
             <ListItemIcon>
               <DashboardIcon fontSize="small" />
             </ListItemIcon>
             Dashboard
           </MenuItem>
-          <MenuItem component={Link} to="/dashboard/user/profile">
+          <MenuItem component={Link} to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/profile`}>
             <ListItemIcon>
               <SettingsIcon fontSize="small" />
             </ListItemIcon>
@@ -432,7 +432,7 @@ const renderMegaMenu = (
                       <Divider sx={{ my: 1 }} />
                       <ListItem 
                         component={Link} 
-                        to="/dashboard/user/profile"
+                        to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/profile`}
                         onClick={handleDrawerToggle}
                       >
                         <ListItemIcon>
@@ -442,7 +442,7 @@ const renderMegaMenu = (
                       </ListItem>
                       <ListItem 
                         component={Link} 
-                        to="/dashboard/user"
+                        to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user`}
                         onClick={handleDrawerToggle}
                       >
                         <ListItemIcon>
@@ -452,7 +452,7 @@ const renderMegaMenu = (
                       </ListItem>
                       <ListItem 
                         component={Link} 
-                        to="/dashboard/user/profile"
+                        to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/profile`}
                         onClick={handleDrawerToggle}
                       >
                         <ListItemIcon>

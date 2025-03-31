@@ -376,7 +376,7 @@ const SupportForm = () => {
                     </Typography>
                     <Button 
                       variant="contained"
-                      onClick={() => navigate('/dashboard/user/support')}
+                      onClick={() => window.location.href = `${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/support`}
                       sx={{ mt: 2 }}
                     >
                       View My Support Tickets
