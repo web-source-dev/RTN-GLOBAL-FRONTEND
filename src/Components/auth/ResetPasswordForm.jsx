@@ -320,34 +320,11 @@ const ResetPasswordForm = () => {
         }}
       />
 
-      {/* Decorative shapes */}
-      {[...Array(6)].map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            position: 'absolute',
-            width: `${30 + i * 15}px`,
-            height: `${30 + i * 15}px`,
-            borderRadius: i % 2 === 0 ? '50%' : '30%',
-            background: `${theme.palette.primary.main}10`,
-            border: `1px solid ${theme.palette.primary.main}20`,
-            top: `${10 + i * 15}%`,
-            left: `${70 - i * 10}%`,
-            animation: `float ${3 + i * 0.5}s infinite ease-in-out alternate`,
-            '@keyframes float': {
-              '0%': { transform: 'translateY(0) rotate(0deg)' },
-              '100%': { transform: 'translateY(-20px) rotate(10deg)' },
-            },
-            zIndex: 1,
-            opacity: 0.7,
-          }}
-        />
-      ))}
       
-      <Container maxWidth="md" sx={{ position: 'relative', zIndex: 2 }}>
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center" justifyContent="center">
           {/* Left side - Enhanced Illustration with animations */}
-          <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
+          <Grid item xs={12} md={5} sx={{ display: { xs: 'none', md: 'block' } }}>
             <Box
               sx={{
                 p: { md: 3, lg: 4 },
@@ -370,10 +347,10 @@ const ResetPasswordForm = () => {
                 }}
               >
                 <img
-                  src="/images/auth/reset.svg"
+                  src="/images/auth/forget.svg"
                   alt="Reset Password"
                   style={{ 
-                    maxWidth: '85%', 
+                    maxWidth: '100%', 
                     height: 'auto',
                     filter: isDark ? 'drop-shadow(0 0 8px rgba(25, 118, 210, 0.3))' : 'drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1))',
                     mixBlendMode: isDark ? 'lighten' : 'multiply'  
@@ -381,42 +358,6 @@ const ResetPasswordForm = () => {
                 />
               </Box>
               
-              <Typography
-                variant="h4"
-                sx={{
-                  mt: 4,
-                  fontWeight: 700,
-                  background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                  backgroundSize: '200% 200%',
-                  animation: 'gradientAnimation 5s ease infinite',
-                  '@keyframes gradientAnimation': {
-                    '0%': { backgroundPosition: '0% 50%' },
-                    '50%': { backgroundPosition: '100% 50%' },
-                    '100%': { backgroundPosition: '0% 50%' },
-                  },
-                  backgroundClip: 'text',
-                  textFillColor: 'transparent',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  letterSpacing: '0.5px',
-                }}
-              >
-                Reset Password
-              </Typography>
-              
-              <Typography 
-                color="text.secondary" 
-                sx={{ 
-                  mt: 2, 
-                  fontSize: { xs: '0.9rem', md: '1rem' },
-                  maxWidth: '85%',
-                  mx: 'auto',
-                  lineHeight: 1.6,
-                }}
-              >
-                Create a new, secure password for your account.
-                Make sure it's strong and different from previous passwords.
-              </Typography>
             </Box>
           </Grid>
 

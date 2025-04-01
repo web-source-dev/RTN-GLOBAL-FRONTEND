@@ -103,10 +103,10 @@ const ForgotPasswordForm = () => {
         }}
       />
         
-        <Container maxWidth="md" sx={{ position: 'relative', zIndex: 2 }}>
-          <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center">
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
+          <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center"justifyContent={'center'}>
             {/* Left side - Enhanced Illustration with animations */}
-            <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
+            <Grid item xs={12} md={5} sx={{ display: { xs: 'none', md: 'block' } }}>
               <Box
                 sx={{
                   p: { md: 3, lg: 4 },
@@ -128,53 +128,19 @@ const ForgotPasswordForm = () => {
                     },
                   }}
                 >
+                  
                   <img
                     src="/images/auth/forget.svg"
                     alt="Forgot Password"
                     style={{ 
-                      maxWidth: '85%', 
+                      maxWidth: '100%', 
                       height: 'auto',
                       filter: isDark ? 'drop-shadow(0 0 8px rgba(25, 118, 210, 0.3))' : 'drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1))',
                       mixBlendMode: isDark ? 'lighten' : 'multiply'  
                     }}
                   />
                 </Box>
-                
-                <Typography
-                  variant="h4"
-                  sx={{
-                    mt: 4,
-                    fontWeight: 700,
-                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                    backgroundSize: '200% 200%',
-                    animation: 'gradientAnimation 5s ease infinite',
-                    '@keyframes gradientAnimation': {
-                      '0%': { backgroundPosition: '0% 50%' },
-                      '50%': { backgroundPosition: '100% 50%' },
-                      '100%': { backgroundPosition: '0% 50%' },
-                    },
-                    backgroundClip: 'text',
-                    textFillColor: 'transparent',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    letterSpacing: '0.5px',
-                  }}
-                >
-                  Password Recovery
-                </Typography>
-                
-                <Typography 
-                  color="text.secondary" 
-                  sx={{ 
-                    mt: 2, 
-                    fontSize: { xs: '0.9rem', md: '1rem' },
-                    maxWidth: '85%',
-                    mx: 'auto',
-                    lineHeight: 1.6,
-                  }}
-                >
-                  Don't worry, we'll help you reset your password securely
-                </Typography>
+
               </Box>
             </Grid>
 

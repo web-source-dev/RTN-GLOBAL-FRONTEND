@@ -13,7 +13,8 @@ import {
   Divider,
   CircularProgress,
   Tooltip,
-  Avatar
+  Avatar,
+  Chip
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import InfoIcon from '@mui/icons-material/Info';
@@ -21,6 +22,14 @@ import SupportIcon from '@mui/icons-material/Support';
 import EmailIcon from '@mui/icons-material/Email';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import WarningIcon from '@mui/icons-material/Warning';
+import ErrorIcon from '@mui/icons-material/Error';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import MoneyIcon from '@mui/icons-material/Money';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import BuildIcon from '@mui/icons-material/Build';
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import { format } from 'date-fns';
 import API from '../../BackendAPi/ApiProvider';
 
@@ -59,7 +68,7 @@ const NotificationComponent = () => {
 
   const markAsRead = async (notificationId) => {
     try {
-      await API.post(`/api/user/notifications/${notificationId}/read`);
+      await API.patch(`/api/user/notifications/${notificationId}/read`);
       
       // Update the notifications state
       setNotifications(notifications.map(notification => 
@@ -70,6 +79,12 @@ const NotificationComponent = () => {
       
       // Update unread count
       setUnreadCount(prevCount => Math.max(0, prevCount - 1));
+      
+      // Handle notification link if it exists
+      const notification = notifications.find(n => n.id === notificationId);
+      if (notification && notification.link) {
+        window.location.href = notification.link;
+      }
     } catch (err) {
       console.error('Error marking notification as read:', err);
     }
@@ -77,7 +92,7 @@ const NotificationComponent = () => {
 
   const markAllAsRead = async () => {
     try {
-      await API.post('/api/user/notifications/read-all');
+      await API.patch('/api/user/notifications/read-all');
       
       // Update all notifications to read
       setNotifications(notifications.map(notification => ({ ...notification, read: true })));
@@ -87,7 +102,43 @@ const NotificationComponent = () => {
     }
   };
 
-  const getNotificationIcon = (type) => {
+  const getNotificationIcon = (notification) => {
+    const { type } = notification;
+    
+    // Handle order-specific notification types
+    if (notification.metadata && notification.metadata.orderId) {
+      // This is likely an order notification
+      if (type === 'success') {
+        return <CheckCircleIcon color="success" />;
+      } else if (type === 'warning') {
+        return <WarningIcon color="warning" />;
+      } else if (type === 'error') {
+        return <ErrorIcon color="error" />;
+      }
+      
+      // Check for specific order notification scenarios based on title
+      const title = notification.title.toLowerCase();
+      if (title.includes('payment')) {
+        return <MoneyIcon color="success" />;
+      } else if (title.includes('review')) {
+        return <RateReviewIcon color="primary" />;
+      } else if (title.includes('revision')) {
+        return <BuildIcon color="warning" />;
+      } else if (title.includes('offer')) {
+        return <ShoppingCartIcon color="primary" />;
+      } else if (title.includes('status')) {
+        return <InfoIcon color="info" />;
+      } else if (title.includes('tip')) {
+        return <MoneyIcon color="success" />;
+      } else if (title.includes('invoice') || title.includes('receipt')) {
+        return <ReceiptIcon color="primary" />;
+      }
+      
+      // Default icon for orders
+      return <ShoppingCartIcon color="primary" />;
+    }
+    
+    // Handle standard notification types
     switch (type) {
       case 'system':
         return <InfoIcon color="info" />;
@@ -97,8 +148,31 @@ const NotificationComponent = () => {
         return <EmailIcon color="primary" />;
       case 'consultation':
         return <EventNoteIcon color="success" />;
+      case 'info':
+        return <InfoIcon color="info" />;
+      case 'success':
+        return <CheckCircleIcon color="success" />;
+      case 'warning':
+        return <WarningIcon color="warning" />;
+      case 'error':
+        return <ErrorIcon color="error" />;
       default:
         return <InfoIcon />;
+    }
+  };
+
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'urgent':
+        return 'error';
+      case 'high':
+        return 'warning';
+      case 'medium':
+        return 'info';
+      case 'low':
+        return 'success';
+      default:
+        return 'default';
     }
   };
 
@@ -107,18 +181,29 @@ const NotificationComponent = () => {
       alignItems="flex-start"
       sx={{
         backgroundColor: notification.read ? 'inherit' : 'action.hover',
-        '&:hover': { backgroundColor: 'action.selected' }
+        '&:hover': { backgroundColor: 'action.selected' },
+        cursor: 'pointer'
       }}
       onClick={() => markAsRead(notification.id)}
     >
       <ListItemIcon>
-        {getNotificationIcon(notification.type)}
+        {getNotificationIcon(notification)}
       </ListItemIcon>
       <ListItemText
         primary={
-          <Typography variant="subtitle2" component="div">
-            {notification.title}
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Typography variant="subtitle2" component="div">
+              {notification.title}
+            </Typography>
+            {notification.priority && (
+              <Chip 
+                label={notification.priority} 
+                size="small" 
+                color={getPriorityColor(notification.priority)}
+                sx={{ height: 20, fontSize: '0.7rem' }}
+              />
+            )}
+          </Box>
         }
         secondary={
           <React.Fragment>

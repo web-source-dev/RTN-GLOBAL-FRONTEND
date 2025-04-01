@@ -15,6 +15,12 @@ import {
   CircularProgress,
   Paper,
   Divider,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Stack,
+  useMediaQuery,
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -24,12 +30,15 @@ import LockIcon from '@mui/icons-material/Lock';
 import LockClockIcon from '@mui/icons-material/LockClock';
 import GoogleIcon from '@mui/icons-material/Google';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import SecurityIcon from '@mui/icons-material/Security';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import API from '../../BackendAPi/ApiProvider';
 
 const LoginForm = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
   const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const [formData, setFormData] = useState({
     email: '',
@@ -46,6 +55,14 @@ const LoginForm = () => {
     message: '',
     severity: 'success',
   });
+  
+  // 2FA States
+  const [showTwoFactorDialog, setShowTwoFactorDialog] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [verificationError, setVerificationError] = useState('');
+  const [showBackupCodeForm, setShowBackupCodeForm] = useState(false);
+  const [backupCode, setBackupCode] = useState('');
+  const [twoFactorLoading, setTwoFactorLoading] = useState(false);
 
   // Check localStorage for existing lock when component mounts
   useEffect(() => {
@@ -142,6 +159,14 @@ const LoginForm = () => {
       try {
         const response = await API.post('/api/auth/login', formData);
         
+        // Check if 2FA is required (based on the response from the server)
+        if (response.data.requireTwoFactor) {
+          // Show 2FA dialog instead of completing login
+          setShowTwoFactorDialog(true);
+          setLoading(false);
+          return;
+        }
+        
         // Store user data in localStorage
         localStorage.setItem('user', JSON.stringify(response.data.user));
 
@@ -156,6 +181,13 @@ const LoginForm = () => {
         }, 1500);
       } catch (error) {
         console.error('Login error:', error.response);
+        
+        // Check for 2FA required response
+        if (error.response?.data?.requireTwoFactor) {
+          setShowTwoFactorDialog(true);
+          setLoading(false);
+          return;
+        }
         
         // More robust error detection for account locked scenario
         if (error.response?.status === 403 && error.response?.data?.accountLocked) {
@@ -221,6 +253,56 @@ const LoginForm = () => {
     }
   };
 
+  // Handle 2FA verification
+  const handleVerifyTwoFactor = async () => {
+    if (!verificationCode && !backupCode) {
+      setVerificationError('Please enter a verification code or backup code');
+      return;
+    }
+    
+    setTwoFactorLoading(true);
+    setVerificationError('');
+    
+    try {
+      let response;
+      
+      if (showBackupCodeForm) {
+        // Using backup code
+        response = await API.post('/api/auth/2fa/validate', {
+          email: formData.email,
+          backupCode: backupCode
+        });
+      } else {
+        // Using verification code from authenticator app
+        response = await API.post('/api/auth/2fa/validate', {
+          email: formData.email,
+          token: verificationCode
+        });
+      }
+      
+      // Login successful with 2FA
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      
+      setSnackbar({
+        open: true,
+        message: 'Login successful!',
+        severity: 'success',
+      });
+      
+      // Close dialog
+      setShowTwoFactorDialog(false);
+      
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1500);
+    } catch (error) {
+      console.error('2FA verification error:', error.response);
+      setVerificationError(error.response?.data?.message || 'Invalid verification code');
+    } finally {
+      setTwoFactorLoading(false);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -243,19 +325,29 @@ const LoginForm = () => {
     window.location.href = `${process.env.REACT_APP_API_URL}/api/auth/facebook`;
   };
 
+  // Toggle between verification code and backup code forms
+  const toggleBackupCodeForm = () => {
+    setShowBackupCodeForm(!showBackupCodeForm);
+    setVerificationCode('');
+    setBackupCode('');
+    setVerificationError('');
+  };
+
   return (
     <Box
       sx={{
         minHeight: '100vh',
         display: 'flex',
-        position: 'relative',
+        alignItems: 'center',
+        justifyContent: 'center',
         background: theme.palette.background.default,
+        position: 'relative',
         overflow: 'hidden',
         py: { xs: 4, md: 0 },
       }}
     >
-          {/* Background Pattern with enhanced animation */}
-          <Box
+      {/* Background gradients */}
+      <Box
         sx={{
           position: 'absolute',
           top: 0,
@@ -263,16 +355,16 @@ const LoginForm = () => {
           right: 0,
           bottom: 0,
           opacity: 0.2,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 40%),
+                        radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
           zIndex: 1,
         }}
       />
-      
+
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center" sx={{ minHeight: '100vh' }}>
-          {/* Left side - Enhanced Illustration */}
-          <Grid item xs={12} md={6} sx={{ display: { xs: 'none', md: 'block' } }}>
+        <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center">
+          {/* Left side - Hidden on mobile */}
+          <Grid item xs={12} md={5} sx={{ display: { xs: 'none', md: 'block' } }}>
             <Box
               sx={{
                 p: { md: 3, lg: 4 },
@@ -280,547 +372,319 @@ const LoginForm = () => {
                 position: 'relative',
               }}
             >
-              <Box
-                sx={{
-                  position: 'relative',
-                  animation: 'float 6s ease-in-out infinite',
-                  '@keyframes float': {
-                    '0%, 100%': { transform: 'translateY(0)' },
-                    '50%': { transform: 'translateY(-20px)' },
-                  },
-                  transition: 'transform 0.3s ease',
-                  '&:hover': {
-                    transform: 'scale(1.03)',
-                  },
-                }}
-              >
-                <img
-                  src="/images/auth/login.svg"
-                  alt="Secure Login"
-                  style={{ 
-                    maxWidth: '85%', 
-                    height: 'auto',
-                    filter: isDark ? 'drop-shadow(0 0 10px rgba(25, 118, 210, 0.4))' : 'drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1))'
-                  }}
-                />
-              </Box>
-              
-              <Typography
-                variant="h4"
-                sx={{
-                  fontWeight: 700,
-                  background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                  backgroundSize: '200% 200%',
-                  animation: 'gradientAnimation 5s ease infinite',
-                  '@keyframes gradientAnimation': {
-                    '0%': { backgroundPosition: '0% 50%' },
-                    '50%': { backgroundPosition: '100% 50%' },
-                    '100%': { backgroundPosition: '0% 50%' },
-                  },
-                  backgroundClip: 'text',
-                  textFillColor: 'transparent',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  letterSpacing: '0.5px',
-                }}
-              >
-                Welcome Back!
-              </Typography>
-              
-              <Typography 
-                color="text.secondary" 
-                sx={{ 
-                  mt: 2, 
-                  fontSize: { xs: '0.9rem', md: '1rem' },
-                  maxWidth: '85%', 
-                  mx: 'auto',
-                  lineHeight: 1.6,
-                }}
-              >
-                Sign in to your account to continue your journey with us
-              </Typography>
+             
+
+          <Box>
+            <img src="/images/auth/login.svg" alt="RTN Global" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          </Box>
             </Box>
           </Grid>
-
-          {/* Right side - Enhanced Form */}
-          <Grid item xs={12} md={6}>
+          
+          {/* Right side - Form */}
+          <Grid item xs={12} md={7}>
             <Paper
-              elevation={isDark ? 4 : 6}
+              elevation={6}
               sx={{
-                p: { xs: 3, sm: 4 },
+                p: { xs: 3, sm: 5 },
                 borderRadius: 3,
-                background: theme.palette.background.default,
+                maxWidth: '100%',
+                position: 'relative',
+                zIndex: 2,
+                background: theme.palette.background.paper,
                 backdropFilter: 'blur(10px)',
                 border: '1px solid',
                 borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                  boxShadow: isDark 
-                    ? '0 15px 30px rgba(0, 0, 0, 0.5)' 
-                    : '0 15px 30px rgba(0, 0, 0, 0.1)',
-                },
-                animation: 'fadeInUp 0.6s ease-out',
-                '@keyframes fadeInUp': {
-                  '0%': { opacity: 0, transform: 'translateY(20px)' },
-                  '100%': { opacity: 1, transform: 'translateY(0)' },
-                },
+                boxShadow: isDark 
+                  ? '0 10px 30px rgba(0, 0, 0, 0.5)' 
+                  : '0 10px 30px rgba(0, 0, 0, 0.1)',
               }}
             >
-              {accountLocked ? (
-                <Box
+              {/* Mobile header */}
+              <Box sx={{ display: { xs: 'block', md: 'none' }, mb: 3 }}>
+                <Typography
+                  variant="h5"
                   sx={{
+                    fontWeight: 700,
                     textAlign: 'center',
-                    py: 4,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    gap: 2
+                    mb: 1,
+                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                    backgroundClip: 'text',
+                    textFillColor: 'transparent',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  <Box
+                  Welcome Back
+                </Typography>
+                
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ textAlign: 'center', mb: 3 }}
+                >
+                  Sign in to access your dashboard
+                </Typography>
+              </Box>
+              
+              {/* Logo */}
+           
+
+              {/* Desktop heading - only visible on desktop */}
+              <Box sx={{ display: { xs: 'none', md: 'block' }, mb: 3 }}>
+                <Typography variant="h5" fontWeight="bold">
+                  Sign In
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Enter your credentials to access your account
+                </Typography>
+              </Box>
+
+              {/* Form */}
+              <Box component="form" onSubmit={handleSubmit}>
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                  value={formData.email}
+                  onChange={handleChange}
+                  error={!!errors.email}
+                  helperText={errors.email}
+                  disabled={accountLocked || loading}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailIcon color="action" />
+                      </InputAdornment>
+                    ),
+                    sx: {
+                      borderRadius: 2,
+                    }
+                  }}
+                  sx={{ mb: 2 }}
+                />
+                
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  autoComplete="current-password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  error={!!errors.password}
+                  helperText={errors.password}
+                  disabled={accountLocked || loading}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon color="action" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                    sx: {
+                      borderRadius: 2,
+                    }
+                  }}
+                  sx={{ mb: 2 }}
+                />
+
+                {accountLocked && (
+                  <Alert
+                    severity="error"
+                    icon={<LockClockIcon />}
                     sx={{
-                      width: 100,
-                      height: 100,
-                      borderRadius: '50%',
-                      background: isDark 
-                        ? 'rgba(211, 47, 47, 0.2)' 
-                        : 'rgba(211, 47, 47, 0.1)',
-                      display: 'flex',
+                      mb: 3,
+                      mt: 1,
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      mb: 2,
-                      animation: 'pulse 2s infinite',
-                      '@keyframes pulse': {
-                        '0%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0.4)' },
-                        '70%': { boxShadow: '0 0 0 15px rgba(211, 47, 47, 0)' },
-                        '100%': { boxShadow: '0 0 0 0 rgba(211, 47, 47, 0)' },
+                      borderRadius: 2,
+                      '& .MuiAlert-message': {
+                        width: '100%',
                       },
                     }}
                   >
-                    <LockClockIcon
-                      sx={{ 
-                        fontSize: 60,
-                        color: theme.palette.error.main,
-                        animation: 'shake 1.5s ease infinite',
-                        '@keyframes shake': {
-                          '0%, 100%': { transform: 'rotate(0)' },
-                          '10%, 30%, 50%, 70%, 90%': { transform: 'rotate(-5deg)' },
-                          '20%, 40%, 60%, 80%': { transform: 'rotate(5deg)' },
+                    <Typography variant="subtitle2" gutterBottom>
+                      Account locked due to multiple failed attempts
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Typography variant="body2">Try again in:</Typography>
+                      <Typography
+                        variant="h6"
+                        sx={{
+                          fontFamily: 'monospace',
+                          fontWeight: 'bold',
+                          color: theme.palette.error.light,
+                        }}
+                      >
+                        {remainingTime}
+                      </Typography>
+                    </Box>
+                  </Alert>
+                )}
+
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  disabled={accountLocked || loading}
+                  sx={{
+                    mt: 3,
+                    mb: 3,
+                    py: 1.2,
+                    borderRadius: 2,
+                    textTransform: 'none',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    fontSize: '0.95rem',
+                    fontWeight: 600,
+                    background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+                    backgroundSize: '200% 200%',
+                    transition: 'all 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 5px 10px rgba(25, 118, 210, 0.3)',
+                    },
+                  }}
+                >
+                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign In'}
+                </Button>
+
+                <Grid container justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+                  <Grid item>
+                    <Link 
+                      component={RouterLink} 
+                      to="/auth/forgot-password" 
+                      variant="body2"
+                      sx={{
+                        color: theme.palette.primary.main,
+                        textDecoration: 'none',
+                        position: 'relative',
+                        '&:after': {
+                          content: '""',
+                          position: 'absolute',
+                          width: '100%',
+                          height: '2px',
+                          bottom: -2,
+                          left: 0,
+                          background: 'linear-gradient(90deg, #1976d2, #9c27b0)',
+                          transform: 'scaleX(0)',
+                          transformOrigin: 'bottom right',
+                          transition: 'transform 0.3s',
+                        },
+                        '&:hover:after': {
+                          transform: 'scaleX(1)',
+                          transformOrigin: 'bottom left',
                         },
                       }}
-                    />
-                  </Box>
-                  
-                  <Typography 
-                    variant="h4" 
-                    sx={{
-                      fontWeight: 700,
-                      background: 'linear-gradient(45deg, #d32f2f, #f44336)',
-                      backgroundClip: 'text',
-                      textFillColor: 'transparent',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
-                    Account Locked
-                  </Typography>
-                  
-                  <Typography variant="body1" color="text.secondary" paragraph>
-                    Too many failed login attempts. Please try again in:
-                  </Typography>
-                  
-                  <Paper 
-                    elevation={3} 
-                    sx={{ 
-                      py: 2, 
-                      px: 4, 
-                      borderRadius: 2,
-                      background: isDark ? 'rgba(211, 47, 47, 0.2)' : 'rgba(211, 47, 47, 0.1)',
-                      border: '1px solid',
-                      borderColor: isDark ? 'rgba(211, 47, 47, 0.3)' : 'rgba(211, 47, 47, 0.2)',
-                    }}
-                  >
-                    <Typography 
-                      variant="h3" 
-                      fontFamily="monospace"
+                    >
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link 
+                      component={RouterLink} 
+                      to="/auth/register" 
+                      variant="body2"
                       sx={{
-                        color: theme.palette.error.main,
-                        animation: 'pulse 1s infinite ease-in-out',
+                        color: theme.palette.primary.main,
+                        fontWeight: 600,
+                        textDecoration: 'none',
+                        position: 'relative',
+                        '&:after': {
+                          content: '""',
+                          position: 'absolute',
+                          width: '100%',
+                          height: '2px',
+                          bottom: -2,
+                          left: 0,
+                          background: 'linear-gradient(90deg, #1976d2, #9c27b0)',
+                          transform: 'scaleX(0)',
+                          transformOrigin: 'bottom right',
+                          transition: 'transform 0.3s',
+                        },
+                        '&:hover:after': {
+                          transform: 'scaleX(1)',
+                          transformOrigin: 'bottom left',
+                        },
                       }}
                     >
-                      {remainingTime}
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
+                </Grid>
+
+                <Box sx={{ position: 'relative', textAlign: 'center', my: 3 }}>
+                  <Divider>
+                    <Typography variant="body2" color="text.secondary" sx={{ px: 1 }}>
+                      OR
                     </Typography>
-                  </Paper>
-                  
-                  <Box sx={{ mt: 2 }}>
-                    <Typography variant="body2" color="text.secondary">
-                      Forgot your password?{' '}
-                      <Link
-                        component={RouterLink}
-                        to="/auth/forgot-password"
-                        sx={{
-                          color: theme.palette.primary.main,
-                          fontWeight: 600,
-                          textDecoration: 'none',
-                          position: 'relative',
-                          '&:after': {
-                            content: '""',
-                            position: 'absolute',
-                            width: '100%',
-                            height: '2px',
-                            bottom: -2,
-                            left: 0,
-                            background: 'linear-gradient(90deg, #1976d2, #9c27b0)',
-                            transform: 'scaleX(0)',
-                            transformOrigin: 'bottom right',
-                            transition: 'transform 0.3s',
-                          },
-                          '&:hover:after': {
-                            transform: 'scaleX(1)',
-                            transformOrigin: 'bottom left',
-                          },
-                        }}
-                      >
-                        Reset it here
-                      </Link>
-                    </Typography>
-                  </Box>
+                  </Divider>
                 </Box>
-              ) : (
-                <form onSubmit={handleSubmit}>
-                  <Typography
-                    variant="h4"
-                    textAlign="center"
+
+                <Stack spacing={2} direction="row">
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    startIcon={<GoogleIcon color="error" />}
+                    onClick={handleGoogleLogin}
                     sx={{
-                      fontWeight: 700,
-                      mb: 2,
-                      background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                      backgroundClip: 'text',
-                      textFillColor: 'transparent',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      letterSpacing: '0.5px',
+                      borderRadius: 2,
+                      textTransform: 'none',
+                      borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
+                      color: theme.palette.text.primary,
+                      p: 1,
+                      '&:hover': {
+                        borderColor: theme.palette.primary.main,
+                        backgroundColor: `${theme.palette.primary.main}10`,
+                      },
                     }}
                   >
-                    Sign In
-                  </Typography>
-
-                  <Grid container spacing={3}>
-        
-
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        error={!!errors.email}
-                        helperText={errors.email}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <EmailIcon color="action" />
-                            </InputAdornment>
-                          ),
-                          sx: {
-                            borderRadius: 2,
-                            '& .MuiOutlinedInput-notchedOutline': {
-                              borderWidth: '1.5px',
-                              transition: 'border-color 0.3s',
-                            },
-                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              borderWidth: '2px',
-                            },
-                          }
-                        }}
-                        sx={{ 
-                          '& label': { fontSize: '0.95rem' },
-                          '& label.Mui-focused': { 
-                            background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                            backgroundClip: 'text',
-                            textFillColor: 'transparent',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                          },
-                        }}
-                      />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Password"
-                        name="password"
-                        type={showPassword ? 'text' : 'password'}
-                        value={formData.password}
-                        onChange={handleChange}
-                        error={!!errors.password}
-                        helperText={errors.password}
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <LockIcon color="action" />
-                            </InputAdornment>
-                          ),
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              <IconButton
-                                onClick={() => setShowPassword(!showPassword)}
-                                edge="end"
-                                sx={{
-                                  color: showPassword ? theme.palette.primary.main : 'inherit',
-                                  transition: 'all 0.2s',
-                                  '&:hover': {
-                                    background: `${theme.palette.primary.main}15`,
-                                    transform: 'scale(1.05)',
-                                  },
-                                }}
-                              >
-                                {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                              </IconButton>
-                            </InputAdornment>
-                          ),
-                          sx: {
-                            borderRadius: 2,
-                            '& .MuiOutlinedInput-notchedOutline': {
-                              borderWidth: '1.5px',
-                              transition: 'border-color 0.3s',
-                            },
-                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                              borderWidth: '2px',
-                            },
-                          }
-                        }}
-                        sx={{ 
-                          '& label': { fontSize: '0.95rem' },
-                          '& label.Mui-focused': { 
-                            background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                            backgroundClip: 'text',
-                            textFillColor: 'transparent',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                          },
-                        }}
-                      />
-                    </Grid>
-                    
-                    <Grid item xs={12}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', my: 1 }}>
-                        <Divider sx={{ flexGrow: 1 }} />
-                        <Typography variant="body2" color="text.secondary" sx={{ mx: 2 }}>
-                          or
-                        </Typography>
-                        <Divider sx={{ flexGrow: 1 }} />
-                      </Box>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        startIcon={<GoogleIcon sx={{ color: '#DB4437' }} />}
-                        onClick={handleGoogleLogin}
-                        sx={{
-                          py: 1.2,
-                          borderRadius: 2,
-                          borderColor: isDark ? 'rgba(255,255,255,0.2)' : '#DBDBDB',
-                          color: theme.palette.text.primary,
-                          textTransform: 'none',
-                          fontSize: '1rem',
-                          position: 'relative',
-                          overflow: 'hidden',
-                          '&:before': {
-                            content: '""',
-                            position: 'absolute',
-                            top: 0,
-                            left: '-100%',
-                            width: '100%',
-                            height: '100%',
-                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-                            transition: 'left 0.7s',
-                          },
-                          '&:hover': {
-                            borderColor: isDark ? 'rgba(255,255,255,0.3)' : '#ABABAB',
-                            transform: 'translateY(-2px)',
-                            boxShadow: isDark 
-                              ? '0 4px 12px rgba(0,0,0,0.3)' 
-                              : '0 4px 12px rgba(0,0,0,0.1)',
-                            '&:before': {
-                              left: '100%',
-                            },
-                          },
-                          transition: 'all 0.3s ease',
-                        }}
-                      >
-                        Continue with Google
-                      </Button>
-                    </Grid>
-
-                    <Grid item xs={12} md={6}>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        startIcon={<FacebookIcon style={{ color: '#1877F2' }} />}
-                        onClick={handleFacebookLogin}
-                        sx={{
-                          py: 1.2,
-                          borderRadius: 2,
-                          borderColor: isDark ? 'rgba(255,255,255,0.2)' : '#DBDBDB',
-                          color: theme.palette.text.primary,
-                          textTransform: 'none',
-                          fontSize: '1rem',
-                          position: 'relative',
-                          overflow: 'hidden',
-                          '&:before': {
-                            content: '""',
-                            position: 'absolute',
-                            top: 0,
-                            left: '-100%',
-                            width: '100%',
-                            height: '100%',
-                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-                            transition: 'left 0.7s',
-                          },
-                          '&:hover': {
-                            borderColor: isDark ? 'rgba(255,255,255,0.3)' : '#ABABAB',
-                            transform: 'translateY(-2px)',
-                            boxShadow: isDark 
-                              ? '0 4px 12px rgba(0,0,0,0.3)' 
-                              : '0 4px 12px rgba(0,0,0,0.1)',
-                            '&:before': {
-                              left: '100%',
-                            },
-                          },
-                          transition: 'all 0.3s ease',
-                        }}
-                      >
-                        Continue with Facebook
-                      </Button>
-                    </Grid>
-
-
-                    <Grid item xs={12}>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          mb: 2,
-                        }}
-                      >
-                        <Link
-                          component={RouterLink}
-                          to="/auth/forgot-password"
-                          sx={{
-                            color: theme.palette.primary.main,
-                            fontWeight: 600,
-                            textDecoration: 'none',
-                            position: 'relative',
-                            '&:after': {
-                              content: '""',
-                              position: 'absolute',
-                              width: '100%',
-                              height: '2px',
-                              bottom: -2,
-                              left: 0,
-                              background: 'linear-gradient(90deg, #1976d2, #9c27b0)',
-                              transform: 'scaleX(0)',
-                              transformOrigin: 'bottom right',
-                              transition: 'transform 0.3s',
-                            },
-                            '&:hover:after': {
-                              transform: 'scaleX(1)',
-                              transformOrigin: 'bottom left',
-                            },
-                          }}
-                        >
-                          Forgot Password?
-                        </Link>
-                      </Box>
-
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        fullWidth
-                        size="large"
-                        disabled={loading}
-                        sx={{
-                          borderRadius: 2,
-                          textTransform: 'none',
-                          fontSize: '1rem',
-                          py: 1.5,
-                          fontWeight: 600,
-                          background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
-                          backgroundSize: '200% 200%',
-                          animation: 'gradientBtnAnimation 5s ease infinite',
-                          '@keyframes gradientBtnAnimation': {
-                            '0%': { backgroundPosition: '0% 50%' },
-                            '50%': { backgroundPosition: '100% 50%' },
-                            '100%': { backgroundPosition: '0% 50%' },
-                          },
-                          transition: 'all 0.3s ease-in-out',
-                          '&:hover': {
-                            transform: 'translateY(-3px)',
-                            boxShadow: '0 7px 15px rgba(25, 118, 210, 0.3)',
-                          },
-                          '&:active': {
-                            transform: 'translateY(-1px)',
-                          },
-                        }}
-                      >
-                        {loading ? (
-                          <CircularProgress size={24} color="inherit" />
-                        ) : (
-                          'Log In'
-                        )}
-                      </Button>
-
-                      <Box sx={{ mt: 2, textAlign: 'center' }}>
-                        <Typography variant="body2" color="text.secondary">
-                          Don't have an account?{' '}
-                          <Link
-                            component={RouterLink}
-                            to="/auth/register"
-                            sx={{
-                              color: theme.palette.primary.main,
-                              fontWeight: 600,
-                              textDecoration: 'none',
-                              position: 'relative',
-                              '&:after': {
-                                content: '""',
-                                position: 'absolute',
-                                width: '100%',
-                                height: '2px',
-                                bottom: -2,
-                                left: 0,
-                                background: 'linear-gradient(90deg, #1976d2, #9c27b0)',
-                                transform: 'scaleX(0)',
-                                transformOrigin: 'bottom right',
-                                transition: 'transform 0.3s',
-                              },
-                              '&:hover:after': {
-                                transform: 'scaleX(1)',
-                                transformOrigin: 'bottom left',
-                              },
-                            }}
-                          >
-                            Sign up
-                          </Link>
-                        </Typography>
-                      </Box>
-                    </Grid>
-
-                  </Grid>
-                </form>
-              )}
+                    Continue with Google
+                  </Button>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    startIcon={<FacebookIcon color="primary" />}
+                    onClick={handleFacebookLogin}
+                    sx={{
+                      borderRadius: 2,
+                      textTransform: 'none',
+                      borderColor: isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)',
+                      color: theme.palette.text.primary,
+                      p: 1,
+                      '&:hover': {
+                        borderColor: theme.palette.primary.main,
+                        backgroundColor: `${theme.palette.primary.main}10`,
+                      },
+                    }}
+                  >
+                    Continue with Facebook
+                  </Button>
+                </Stack>
+              </Box>
             </Paper>
           </Grid>
         </Grid>
       </Container>
 
+      {/* Snackbar */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -841,6 +705,119 @@ const LoginForm = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+      
+      {/* Two-Factor Authentication Dialog */}
+      <Dialog 
+        open={showTwoFactorDialog} 
+        maxWidth="xs" 
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+          color: 'white',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1
+        }}>
+          <SecurityIcon />
+          Two-Factor Authentication
+        </DialogTitle>
+        
+        <DialogContent sx={{ pt: 3, pb: 1 }}>
+          <Stack spacing={3}>
+            {verificationError && (
+              <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
+                {verificationError}
+              </Alert>
+            )}
+            
+            {!showBackupCodeForm ? (
+              <>
+                <Typography variant="body1">
+                  Enter the verification code from your authenticator app to complete login.
+                </Typography>
+                
+                <TextField
+                  label="Verification Code"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ''))}
+                  fullWidth
+                  autoFocus
+                  placeholder="6-digit code"
+                  inputProps={{ 
+                    maxLength: 6,
+                    inputMode: 'numeric'
+                  }}
+                  InputProps={{
+                    sx: {
+                      borderRadius: 2,
+                    }
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Typography variant="body1">
+                  Enter one of your backup codes to complete login.
+                </Typography>
+                
+                <TextField
+                  label="Backup Code"
+                  value={backupCode}
+                  onChange={(e) => setBackupCode(e.target.value.toUpperCase())}
+                  fullWidth
+                  autoFocus
+                  placeholder="e.g. ABCD1234"
+                  InputProps={{
+                    sx: {
+                      borderRadius: 2,
+                    }
+                  }}
+                />
+              </>
+            )}
+            
+            <Button
+              variant="text"
+              onClick={toggleBackupCodeForm}
+              startIcon={<HelpOutlineIcon />}
+              sx={{ alignSelf: 'flex-start' }}
+            >
+              {showBackupCodeForm 
+                ? "Use authenticator app instead" 
+                : "Lost your device? Use a backup code"}
+            </Button>
+          </Stack>
+        </DialogContent>
+        
+        <DialogActions sx={{ px: 3, py: 2, borderTop: `1px solid ${theme.palette.divider}` }}>
+          <Button 
+            onClick={() => setShowTwoFactorDialog(false)}
+            disabled={twoFactorLoading}
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="contained"
+            onClick={handleVerifyTwoFactor}
+            disabled={(!verificationCode && !backupCode) || twoFactorLoading}
+            startIcon={twoFactorLoading ? <CircularProgress size={16} color="inherit" /> : null}
+            sx={{
+              background: 'linear-gradient(45deg, #1976d2, #9c27b0)',
+              borderRadius: 2,
+            }}
+          >
+            {twoFactorLoading ? "Verifying..." : "Verify"}
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
