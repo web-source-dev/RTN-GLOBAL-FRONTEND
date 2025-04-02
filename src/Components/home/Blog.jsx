@@ -137,7 +137,10 @@ const Blog = () => {
 
                   <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Avatar src={post.author?.avatar} sx={{ width: 32, height: 32, mr: 1 }} />
+                      <Avatar src={post.author?.avatar ? `${process.env.REACT_APP_API_URL}${post.author.avatar}` : undefined} sx={{ width: 32, height: 32, mr: 1,
+                        border: '1px solid',
+                        borderColor: 'primary.main'
+                      }} />
                       <Box>
                         <Typography variant="subtitle2">{`${post.author?.firstName} ${post.author?.lastName}`}</Typography>
                         <Typography variant="caption" color="text.secondary">

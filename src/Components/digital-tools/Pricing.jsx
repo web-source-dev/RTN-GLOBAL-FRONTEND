@@ -19,7 +19,7 @@ import StarIcon from '@mui/icons-material/Star';
 const plans = [
   {
     title: 'Basic Website',
-    price: '$2,999',
+    price: '$299',
     period: 'starting at',
     description: 'Professional Wix website for small businesses',
     features: [
@@ -35,7 +35,7 @@ const plans = [
   },
   {
     title: 'Custom Web App',
-    price: '$4,999',
+    price: '$499',
     period: 'starting at',
     description: 'Full-stack MERN application for business needs',
     features: [
@@ -44,8 +44,6 @@ const plans = [
       'Database Integration',
       'API Development',
       'Admin Dashboard',
-      'Performance Optimization',
-      'Technical Documentation',
       '3 Months Support'
     ],
     color: '#4caf50',
@@ -53,7 +51,7 @@ const plans = [
   },
   {
     title: 'Mobile App',
-    price: '$3,999',
+    price: '$699',
     period: 'starting at',
     description: 'Cross-platform React Native mobile application',
     features: [

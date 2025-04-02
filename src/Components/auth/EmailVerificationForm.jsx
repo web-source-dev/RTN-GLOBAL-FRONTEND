@@ -96,7 +96,7 @@ const EmailVerificationForm = () => {
       
       // Redirect to dashboard/home after successful verification
       setTimeout(() => {
-        navigate('/dashboard/user');
+        window.location.href = `${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user`;
       }, 10000);
     } catch (error) {
       console.error('Verification error:', error);

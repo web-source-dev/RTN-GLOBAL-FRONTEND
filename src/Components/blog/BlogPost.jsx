@@ -271,9 +271,12 @@ const BlogPost = () => {
               }}>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Avatar 
-                    src={blog.author?.avatar} 
+                    src={blog.author?.avatar ? `${process.env.REACT_APP_API_URL}${blog.author.avatar}` : undefined}
                     alt={blog.author?.firstName}
-                    sx={{ width: 48, height: 48 }}
+                    sx={{ width: 48, height: 48,
+                      border: '2px solid',
+                      borderColor: 'primary.main'
+                    }}
                   />
                   <Box sx={{ ml: 2 }}>
                     <Typography 
@@ -453,9 +456,12 @@ const BlogPost = () => {
                     >
                       <ListItemAvatar>
                         <Avatar 
-                          src={comment.user?.avatar} 
+                          src={comment.user?.avatar ? `${process.env.REACT_APP_API_URL}${comment.user.avatar}` : undefined}
                           alt={comment.user?.firstName}
-                          sx={{ width: 40, height: 40 }}
+                          sx={{ width: 40, height: 40,
+                            border: '2px solid',
+                            borderColor: 'primary.main'
+                          }}
                         />
                       </ListItemAvatar>
                       <ListItemText
@@ -540,9 +546,12 @@ const BlogPost = () => {
                                     }}
                                   >
                                     <Avatar
-                                      src={reply.user?.avatar}
+                                      src={reply.user?.avatar ? `${process.env.REACT_APP_API_URL}${reply.user.avatar}` : undefined}
                                       alt={reply.user?.firstName}
-                                      sx={{ width: 32, height: 32 }}
+                                      sx={{ width: 32, height: 32,
+                                        border: '2px solid',
+                                        borderColor: 'primary.main'
+                                      }}
                                     />
                                     <Box>
                                       <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
@@ -645,9 +654,12 @@ const BlogPost = () => {
                   >
                     <ListItemAvatar>
                       <Avatar
-                        src={reply.user?.avatar}
+                        src={reply.user?.avatar ? `${process.env.REACT_APP_API_URL}${reply.user.avatar}` : undefined}
                         alt={reply.user?.firstName}
-                        sx={{ width: 32, height: 32 }}
+                        sx={{ width: 32, height: 32,
+                          border: '2px solid',
+                          borderColor: 'primary.main'
+                        }}
                       />
                     </ListItemAvatar>
                     <ListItemText

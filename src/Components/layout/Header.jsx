@@ -25,7 +25,8 @@ import {
   Grid,
   ListItemIcon,
   CircularProgress,
-  CardMedia
+  CardMedia,
+  Chip
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -33,11 +34,12 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import PersonIcon from '@mui/icons-material/Person';
 import ThemeSwitcher from '../ThemeSwitcher';
 import NotificationComponent from '../notifications/NotificationComponent';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import API from '../../BackendAPi/ApiProvider';
 
 const pages = [
   { title: 'Services', path: '/services' },
@@ -54,66 +56,23 @@ const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [megaMenuAnchor, setMegaMenuAnchor] = useState(null);
   const [activeMenu, setActiveMenu] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   // Enhanced user state management
-  const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userPreferences, setUserPreferences] = useState({
     theme: 'system',
     language: 'en',
     emailNotifications: true
   });
 
-  const { logout } = useAuth();
-
-  // Fetch user data on component mount
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        setLoading(true);
-        // Replace direct fetch with API provider for cookie auth
-        const response = await API.get('/api/user/profile');
-        
-        // If successful, update state
-        setUser(response.data);
-        setIsLoggedIn(true);
-        setUserPreferences(response.data.preferences || {});
-      } catch (err) {
-        // Handle error but don't show it to the user
-        console.error('Error fetching user profile:', err);
-        setIsLoggedIn(false);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Only fetch if there's a user in localStorage (possible from previous login)
-    if (localStorage.getItem('user')) {
-      fetchUserData();
-    } else {
-      setLoading(false);
-    }
-  }, []);
+  const { user, logout, isAdmin, isAuthenticated, getDashboardUrl } = useAuth();
 
   const handleLogout = async () => {
     try {
-      // Use API provider for logout
-      await API.post('/api/auth/logout');
-      
-      // Clear user from localStorage
-      localStorage.removeItem('user');
-      
-      // Update state
-      setUser(null);
-      setIsLoggedIn(false);
-      
-      // Use auth context logout if available
-      if (logout) logout();
-      
-      // Close menu
-      setAnchorEl(null);
+      await logout();
+      // Redirect to home or login page after logout
+      window.location.href = '/';
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -170,6 +129,18 @@ const Header = () => {
     handleMegaMenuClose();
   };
 
+  const getDashboardLink = () => {
+    return getDashboardUrl();
+  };
+
+  const getProfileLink = () => {
+    if (isAdmin) {
+      return `${process.env.REACT_APP_ADMIN_DASHBOARD_URL}/profile`;
+    } else {
+      return `${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/profile`;
+    }
+  };
+
   const renderProfileMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -200,32 +171,47 @@ const Header = () => {
       ) : (
         <>
           <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              {user?.fullName}
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                {user?.firstName} {user?.lastName}
+              </Typography>
+              {isAdmin && (
+                <Chip 
+                  label="Admin" 
+                  size="small" 
+                  color="primary" 
+                  sx={{ ml: 1, height: 20, fontSize: '0.65rem' }}
+                />
+              )}
+            </Box>
             <Typography variant="body2" color="text.secondary">
               {user?.email}
             </Typography>
           </Box>
-          <MenuItem component={Link} to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/profile`}>
+          
+          <MenuItem component={Link} to={getProfileLink()}>
             <ListItemIcon>
-              <AccountCircleIcon fontSize="small" />
+              <PersonIcon fontSize="small" />
             </ListItemIcon>
             Profile
           </MenuItem>
-          <MenuItem component={Link} to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user`}>
+          
+          <MenuItem component={Link} to={getDashboardLink()}>
             <ListItemIcon>
-              <DashboardIcon fontSize="small" />
+              {isAdmin ? <AdminPanelSettingsIcon fontSize="small" /> : <DashboardIcon fontSize="small" />}
             </ListItemIcon>
-            Dashboard
+            {isAdmin ? 'Admin Dashboard' : 'Dashboard'}
           </MenuItem>
-          <MenuItem component={Link} to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/profile`}>
+          
+          <MenuItem component={Link} to={getProfileLink()}>
             <ListItemIcon>
               <SettingsIcon fontSize="small" />
             </ListItemIcon>
             Settings
           </MenuItem>
+          
           <Divider />
+          
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>
               <LogoutIcon fontSize="small" />
@@ -275,6 +261,7 @@ const renderMegaMenu = (
           onClick={() => window.location.href = '/'}
           image="/rtnglobal-logo.png"
           alt="Logo"
+          className="logo-img"
           sx={{width: 60, height: 50,ml:2 ,cursor:'pointer'}}
         />
 
@@ -312,10 +299,10 @@ const renderMegaMenu = (
                 </Button>
               ))}
               <ThemeSwitcher />
-              {isLoggedIn ? (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              {isAuthenticated && localStorage.getItem('user') ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <NotificationComponent />
-                  <Tooltip title="Account settings">
+                  <Tooltip title={isAdmin ? "Admin settings" : "Account settings"}>
                     <IconButton
                       onClick={handleProfileMenuOpen}
                       size="small"
@@ -324,14 +311,24 @@ const renderMegaMenu = (
                       aria-haspopup="true"
                       aria-expanded={Boolean(anchorEl) ? 'true' : undefined}
                     >
-                      {user.avatar ? (
+                      {user?.avatar ? (
                         <Avatar
-                          alt={user.name}
+                          alt={user.fullName}
                           src={`${process.env.REACT_APP_API_URL}${user.avatar}`}
-                          sx={{ width: 32, height: 32,border:'1px solid #000' }}
+                          sx={{ 
+                            width: 32, 
+                            height: 32, 
+                            border: isAdmin ? '1px solid rgb(4, 0, 245)' : '1px solid #000'
+                          }}
                         />
                       ) : (
-                        <AccountCircleIcon />
+                        <Avatar sx={{ 
+                          bgcolor: isAdmin ? 'error.main' : 'primary.main',
+                          width: 32,
+                          height: 32,
+                        }}>
+                          {isAdmin ? <AdminPanelSettingsIcon fontSize="small" /> : <AccountCircleIcon />}
+                        </Avatar>
                       )}
                     </IconButton>
                   </Tooltip>
@@ -358,7 +355,7 @@ const renderMegaMenu = (
             <>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <ThemeSwitcher />
-                {isLoggedIn && <NotificationComponent />}
+                {isAuthenticated && localStorage.getItem('user') && <NotificationComponent />}
                 <IconButton
                   color="inherit"
                   aria-label="open drawer"
@@ -386,27 +383,63 @@ const renderMegaMenu = (
                 </Box>
                 <Divider />
                 
-                {isLoggedIn && (
+                {isAuthenticated && localStorage.getItem('user') ? (
                   <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                       {user?.avatar ? (
                         <Avatar
-                          alt={user.name}
+                          alt={user.fullName}
                           src={`${process.env.REACT_APP_API_URL}${user.avatar}`}
-                          sx={{ width: 48, height: 48, border: '1px solid #000', mr: 2 }}
+                          sx={{ 
+                            width: 48, 
+                            height: 48, 
+                            border: isAdmin ? 'px solidrgb(4, 0, 245)' : '1px solid #000', 
+                            mr: 2 
+                          }}
                         />
                       ) : (
-                        <AccountCircleIcon sx={{ width: 48, height: 48, mr: 2 }} />
+                        <Avatar 
+                          sx={{ 
+                            width: 48, 
+                            height: 48, 
+                            mr: 2,
+                            bgcolor: isAdmin ? 'error.main' : 'primary.main'
+                          }}
+                        >
+                          {isAdmin ? <AdminPanelSettingsIcon /> : <AccountCircleIcon />}
+                        </Avatar>
                       )}
                       <Box>
-                        <Typography variant="subtitle1" fontWeight="bold">
-                          {user?.fullName}
-                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Typography variant="subtitle1" fontWeight="bold">
+                            {user?.firstName} {user?.lastName}
+                          </Typography>
+                          {isAdmin && (
+                            <Chip 
+                              label="Admin" 
+                              size="small" 
+                              color="primary" 
+                              sx={{ ml: 1, height: 20, fontSize: '0.65rem' }}
+                            />
+                          )}
+                        </Box>
                         <Typography variant="body2" color="text.secondary">
                           {user?.email}
                         </Typography>
                       </Box>
                     </Box>
+                  </Box>
+                ) : (
+                  <Box sx={{ p: 2 }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      component="a"
+                      href="/auth/login"
+                    >
+                      Get Started
+                    </Button>
                   </Box>
                 )}
                 
@@ -427,32 +460,32 @@ const renderMegaMenu = (
                     </ListItem>
                   ))}
                   
-                  {isLoggedIn ? (
+                  {isAuthenticated && localStorage.getItem('user') ? (
                     <>
                       <Divider sx={{ my: 1 }} />
                       <ListItem 
                         component={Link} 
-                        to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/profile`}
+                        to={getProfileLink()}
                         onClick={handleDrawerToggle}
                       >
                         <ListItemIcon>
-                          <AccountCircleIcon fontSize="small" />
+                          <PersonIcon fontSize="small" />
                         </ListItemIcon>
                         <ListItemText primary="Profile" />
                       </ListItem>
                       <ListItem 
                         component={Link} 
-                        to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user`}
+                        to={getDashboardLink()}
                         onClick={handleDrawerToggle}
                       >
                         <ListItemIcon>
-                          <DashboardIcon fontSize="small" />
+                          {isAdmin ? <AdminPanelSettingsIcon fontSize="small" /> : <DashboardIcon fontSize="small" />}
                         </ListItemIcon>
-                        <ListItemText primary="Dashboard" />
+                        <ListItemText primary={isAdmin ? "Admin Dashboard" : "Dashboard"} />
                       </ListItem>
                       <ListItem 
                         component={Link} 
-                        to={`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/profile`}
+                        to={getProfileLink()}
                         onClick={handleDrawerToggle}
                       >
                         <ListItemIcon>
@@ -493,6 +526,7 @@ const renderMegaMenu = (
           )}
         </Toolbar>
       </Container>
+      
       {renderProfileMenu}
       {renderMegaMenu}
     </AppBar>

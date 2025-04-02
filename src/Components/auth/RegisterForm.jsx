@@ -232,7 +232,7 @@ const RegisterForm = () => {
           });
           
           setTimeout(() => {
-            window.location.href = '/';
+            window.location.href = `${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user`;
           }, 2000);
         }
       } catch (error) {

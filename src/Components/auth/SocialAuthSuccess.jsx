@@ -28,7 +28,7 @@ const SocialAuthSuccess = () => {
         
         // Redirect after short delay to show success message
         setTimeout(() => {
-          navigate('/');
+          navigate(`${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user`);
         }, 1500);
       } catch (error) {
         console.error('Error fetching user data after social login', error);

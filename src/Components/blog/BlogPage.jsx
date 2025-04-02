@@ -50,12 +50,6 @@ const BlogPage = () => {
     }
   };
 
-  const truncateText = (text, maxLength) => {
-    // Remove HTML tags for preview
-    const strippedText = text.replace(/<[^>]+>/g, '');
-    if (strippedText.length <= maxLength) return strippedText;
-    return strippedText.substr(0, maxLength) + '...';
-  };
 
   const handlePageChange = (event, value) => {
     setPage(value);
@@ -135,7 +129,7 @@ const BlogPage = () => {
                   }}
                 >
                   <Avatar
-                    src={blogs[0].author?.avatar}
+                    src={blogs[0].author?.avatar ? `${process.env.REACT_APP_API_URL}${blogs[0].author.avatar}` : undefined}
                     alt={blogs[0].author ? `${blogs[0].author.firstName} ${blogs[0].author.lastName}` : 'Anonymous'}
                     sx={{
                       width: 40,

@@ -177,7 +177,7 @@ const LoginForm = () => {
         });
 
         setTimeout(() => {
-          window.location.href = '/';
+          window.location.href = `${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user`;
         }, 1500);
       } catch (error) {
         console.error('Login error:', error.response);
@@ -293,7 +293,7 @@ const LoginForm = () => {
       setShowTwoFactorDialog(false);
       
       setTimeout(() => {
-        window.location.href = '/';
+        window.location.href = `${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user`;
       }, 1500);
     } catch (error) {
       console.error('2FA verification error:', error.response);

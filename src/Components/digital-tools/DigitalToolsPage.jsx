@@ -5,7 +5,6 @@ import ToolsGrid from './ToolsGrid';
 import FeaturedTools from './FeaturedTools';
 import Integration from './Integration';
 import Pricing from './Pricing';
-import FAQ from './FAQ';
 import CTA from '../home/CTA';
 
 const DigitalToolsPage = () => {
@@ -16,7 +15,6 @@ const DigitalToolsPage = () => {
       <FeaturedTools />
       <Integration />
       <Pricing />
-      <FAQ />
       <CTA />
     </Box>
   );

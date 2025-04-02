@@ -67,6 +67,17 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Get dashboard URL based on user role
+  const getDashboardUrl = () => {
+    if (!user) return null;
+    
+    if (user.role === 'admin') {
+      return process.env.REACT_APP_ADMIN_DASHBOARD_URL;
+    } else {
+      return `${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user`;
+    }
+  };
+
   const value = {
     user,
     login,
@@ -74,7 +85,9 @@ export const AuthProvider = ({ children }) => {
     register,
     refreshUser,
     loading,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+    isAdmin: user?.role === 'admin',
+    getDashboardUrl
   };
 
   return (

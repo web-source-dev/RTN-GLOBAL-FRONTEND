@@ -3,17 +3,18 @@ import { Box, Container, Typography, Button, Stack, Grid } from '@mui/material';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const handleGetStarted = () => {
-    navigate('/free-consultation');
+    window.location.href = isAuthenticated ? `${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/orders` : `/auth/login`;
   };
 
-  const handleWatchDemo = () => {
-    // For now, navigate to services page where demo content would typically be
-    navigate('/services');
+  const handleBookConsultation = () => {
+    navigate('/free-consultation');
   };
 
   return (
@@ -124,7 +125,7 @@ const Hero = () => {
                   variant="outlined"
                   size="large"
                   startIcon={<PlayArrowIcon />}
-                  onClick={handleWatchDemo}
+                  onClick={handleBookConsultation}
                   sx={{
                     py: 1.5,
                     px: 4,
@@ -139,8 +140,8 @@ const Hero = () => {
                     },
                   }}
                 >
-                  Watch Demo
-                </Button>
+                    Book a Free Consultation
+                  </Button>
               </Stack>
               <Box
                 sx={{

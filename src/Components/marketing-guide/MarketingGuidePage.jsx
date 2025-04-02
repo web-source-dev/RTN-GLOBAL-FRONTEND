@@ -4,7 +4,6 @@ import Hero from './Hero';
 import GuideCategories from './GuideCategories';
 import FeaturedGuides from './FeaturedGuides';
 import LatestResources from './LatestResources';
-import Newsletter from './Newsletter';
 import CTA from '../home/CTA';
 import NewsletterForm from '../forms/NewsletterForm';
 

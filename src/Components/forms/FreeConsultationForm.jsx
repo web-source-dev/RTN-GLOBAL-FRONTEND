@@ -431,7 +431,7 @@ const FreeConsultationForm = () => {
             <Button 
               color="inherit" 
               size="small" 
-              onClick={() => navigate('/login?redirect=/free-consultation')}
+              onClick={() => navigate('/auth/login?redirect=/free-consultation')}
             >
               Login Now
             </Button>
