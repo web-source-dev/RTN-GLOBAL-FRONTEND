@@ -74,7 +74,7 @@ function App() {
                   <Route path="/case-studies" element={<CaseStudiesPage />} />
                   <Route path="/blog" element={<BlogPage />} />
                   <Route path="/blog/post/:id" element={<BlogPost />} />
-                  <Route path="/team" element={<TeamPage />} />
+                  {/* <Route path="/team" element={<TeamPage />} /> */}
                   <Route path="/careers" element={<CareersPage />} />
                   <Route path="/news" element={<NewsPage />} />
                   <Route path="/marketing-guide" element={<MarketingGuidePage />} />
