@@ -32,8 +32,8 @@ const HomePage = () => {
         "logo": {
           "@type": "ImageObject",
           "@id": "https://rtnglobal.site/#logo",
-          "url": "https://rtnglobal.site/images/logo.png",
-          "contentUrl": "https://rtnglobal.site/images/logo.png",
+          "url": "https://rtnglobal.site/rtnglobal-logo.png",
+          "contentUrl": "https://rtnglobal.site/rtnglobal-logo.png",
           "caption": "RTN Global Logo",
           "inLanguage": "en-US",
           "width": "800",
@@ -104,8 +104,8 @@ const HomePage = () => {
         "inLanguage": "en-US",
         "primaryImageOfPage": {
           "@type": "ImageObject",
-          "@id": "https://rtnglobal.site/images/og-home.png",
-          "url": "https://rtnglobal.site/images/og-home.png"
+          "@id": "https://rtnglobal.site/images/og-rtnglobal.png",
+          "url": "https://rtnglobal.site/images/og-rtnglobal.png"
         },
         "description": "Professional web development services including custom Wix websites, MERN stack applications, and React Native mobile apps. Fast, scalable, and user-friendly digital experiences for your business."
       },
@@ -163,7 +163,7 @@ const HomePage = () => {
         keywords="web development, Wix development, MERN stack, React Native, mobile apps, custom websites, web solutions, responsive design, professional web development, ecommerce websites, business websites, web applications, Albuquerque web design, New Mexico web development"
         canonicalUrl="/"
         ogType="website"
-        ogImage="/images/og-home.png"
+        ogImage="/images/og-rtnglobal.png"
         schema={enhancedSchema}
       />
       <Hero />

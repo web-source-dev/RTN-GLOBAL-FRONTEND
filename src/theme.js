@@ -18,7 +18,7 @@ export const getDesignTokens = (mode) => ({
             dark: '#5243AA',
           },
           background: {
-            default: 'rgb(224, 224, 224)',
+            default: 'rgb(255, 255, 255)',
             paper: '#FFFFFF',
             alternate: '#F4F5F7',
           },
