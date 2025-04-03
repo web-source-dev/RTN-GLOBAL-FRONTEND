@@ -20,6 +20,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 
 const categories = [
   {
+    id: 'getting-started',
     title: 'Getting Started',
     description: 'Essential guides for new users',
     icon: ArticleIcon,
@@ -28,6 +29,7 @@ const categories = [
     popular: ['Quick Start Guide', 'Platform Overview', 'Basic Setup']
   },
   {
+    id: 'technical-guides',
     title: 'Technical Guides',
     description: 'Detailed technical documentation',
     icon: CodeIcon,
@@ -36,6 +38,7 @@ const categories = [
     popular: ['API Integration', 'Custom Development', 'Troubleshooting']
   },
   {
+    id: 'faqs',
     title: 'FAQs',
     description: 'Frequently asked questions',
     icon: HelpIcon,
@@ -44,6 +47,7 @@ const categories = [
     popular: ['Common Issues', 'Account Management', 'Billing Questions']
   },
   {
+    id: 'platform-features',
     title: 'Platform Features',
     description: 'Learn about our platform features',
     icon: SettingsIcon,
@@ -52,6 +56,7 @@ const categories = [
     popular: ['Analytics Tools', 'Campaign Management', 'Reporting']
   },
   {
+    id: 'updates',
     title: 'Updates & Changes',
     description: 'Latest platform updates and changes',
     icon: UpdateIcon,
@@ -60,6 +65,7 @@ const categories = [
     popular: ['Release Notes', 'New Features', 'Upcoming Changes']
   },
   {
+    id: 'security',
     title: 'Security & Privacy',
     description: 'Security guidelines and best practices',
     icon: SecurityIcon,
@@ -76,6 +82,9 @@ const KnowledgeBase = () => {
 
   return (
     <Box
+      component="section"
+      id="knowledge-base"
+      aria-labelledby="knowledge-base-title"
       py={12}
       sx={{
         background: theme.palette.background.default,
@@ -96,11 +105,14 @@ const KnowledgeBase = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1
         }}
+        aria-hidden="true"
       />
 
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="knowledge-base-title"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -116,6 +128,7 @@ const KnowledgeBase = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
@@ -130,10 +143,11 @@ const KnowledgeBase = () => {
             placeholder="Search knowledge base..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="Search knowledge base"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon color="action" />
+                  <SearchIcon color="action" aria-hidden="true" />
                 </InputAdornment>
               ),
             }}
@@ -146,10 +160,26 @@ const KnowledgeBase = () => {
           />
         </Box>
 
-        <Grid container spacing={4}>
+        <Grid 
+          container 
+          spacing={4} 
+          role="list" 
+          aria-label="Knowledge base categories"
+        >
           {categories.map((category, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid 
+              item 
+              xs={12} 
+              sm={6} 
+              md={4} 
+              key={category.id}
+              role="listitem"
+            >
               <Card
+                component="article"
+                id={`category-${category.id}`}
+                aria-labelledby={`category-title-${category.id}`}
+                aria-describedby={`category-desc-${category.id}`}
                 sx={{
                   height: '100%',
                   transition: 'all 0.3s ease',
@@ -174,6 +204,7 @@ const KnowledgeBase = () => {
                     background: `radial-gradient(circle at top right, ${category.color}15, transparent 70%)`,
                     borderRadius: '0 0 0 100%',
                   }}
+                  aria-hidden="true"
                 />
                 <CardContent sx={{ p: 4 }}>
                   <Box
@@ -187,13 +218,24 @@ const KnowledgeBase = () => {
                       mb: 2,
                       transition: 'transform 0.3s ease',
                     }}
+                    aria-hidden="true"
                   >
                     <category.icon fontSize="large" />
                   </Box>
-                  <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+                  <Typography 
+                    variant="h5" 
+                    component="h3" 
+                    id={`category-title-${category.id}`}
+                    gutterBottom 
+                    sx={{ fontWeight: 600 }}
+                  >
                     {category.title}
                   </Typography>
-                  <Typography color="text.secondary" paragraph>
+                  <Typography 
+                    color="text.secondary" 
+                    id={`category-desc-${category.id}`}
+                    paragraph
+                  >
                     {category.description}
                   </Typography>
                   <Box
@@ -211,9 +253,18 @@ const KnowledgeBase = () => {
                   >
                     {category.articles} Articles
                   </Box>
-                  <Box sx={{ mt: 2 }}>
+                  <Box 
+                    component="ul" 
+                    sx={{ 
+                      mt: 2, 
+                      pl: 0, 
+                      listStyleType: 'none' 
+                    }}
+                    aria-label={`Popular articles in ${category.title}`}
+                  >
                     {category.popular.map((article, idx) => (
                       <Box
+                        component="li"
                         key={idx}
                         sx={{
                           display: 'flex',
@@ -231,7 +282,19 @@ const KnowledgeBase = () => {
                           },
                         }}
                       >
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography 
+                          component="a"
+                          href={`/knowledge/${category.id}/${article.toLowerCase().replace(/\s+/g, '-')}`}
+                          variant="body2" 
+                          color="text.secondary"
+                          sx={{ 
+                            textDecoration: 'none',
+                            '&:hover': { 
+                              textDecoration: 'underline',
+                              color: category.color
+                            }
+                          }}
+                        >
                           {article}
                         </Typography>
                       </Box>

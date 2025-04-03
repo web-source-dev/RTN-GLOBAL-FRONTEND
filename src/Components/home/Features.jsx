@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Paper, IconButton, useTheme } from '@mui/material';
+import { Box, Container, Grid, Typography, Paper, IconButton, useTheme, useMediaQuery } from '@mui/material';
 import SpeedIcon from '@mui/icons-material/Speed';
 import DevicesIcon from '@mui/icons-material/Devices';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -10,51 +10,57 @@ import SupportIcon from '@mui/icons-material/Support';
 const features = [
   {
     icon: SpeedIcon,
-    title: 'Fast Performance',
-    description: 'Optimized code and efficient architecture for lightning-fast loading and smooth user experience.',
+    title: 'Fast Website Performance',
+    description: 'Optimized code and efficient architecture for lightning-fast loading speeds and smooth user experience on all websites and applications.',
     color: '#2196f3'
   },
   {
     icon: DevicesIcon,
-    title: 'Responsive Design',
-    description: 'Fully responsive layouts that work perfectly across all devices, from desktops to smartphones.',
+    title: 'Responsive Web Design',
+    description: 'Fully responsive layouts that work perfectly across all devices, from desktops to smartphones, providing a seamless user experience.',
     color: '#4caf50'
   },
   {
     icon: SecurityIcon,
-    title: 'Secure Solutions',
-    description: 'Built-in security features and best practices to protect your data and your users.',
+    title: 'Secure Web Solutions',
+    description: 'Built-in security features and best practices to protect your website data and users from potential threats and vulnerabilities.',
     color: '#ff9800'
   },
   {
     icon: CodeIcon,
-    title: 'Clean Code',
-    description: 'Well-structured, maintainable code that follows industry standards for long-term reliability.',
+    title: 'Clean Code Architecture',
+    description: 'Well-structured, maintainable code following industry standards for long-term reliability and easy future updates to your web applications.',
     color: '#9c27b0'
   },
   {
     icon: BrushIcon,
-    title: 'Modern UI/UX',
-    description: 'Beautiful, intuitive interfaces designed for optimal user engagement and conversion.',
+    title: 'Modern UI/UX Web Design',
+    description: 'Beautiful, intuitive interfaces designed for optimal user engagement and conversion rates on your business website or application.',
     color: '#f44336'
   },
   {
     icon: SupportIcon,
-    title: 'Ongoing Support',
-    description: 'Dedicated technical support and maintenance to keep your web solutions running smoothly.',
+    title: 'Ongoing Website Support',
+    description: 'Dedicated technical support and maintenance to keep your web solutions and applications running smoothly after launch.',
     color: '#00bcd4'
   }
 ];
 
 const Features = () => {
   const theme = useTheme();
-  
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return (
-    <Box py={8} sx={{ 
-      position: 'relative',
-      overflow: 'hidden',
-      background: theme.palette.background.default,
-    }}>
+    <Box 
+      component="section" 
+      id="features-section"
+      aria-label="Web Development Features and Benefits"
+      py={8} 
+      sx={{ 
+        position: 'relative',
+        overflow: 'hidden',
+        background: theme.palette.background.default,
+      }}
+    >
       <Box
         sx={{
           position: 'absolute',
@@ -71,6 +77,7 @@ const Features = () => {
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography 
           variant="h2" 
+          component="h2"
           textAlign="center" 
           gutterBottom
           sx={{
@@ -82,20 +89,21 @@ const Features = () => {
             WebkitTextFillColor: 'transparent',
           }}
         >
-          Why Choose Us
+          Why Choose Our Web Development Services
         </Typography>
         <Typography 
-          variant="h5" 
+          variant="body1"
+          component="p"
           color="text.secondary" 
           textAlign="center" 
           mb={6}
           sx={{ maxWidth: '800px', mx: 'auto' }}        
         >
-          Discover the advantages that set our web development solutions apart
+          Discover the advantages that set our professional web development solutions apart
         </Typography>
-        <Grid container spacing={4}>
-          {features.map((feature, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+        <Grid container spacing={4} component="ul" sx={{ listStyle: 'none', p: 0 }}>
+          {features.slice(isMobile ? 3 : 0).map((feature, index) => (
+            <Grid item xs={12} sm={6} md={4} key={index} component="li">
               <Paper
                 elevation={0}
                 sx={{
@@ -125,6 +133,7 @@ const Features = () => {
                   }}
                 />
                 <IconButton
+                  aria-hidden="true"
                   sx={{
                     mb: 2,
                     bgcolor: `${feature.color}15`,
@@ -132,13 +141,14 @@ const Features = () => {
                     '&:hover': { bgcolor: `${feature.color}25` },
                   }}
                   size="large"
+                  tabIndex={-1}
                 >
                   <feature.icon fontSize="large" />
                 </IconButton>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, color: theme.palette.text.primary }}>
+                <Typography variant="h3" component="h3" gutterBottom sx={{ fontWeight: 600, color: theme.palette.text.primary, fontSize: '1.5rem' }}>
                   {feature.title}
                 </Typography>
-                <Typography color="text.secondary">
+                <Typography component="p" color="text.secondary">
                   {feature.description}
                 </Typography>
               </Paper>

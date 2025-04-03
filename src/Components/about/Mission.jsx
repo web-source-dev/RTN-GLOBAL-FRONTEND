@@ -61,6 +61,9 @@ const Mission = () => {
 
   return (
     <Box
+      component="section"
+      id="mission"
+      aria-label="Our Mission Section"
       sx={{
         py: 12,
         position: 'relative',
@@ -112,6 +115,7 @@ const Mission = () => {
             </Typography>
             <Typography
               variant="h2"
+              component="h2"
               gutterBottom
               sx={{
                 fontWeight: 800,
@@ -127,6 +131,7 @@ const Mission = () => {
             </Typography>
             <Typography
               variant="h5"
+              component="p"
               color="text.secondary"
               sx={{ maxWidth: '800px', mx: 'auto', mb: 4 }}
             >
@@ -207,6 +212,7 @@ const Mission = () => {
                           boxShadow: `0 0 30px ${feature.color}60`
                         }
                       }}
+                      aria-hidden="true"
                     >
                       {feature.icon}
                     </Avatar>

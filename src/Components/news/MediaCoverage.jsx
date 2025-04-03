@@ -15,40 +15,52 @@ import LaunchIcon from '@mui/icons-material/Launch';
 
 const mediaCoverage = [
   {
+    id: 'tech-weekly',
     title: 'RTN Global Revolutionizes Digital Marketing with AI',
     source: 'Tech Weekly',
     date: 'March 18, 2024',
+    isoDate: '2024-03-18',
     excerpt: 'Leading tech publication highlights RTN Global\'s innovative approach to AI-powered marketing solutions.',
     image: '/images/media/tech-weekly.jpg',
     link: 'https://techweekly.com/rtn-global-ai',
-    category: 'Technology'
+    category: 'Technology',
+    ariaLabel: 'Read Tech Weekly article about RTN Global\'s AI marketing solutions'
   },
   {
+    id: 'marketing-today',
     title: 'The Future of Marketing: RTN Global\'s Vision',
     source: 'Marketing Today',
     date: 'March 15, 2024',
+    isoDate: '2024-03-15',
     excerpt: 'In-depth interview with RTN Global\'s CEO about the company\'s innovative approach to digital marketing.',
     image: '/images/media/marketing-today.jpg',
     link: 'https://marketingtoday.com/rtn-global-interview',
-    category: 'Interview'
+    category: 'Interview',
+    ariaLabel: 'Read Marketing Today interview with RTN Global\'s CEO'
   },
   {
+    id: 'business-insider',
     title: 'RTN Global Named Top Marketing Innovation Company',
     source: 'Business Insider',
     date: 'March 12, 2024',
+    isoDate: '2024-03-12',
     excerpt: 'Industry recognition for RTN Global\'s contributions to marketing technology and innovation.',
     image: '/images/media/business-insider.jpg',
     link: 'https://businessinsider.com/rtn-global-award',
-    category: 'Award'
+    category: 'Award',
+    ariaLabel: 'Read Business Insider article about RTN Global\'s innovation award'
   },
   {
+    id: 'digital-trends',
     title: 'How RTN Global is Transforming Digital Marketing',
     source: 'Digital Trends',
     date: 'March 8, 2024',
+    isoDate: '2024-03-08',
     excerpt: 'Feature story on RTN Global\'s impact on the digital marketing landscape.',
     image: '/images/media/digital-trends.jpg',
     link: 'https://digitaltrends.com/rtn-global-impact',
-    category: 'Feature'
+    category: 'Feature',
+    ariaLabel: 'Read Digital Trends feature about RTN Global\'s impact on digital marketing'
   }
 ];
 
@@ -58,6 +70,9 @@ const MediaCoverage = () => {
 
   return (
     <Box
+      component="section"
+      id="media-coverage"
+      aria-labelledby="media-coverage-heading"
       py={12}
       sx={{
         background: theme.palette.background.default,
@@ -78,11 +93,14 @@ const MediaCoverage = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1
         }}
+        aria-hidden="true"
       />
 
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="media-coverage-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -98,6 +116,7 @@ const MediaCoverage = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
@@ -105,10 +124,11 @@ const MediaCoverage = () => {
           See what the media is saying about RTN Global
         </Typography>
 
-        <Grid container spacing={4}>
-          {mediaCoverage.map((coverage, index) => (
-            <Grid item xs={12} md={6} key={index}>
+        <Grid container spacing={4} role="list">
+          {mediaCoverage.map((coverage) => (
+            <Grid item xs={12} md={6} key={coverage.id} role="listitem">
               <Card
+                component="article"
                 sx={{
                   height: '100%',
                   display: 'flex',
@@ -123,12 +143,13 @@ const MediaCoverage = () => {
                   },
                   overflow: 'hidden'
                 }}
+                id={coverage.id}
               >
                 <Box sx={{ position: 'relative', pt: '56.25%', overflow: 'hidden' }}>
                   <CardMedia
                     component="img"
                     image={coverage.image}
-                    alt={coverage.source}
+                    alt=""
                     className="media-image"
                     sx={{
                       position: 'absolute',
@@ -138,6 +159,7 @@ const MediaCoverage = () => {
                       height: '100%',
                       transition: 'transform 0.6s ease'
                     }}
+                    aria-hidden="true"
                   />
                   <Box
                     sx={{
@@ -154,6 +176,7 @@ const MediaCoverage = () => {
                         color: 'white',
                         fontWeight: 500
                       }}
+                      aria-label={`Category: ${coverage.category}`}
                     />
                   </Box>
                 </Box>
@@ -161,6 +184,7 @@ const MediaCoverage = () => {
                 <CardContent sx={{ p: 4, flexGrow: 1 }}>
                   <Typography
                     variant="subtitle1"
+                    component="p"
                     sx={{
                       color: theme.palette.primary.main,
                       fontWeight: 600,
@@ -170,11 +194,21 @@ const MediaCoverage = () => {
                     {coverage.source}
                   </Typography>
 
-                  <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+                  <Typography 
+                    variant="h5" 
+                    component="h3"
+                    gutterBottom 
+                    sx={{ fontWeight: 600 }}
+                    id={`coverage-title-${coverage.id}`}
+                  >
                     {coverage.title}
                   </Typography>
 
-                  <Typography color="text.secondary" paragraph>
+                  <Typography 
+                    color="text.secondary" 
+                    paragraph
+                    id={`coverage-desc-${coverage.id}`}
+                  >
                     {coverage.excerpt}
                   </Typography>
 
@@ -189,15 +223,21 @@ const MediaCoverage = () => {
                       borderColor: 'divider'
                     }}
                   >
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography 
+                      variant="body2" 
+                      color="text.secondary"
+                      component="time"
+                      dateTime={coverage.isoDate}
+                    >
                       {coverage.date}
                     </Typography>
                     <Button
                       variant="outlined"
-                      endIcon={<LaunchIcon />}
+                      endIcon={<LaunchIcon aria-hidden="true" />}
                       href={coverage.link}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={coverage.ariaLabel}
                       sx={{
                         borderRadius: 2,
                         '&:hover': {

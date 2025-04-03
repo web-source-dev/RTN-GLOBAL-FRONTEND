@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { HelmetProvider } from 'react-helmet-async';
 import Sitemap from './Components/sitemap/Sitemap';
 import ServerError from './Components/error/ServerError';
 import NotFound from './Components/error/NotFound';
@@ -51,67 +52,67 @@ import SocialAuthSuccess from './Components/auth/SocialAuthSuccess';
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <CssBaseline />
-        <Router>
-          <Routes>
-          
-            <Route path="/livechat" element={<LiveChat />} />
-            <Route path="/auth/login" element={<LoginForm />} />
-                  <Route path="/auth/register" element={<RegisterForm />} />
-                  <Route path="/auth/forgot-password" element={<ForgotPasswordForm />} />
-                  <Route path="/auth/reset-password" element={<ResetPasswordForm />} />
-                  <Route path="/auth/social-success" element={<SocialAuthSuccess />} />
-                  <Route path="/auth/verify-email" element={<EmailVerificationForm />} />
-                  <Route path="/error/server-error" element={<ServerError />} />
-                  <Route path="/error/session-expired" element={<SessionExpired />} />
-            <Route path="/*" element={
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/services" element={<ServicesPage />} />
-                  <Route path="/case-studies" element={<CaseStudiesPage />} />
-                  <Route path="/blog" element={<BlogPage />} />
-                  <Route path="/blog/post/:id" element={<BlogPost />} />
-                  {/* <Route path="/team" element={<TeamPage />} /> */}
-                  <Route path="/careers" element={<CareersPage />} />
-                  <Route path="/news" element={<NewsPage />} />
-                  <Route path="/marketing-guide" element={<MarketingGuidePage />} />
-                  <Route path="/digital-tools" element={<DigitalToolsPage />} />
-                  <Route path="/roi-calculator" element={<RoiCalculatorPage />} />
-                  <Route path="/faq" element={<FaqPage />} />
-                  <Route path="/support" element={<SupportPage />} />
-                  <Route path="/services/digital-strategy" element={<DigitalStrategy />} />
-                  <Route path="/services/seo-optimization" element={<SeoOptimization />} />
-                  <Route path="/services/content-marketing" element={<ContentMarketing />} />
-                  <Route path="/services/social-media" element={<SocialMedia/>} />
-                  <Route path="/services/ppc-management" element={<PpcManagement />} />
-                  <Route path="/services/email-marketing" element={<EmailMarketing />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/news/letter/form" element={<NewsletterForm />} />
-                  <Route path="/job/application/form" element={<JobApplicationForm />} />
-                  <Route path="/support/form" element={<SupportForm />} />
-                  <Route path="*" element={<NotFound />} />
-                  <Route path="/about" element={<AboutPage />} />
-                  <Route path="/terms-of-service" element={<TermsOfService />} />
-                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                  <Route path="/disclaimer" element={<Disclaimer />} />
-                  <Route path="/check-ticket" element={<TicketStatus />} />
-                  <Route path="/free-consultation" element={<FreeConsultationForm />} />
-                  <Route path="/sitemap" element={<Sitemap />} />
-                  <Route path="/pricing" element={<Pricing />} />
-                  <Route path="/payment/:id" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
-                  <Route path="/verify-invoice/:invoiceNumber" element={<VerifyInvoice />} />
-                  <Route path="/verify-receipt/:receiptNumber" element={<VerifyReceipt />} />
-
-                </Routes>
-              </Layout>
-            } />
-          </Routes>
-        </Router>
-      </ThemeProvider>
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <CssBaseline />
+          <Router>
+            <Routes>
+              <Route path="/livechat" element={<LiveChat />} />
+              <Route path="/auth/login" element={<LoginForm />} />
+              <Route path="/auth/register" element={<RegisterForm />} />
+              <Route path="/auth/forgot-password" element={<ForgotPasswordForm />} />
+              <Route path="/auth/reset-password" element={<ResetPasswordForm />} />
+              <Route path="/auth/social-success" element={<SocialAuthSuccess />} />
+              <Route path="/auth/verify-email" element={<EmailVerificationForm />} />
+              <Route path="/error/server-error" element={<ServerError />} />
+              <Route path="/error/session-expired" element={<SessionExpired />} />
+              <Route path="/*" element={
+                <Layout>
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/services" element={<ServicesPage />} />
+                    <Route path="/case-studies" element={<CaseStudiesPage />} />
+                    <Route path="/blog" element={<BlogPage />} />
+                    <Route path="/blog/post/:id" element={<BlogPost />} />
+                    {/* <Route path="/team" element={<TeamPage />} /> */}
+                    <Route path="/careers" element={<CareersPage />} />
+                    <Route path="/news" element={<NewsPage />} />
+                    <Route path="/marketing-guide" element={<MarketingGuidePage />} />
+                    <Route path="/digital-tools" element={<DigitalToolsPage />} />
+                    <Route path="/roi-calculator" element={<RoiCalculatorPage />} />
+                    <Route path="/faq" element={<FaqPage />} />
+                    <Route path="/support" element={<SupportPage />} />
+                    <Route path="/services/digital-strategy" element={<DigitalStrategy />} />
+                    <Route path="/services/seo-optimization" element={<SeoOptimization />} />
+                    <Route path="/services/content-marketing" element={<ContentMarketing />} />
+                    <Route path="/services/social-media" element={<SocialMedia/>} />
+                    <Route path="/services/ppc-management" element={<PpcManagement />} />
+                    <Route path="/services/email-marketing" element={<EmailMarketing />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/news/letter/form" element={<NewsletterForm />} />
+                    <Route path="/job/application/form" element={<JobApplicationForm />} />
+                    <Route path="/support/form" element={<SupportForm />} />
+                    <Route path="*" element={<NotFound />} />
+                    <Route path="/about" element={<AboutPage />} />
+                    <Route path="/terms-of-service" element={<TermsOfService />} />
+                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                    <Route path="/disclaimer" element={<Disclaimer />} />
+                    <Route path="/check-ticket" element={<TicketStatus />} />
+                    <Route path="/free-consultation" element={<FreeConsultationForm />} />
+                    <Route path="/sitemap" element={<Sitemap />} />
+                    <Route path="/pricing" element={<Pricing />} />
+                    <Route path="/payment/:id" element={<ProtectedRoute><PaymentPage /></ProtectedRoute>} />
+                    <Route path="/verify-invoice/:invoiceNumber" element={<VerifyInvoice />} />
+                    <Route path="/verify-receipt/:receiptNumber" element={<VerifyReceipt />} />
+                  </Routes>
+                </Layout>
+              } />
+            </Routes>
+          </Router>
+        </ThemeProvider>
+      </AuthProvider>
+    </HelmetProvider>
   );
 }
 

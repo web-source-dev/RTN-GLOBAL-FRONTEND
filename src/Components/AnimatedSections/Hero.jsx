@@ -162,7 +162,7 @@ const MegaHero = () => {
   };
 
   return (
-    <HeroContainer component="section">
+    <HeroContainer component="section" id="hero-section" aria-label="Homepage Hero Section">
       {/* Background Pattern */}
       <Box
         sx={{
@@ -176,6 +176,7 @@ const MegaHero = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <ContentWrapper maxWidth="lg">
         <motion.div
@@ -185,12 +186,12 @@ const MegaHero = () => {
           style={{ width: '100%' }}
         >
           <HeroText>
-            <MainHeading variant="h1" sx={{ color: theme.palette.mode === 'light' ? theme.palette.text.primary : 'white' }}>
-              You dream it<RedDot>.</RedDot><br />
-              We build it<RedDot>.</RedDot>
+            <MainHeading variant="h1" component="h1" sx={{ color: theme.palette.mode === 'light' ? theme.palette.text.primary : 'white' }}>
+              You dream it<RedDot aria-hidden="true">.</RedDot><br />
+              We build it<RedDot aria-hidden="true">.</RedDot>
             </MainHeading>
-            <Tagline variant="h2" sx={{ color: theme.palette.mode === 'light' ? theme.palette.text.secondary : 'rgba(255,255,255,0.8)' }}>
-              Get the website of your dreams with RTN Global<RedDot>.</RedDot>
+            <Tagline variant="h2" component="p" sx={{ color: theme.palette.mode === 'light' ? theme.palette.text.secondary : 'rgba(255,255,255,0.8)' }}>
+              Get the website of your dreams with RTN Global<RedDot aria-hidden="true">.</RedDot>
             </Tagline>
           </HeroText>
         </motion.div>
@@ -202,13 +203,16 @@ const MegaHero = () => {
         duration={800}
         spy={true}
         aria-label="Scroll to services"
+        role="button"
+        tabIndex={0}
       >
         <motion.div
           variants={bounceDelayed}
           initial="initial"
           animate="animate"
+          aria-hidden="true"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 19.59L4.41 12 6.5 9.91 12 15.42 17.5 9.91 19.59 12 12 19.59z" />
           </svg>
         </motion.div>
@@ -216,14 +220,15 @@ const MegaHero = () => {
           variants={bounce}
           initial="initial"
           animate="animate"
+          aria-hidden="true"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path d="M12 19.59L4.41 12 6.5 9.91 12 15.42 17.5 9.91 19.59 12 12 19.59z" />
           </svg>
         </motion.div>
       </ScrollDown>
       
-      <WaveBottom />
+      <WaveBottom aria-hidden="true" />
     </HeroContainer>
   );
 };

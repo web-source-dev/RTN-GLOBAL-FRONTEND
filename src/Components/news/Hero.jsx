@@ -14,14 +14,17 @@ const Hero = () => {
 
   return (
     <Box
-    sx={{
-      position: 'relative',
-      overflow: 'hidden',
-      background:theme.palette.background.default,
-      pt: 8,
-      pb: 8
-    }}
-  >
+      component="section"
+      id="news-hero"
+      aria-labelledby="news-hero-heading"
+      sx={{
+        position: 'relative',
+        overflow: 'hidden',
+        background: theme.palette.background.default,
+        pt: 8,
+        pb: 8
+      }}
+    >
      <Box
         sx={{
           position: 'absolute',
@@ -34,13 +37,15 @@ const Hero = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={4} alignItems="center">
-          <Grid item xs={12} md={6}>
+        <Grid container spacing={4} alignItems="center" justifyContent={'center'}>
+          <Grid item xs={12} md={5}>
             <Typography
               component="h1"
               variant="h2"
+              id="news-hero-heading"
               color="text.primary"
               sx={{
                 fontWeight: 700,
@@ -51,6 +56,7 @@ const Hero = () => {
             </Typography>
             <Typography
               variant="h5"
+              component="p"
               color="text.secondary"
               sx={{ mb: 4, maxWidth: '600px' }}
             >
@@ -61,8 +67,10 @@ const Hero = () => {
               <Button
                 variant="contained"
                 size="large"
-                startIcon={<NewspaperIcon />}
+                startIcon={<NewspaperIcon aria-hidden="true" />}
                 sx={{ borderRadius: 2 }}
+                aria-label="View latest news articles"
+                href="#latest-news"
               >
                 Latest News
               </Button>
@@ -72,7 +80,8 @@ const Hero = () => {
             <Box
               component="img"
               src="/images/news/news-hero.png"
-              alt="News Hero"
+              alt="News and updates illustrated by a digital newspaper and notification icons"
+              loading="lazy"
               sx={{
                 width: '100%',
                 height: 'auto',

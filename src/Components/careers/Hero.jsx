@@ -21,10 +21,13 @@ const Hero = () => {
 
   return (
     <Box
+      component="section"
+      id="careers-hero"
+      aria-labelledby="careers-hero-heading"
       sx={{
         position: 'relative',
         overflow: 'hidden',
-        background:theme.palette.background.default,
+        background: theme.palette.background.default,
         pt: 12,
         pb: 8,
       }}
@@ -42,6 +45,7 @@ const Hero = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
         <Grid container spacing={4} alignItems="center">
@@ -78,6 +82,7 @@ const Hero = () => {
                 <Typography
                   component="h1"
                   variant="h2"
+                  id="careers-hero-heading"
                   sx={{
                     fontWeight: 800,
                     mb: 3,
@@ -95,6 +100,7 @@ const Hero = () => {
                 </Typography>
                 <Typography
                   variant="h5"
+                  component="p"
                   color="text.secondary"
                   sx={{ 
                     mb: 4, 
@@ -120,6 +126,8 @@ const Hero = () => {
                   <Button
                     variant="contained"
                     size="large"
+                    href="#open-positions"
+                    aria-label="View open job positions"
                     startIcon={<WorkIcon />}
                     sx={{ 
                       borderRadius: '30px',
@@ -175,7 +183,8 @@ const Hero = () => {
                 <Box
                   component="img"
                   src="/images/Team/jointeam.png"
-                  alt="Careers Hero"
+                  alt="Team of diverse professionals collaborating in a modern office environment"
+                  loading="lazy"
                   sx={{
                     width: '100%',
                     height: 'auto',

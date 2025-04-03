@@ -14,10 +14,15 @@ const Hero = () => {
 
   return (
     <Box
+      component="section"
+      id="case-studies-hero"
+      aria-labelledby="case-studies-hero-heading"
       sx={{
-        backgroundColor: 'background.defualt',
+        backgroundColor: 'background.default',
         pt: 12,
         pb: 12,
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
    <Box
@@ -32,6 +37,7 @@ const Hero = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
         <Grid container spacing={4} alignItems="center">
@@ -39,6 +45,7 @@ const Hero = () => {
             <Typography
               component="h1"
               variant="h2"
+              id="case-studies-hero-heading"
               color="text.primary"
               sx={{
                 fontWeight: 700,
@@ -49,6 +56,7 @@ const Hero = () => {
             </Typography>
             <Typography
               variant="h5"
+              component="p"
               color="text.secondary"
               sx={{ mb: 4, maxWidth: '600px' }}
             >
@@ -58,6 +66,8 @@ const Hero = () => {
             <Button
               variant="contained"
               size="large"
+              href="#case-studies-list"
+              aria-label="View all case studies and success stories"
               endIcon={<ArrowForwardIcon />}
               sx={{ borderRadius: 2 }}
             >
@@ -68,7 +78,8 @@ const Hero = () => {
             <Box
               component="img"
               src="/assets/plugin.svg"
-              alt="Case Studies Hero"
+              alt="Illustration of data analytics and successful digital marketing strategies"
+              loading="lazy"
               sx={{
                 width: '100%',
                 height: 'auto',

@@ -224,7 +224,15 @@ const Team = () => {
   };
 
   return (
-    <TeamContainer maxWidth={false} id="team" bgcolor={bgColor} textcolor={textColor}>
+    <TeamContainer 
+      maxWidth={false} 
+      id="team" 
+      bgcolor={bgColor} 
+      textcolor={textColor}
+      as="section"
+      aria-label="Our Team Section"
+      ref={containerRef}
+    >
       <FloatingShape 
         bg={theme.palette.primary.main}
         blur={40}
@@ -237,6 +245,7 @@ const Team = () => {
           x: useTransform(scrollYProgress, [0, 1], [0, -100]),
           y: useTransform(scrollYProgress, [0, 1], [0, 50])
         }}
+        aria-hidden="true"
       />
       <FloatingShape 
         bg={theme.palette.secondary.main}
@@ -250,12 +259,14 @@ const Team = () => {
           x: useTransform(scrollYProgress, [0, 1], [0, 100]),
           y: useTransform(scrollYProgress, [0, 1], [0, -50])
         }}
+        aria-hidden="true"
       />
 
       <Container>
         <TeamHeader>
         <Typography
             variant="overline"
+            component="span"
             sx={{ 
               letterSpacing: 3, 
               fontWeight: 600, 
@@ -285,14 +296,18 @@ const Team = () => {
           >
             The Team
           </Typography>
-          <Typography variant="body1" sx={{ maxWidth: '700px', margin: '0 auto', color: theme.palette.text.secondary }}>
+          <Typography 
+            variant="body1" 
+            component="p"
+            sx={{ maxWidth: '700px', margin: '0 auto', color: theme.palette.text.secondary }}
+          >
             Our team of talented designers and developers bring expertise and creativity to every project.
           </Typography>
         </TeamHeader>
 
-        <TeamLayout>
+        <TeamLayout role="list">
           {/* Muhammad Tayyab - CEO */}
-          <JohnCard>
+          <JohnCard role="listitem">
             <JohnImage 
               initial="offscreen"
               whileInView="onscreen"
@@ -301,39 +316,49 @@ const Team = () => {
               custom={0}
               theme={theme}
             >
-              <img src="/images/Team/tayyab.png" alt="Muhammad Tayyab" />
+              <img src="/images/Team/tayyab.png" alt="Muhammad Tayyab - CEO" loading="lazy" />
             </JohnImage>
             <JohnInfo>
             <Typography
-            variant="overline"
-            sx={{ 
-              letterSpacing: 3, 
-              fontWeight: 600, 
-              color: theme.palette.primary.main,
-              display: 'block',
-              mb: 1,
-              fontSize: { xs: '0.8rem', md: '1rem' }
-            }}
-          > CEO
-              </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 600, marginBottom: 1, fontSize: { xs: '1.75rem', md: '2rem' }, color: theme.palette.text.primary }}>
+              variant="overline"
+              component="span"
+              sx={{ 
+                letterSpacing: 3, 
+                fontWeight: 600, 
+                color: theme.palette.primary.main,
+                display: 'block',
+                mb: 1,
+                fontSize: { xs: '0.8rem', md: '1rem' }
+              }}
+            > CEO
+            </Typography>
+              <Typography 
+                variant="h3" 
+                component="h3"
+                sx={{ fontWeight: 600, marginBottom: 1, fontSize: { xs: '1.75rem', md: '2rem' }, color: theme.palette.text.primary }}
+              >
                 Muhammad Tayyab
               </Typography>
-              <Typography variant="body2" sx={{ marginBottom: 1, letterSpacing: 1, color: theme.palette.text.secondary }}>
+              <Typography 
+                variant="body2" 
+                component="p"
+                sx={{ marginBottom: 1, letterSpacing: 1, color: theme.palette.text.secondary }}
+              >
                 muhammadtayyab2928@gmail.com
               </Typography>
               <SocialIcons 
                 justify="flex-start" 
                 color={theme.palette.text.primary}
                 hoverBg={iconHoverBgColor}
+                aria-label="Muhammad Tayyab's social media links"
               >
-                <IconButton color="inherit" size="small">
+                <IconButton color="inherit" size="small" aria-label="Facebook profile">
                   <FacebookIcon fontSize="small" />
                 </IconButton>
-                <IconButton color="inherit" size="small">
+                <IconButton color="inherit" size="small" aria-label="Twitter profile">
                   <TwitterIcon fontSize="small" />
                 </IconButton>
-                <IconButton color="inherit" size="small">
+                <IconButton color="inherit" size="small" aria-label="LinkedIn profile">
                   <LinkedInIcon fontSize="small" />
                 </IconButton>
               </SocialIcons>
@@ -341,7 +366,7 @@ const Team = () => {
           </JohnCard>
 
           {/* Muhammad Rizwan - Project Manager */}
-          <TinaCard>
+          <TinaCard role="listitem">
             <TinaImage 
               initial="offscreen"
               whileInView="onscreen"
@@ -350,31 +375,43 @@ const Team = () => {
               custom={1}
               theme={theme}
             >
-              <img src="/images/Team/Rizwan.jpg" alt="Muhammad Rizwan" />
+              <img src="/images/Team/Rizwan.jpg" alt="Muhammad Rizwan - Project Manager" loading="lazy" />
             </TinaImage>
             <TinaInfo>
-            <Typography variant="h3" sx={{ fontWeight: 600, marginBottom: 1,letterSpacing:3, fontSize: { xs: '0.8rem', md: '1rem' }, color: theme.palette.primary.main }}>
-          
-          Project Manager
-              </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 600, marginBottom: 1, fontSize: { xs: '1.75rem', md: '2rem' }, color: theme.palette.text.primary }}>
+            <Typography 
+              variant="h3" 
+              component="span"
+              sx={{ fontWeight: 600, marginBottom: 1,letterSpacing:3, fontSize: { xs: '0.8rem', md: '1rem' }, color: theme.palette.primary.main }}
+            >
+            Project Manager
+            </Typography>
+              <Typography 
+                variant="h3" 
+                component="h3"
+                sx={{ fontWeight: 600, marginBottom: 1, fontSize: { xs: '1.75rem', md: '2rem' }, color: theme.palette.text.primary }}
+              >
                 Muhammad Rizwan
               </Typography>
-              <Typography variant="body2" sx={{ marginBottom: 1, letterSpacing: 1, color: theme.palette.text.secondary }}>
+              <Typography 
+                variant="body2" 
+                component="p"
+                sx={{ marginBottom: 1, letterSpacing: 1, color: theme.palette.text.secondary }}
+              >
                 rizzeditx@gmail.com
               </Typography>
               <SocialIcons 
                 justify="flex-start" 
                 color={theme.palette.text.primary}
                 hoverBg={iconHoverBgColor}
+                aria-label="Muhammad Rizwan's social media links"
               >
-                <IconButton color="inherit" size="small">
+                <IconButton color="inherit" size="small" aria-label="Facebook profile">
                   <FacebookIcon fontSize="small" />
                 </IconButton>
-                <IconButton color="inherit" size="small">
+                <IconButton color="inherit" size="small" aria-label="Twitter profile">
                   <TwitterIcon fontSize="small" />
                 </IconButton>
-                <IconButton color="inherit" size="small">
+                <IconButton color="inherit" size="small" aria-label="LinkedIn profile">
                   <LinkedInIcon fontSize="small" />
                 </IconButton>
               </SocialIcons>
@@ -382,7 +419,7 @@ const Team = () => {
           </TinaCard>
 
           {/* Muhammad Nouman - Designer */}
-          <AnaCard>
+          <AnaCard role="listitem">
             <AnaImage 
               initial="offscreen"
               whileInView="onscreen"
@@ -391,37 +428,47 @@ const Team = () => {
               custom={2}
               theme={theme}
             >
-              <img src="/images/Team/Nouman.jpg" alt="Muhammad Nouman" />
+              <img src="/images/Team/Nouman.jpg" alt="Muhammad Nouman - Designer" loading="lazy" />
             </AnaImage>
             <AnaInfo>
             <Typography
-            variant="overline"
-            sx={{ 
-              letterSpacing: 3, 
-              fontWeight: 600, 
-              color: theme.palette.primary.main,
-              fontSize: { xs: '0.8rem', md: '1rem' }
-            }}
-          >  DESIGNER
-              </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 600, marginBottom: 1, fontSize: { xs: '1.75rem', md: '2rem' }, color: theme.palette.text.primary }}>
+              variant="overline"
+              component="span"
+              sx={{ 
+                letterSpacing: 3, 
+                fontWeight: 600, 
+                color: theme.palette.primary.main,
+                fontSize: { xs: '0.8rem', md: '1rem' }
+              }}
+            >  DESIGNER
+            </Typography>
+              <Typography 
+                variant="h3" 
+                component="h3"
+                sx={{ fontWeight: 600, marginBottom: 1, fontSize: { xs: '1.75rem', md: '2rem' }, color: theme.palette.text.primary }}
+              >
                 Muhammad Nouman
               </Typography>
-              <Typography variant="body2" sx={{ marginBottom: 1, letterSpacing: 1, color: theme.palette.text.secondary }}>
+              <Typography 
+                variant="body2" 
+                component="p"
+                sx={{ marginBottom: 1, letterSpacing: 1, color: theme.palette.text.secondary }}
+              >
                 muhammadnouman72321@gmail.com
               </Typography>
               <SocialIcons 
                 justify="flex-start" 
                 color={theme.palette.text.primary}
                 hoverBg={iconHoverBgColor}
+                aria-label="Muhammad Nouman's social media links"
               >
-                <IconButton color="inherit" size="small">
+                <IconButton color="inherit" size="small" aria-label="Facebook profile">
                   <FacebookIcon fontSize="small" />
                 </IconButton>
-                <IconButton color="inherit" size="small">
+                <IconButton color="inherit" size="small" aria-label="Twitter profile">
                   <TwitterIcon fontSize="small" />
                 </IconButton>
-                <IconButton color="inherit" size="small">
+                <IconButton color="inherit" size="small" aria-label="LinkedIn profile">
                   <LinkedInIcon fontSize="small" />
                 </IconButton>
               </SocialIcons>

@@ -1,7 +1,8 @@
 {
-  "name": "my-react-app",
-  "version": "0.1.0",
+  "name": "rtn-global-frontend",
+  "version": "1.0.0",
   "private": true,
+  "description": "RTN Global Web Development & Digital Marketing frontend application built with React, offering custom web solutions including Wix development, MERN stack applications, and React Native mobile apps.",
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
@@ -26,6 +27,7 @@
     "react": "^18.3.1",
     "react-countup": "^6.5.3",
     "react-dom": "^18.3.1",
+    "react-helmet-async": "^2.0.5",
     "react-hot-toast": "^2.5.2",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.29.0",
@@ -62,5 +64,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rtnglobal/rtn-global-frontend"
+  },
+  "author": "RTN Global",
+  "homepage": "https://rtnglobal.site"
 }

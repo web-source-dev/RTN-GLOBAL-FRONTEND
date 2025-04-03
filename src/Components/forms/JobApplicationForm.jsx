@@ -23,6 +23,7 @@ import {
   ListItemText,
   Divider,
   CircularProgress,
+  FormHelperText,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import API from '../../BackendAPi/ApiProvider';
@@ -31,6 +32,8 @@ import PersonIcon from '@mui/icons-material/Person';
 import WorkIcon from '@mui/icons-material/Work';
 import DescriptionIcon from '@mui/icons-material/Description';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import ArticleIcon from '@mui/icons-material/Article';
 
 const DEPARTMENTS = [
   'Engineering',
@@ -333,10 +336,14 @@ const JobApplicationForm = () => {
 
   return (
     <Box
+      component="section"
+      id="job-application"
+      aria-labelledby="job-application-heading"
       sx={{
         py: 8,
-        background: theme.palette.background.default,
         position: 'relative',
+        background: theme.palette.background.default,
+        overflow: 'hidden',
       }}
     >
       <Box
@@ -350,10 +357,13 @@ const JobApplicationForm = () => {
           opacity: 0.05,
           zIndex: -1,
         }}
+        aria-hidden="true"
       />
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <Typography
           variant="h3"
+          component="h1"
+          id="job-application-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -504,7 +514,15 @@ const JobApplicationForm = () => {
                             error={!!errors.firstName}
                             helperText={errors.firstName}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.firstName}
+                            aria-describedby={errors.firstName ? "firstName-error" : undefined}
                           />
+                          {errors.firstName && (
+                            <span id="firstName-error" className="sr-only">
+                              {errors.firstName}
+                            </span>
+                          )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <TextField
@@ -516,7 +534,15 @@ const JobApplicationForm = () => {
                             error={!!errors.lastName}
                             helperText={errors.lastName}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.lastName}
+                            aria-describedby={errors.lastName ? "lastName-error" : undefined}
                           />
+                          {errors.lastName && (
+                            <span id="lastName-error" className="sr-only">
+                              {errors.lastName}
+                            </span>
+                          )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <TextField
@@ -529,7 +555,15 @@ const JobApplicationForm = () => {
                             error={!!errors.email}
                             helperText={errors.email}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.email}
+                            aria-describedby={errors.email ? "email-error" : undefined}
                           />
+                          {errors.email && (
+                            <span id="email-error" className="sr-only">
+                              {errors.email}
+                            </span>
+                          )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <TextField
@@ -541,7 +575,15 @@ const JobApplicationForm = () => {
                             error={!!errors.phone}
                             helperText={errors.phone}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.phone}
+                            aria-describedby={errors.phone ? "phone-error" : undefined}
                           />
+                          {errors.phone && (
+                            <span id="phone-error" className="sr-only">
+                              {errors.phone}
+                            </span>
+                          )}
                         </Grid>
                       </Grid>
                     )}
@@ -565,6 +607,9 @@ const JobApplicationForm = () => {
                             error={!!errors.department}
                             helperText={errors.department}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.department}
+                            aria-describedby={errors.department ? "department-error" : undefined}
                           >
                             {DEPARTMENTS.map((dept) => (
                               <MenuItem key={dept} value={dept}>
@@ -572,6 +617,11 @@ const JobApplicationForm = () => {
                               </MenuItem>
                             ))}
                           </TextField>
+                          {errors.department && (
+                            <span id="department-error" className="sr-only">
+                              {errors.department}
+                            </span>
+                          )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <TextField
@@ -583,7 +633,15 @@ const JobApplicationForm = () => {
                             error={!!errors.position}
                             helperText={errors.position}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.position}
+                            aria-describedby={errors.position ? "position-error" : undefined}
                           />
+                          {errors.position && (
+                            <span id="position-error" className="sr-only">
+                              {errors.position}
+                            </span>
+                          )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <TextField
@@ -596,6 +654,9 @@ const JobApplicationForm = () => {
                             error={!!errors.experienceLevel}
                             helperText={errors.experienceLevel}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.experienceLevel}
+                            aria-describedby={errors.experienceLevel ? "experienceLevel-error" : undefined}
                           >
                             {EXPERIENCE_LEVELS.map((level) => (
                               <MenuItem key={level} value={level}>
@@ -603,6 +664,11 @@ const JobApplicationForm = () => {
                               </MenuItem>
                             ))}
                           </TextField>
+                          {errors.experienceLevel && (
+                            <span id="experienceLevel-error" className="sr-only">
+                              {errors.experienceLevel}
+                            </span>
+                          )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <TextField

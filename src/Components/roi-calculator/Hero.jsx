@@ -14,6 +14,9 @@ const Hero = () => {
 
   return (
     <Box
+      component="section"
+      id="roi-calculator-hero"
+      aria-labelledby="hero-heading"
       sx={{
         backgroundColor: theme.palette.background.default,
         position: 'relative',
@@ -34,13 +37,15 @@ const Hero = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={4} alignItems="center">
-          <Grid item xs={12} md={6}>
+        <Grid container spacing={4} alignItems="center" justifyContent={'center'}>
+          <Grid item xs={12} md={5}>
             <Typography
               component="h1"
-              variant="h2"
+              variant="h1"
+              id="hero-heading"
               color="text.primary"
               sx={{
                 fontWeight: 700,
@@ -51,6 +56,7 @@ const Hero = () => {
             </Typography>
             <Typography
               variant="h5"
+              component="p"
               color="text.secondary"
               sx={{ mb: 4, maxWidth: '600px' }}
             >
@@ -61,8 +67,10 @@ const Hero = () => {
               <Button
                 variant="contained"
                 size="large"
-                startIcon={<CalculateIcon />}
+                startIcon={<CalculateIcon aria-hidden="true" />}
                 sx={{ borderRadius: 2 }}
+                href="#roi-calculator-form"
+                aria-label="Start calculating your marketing ROI"
               >
                 Start Calculating
               </Button>
@@ -72,7 +80,8 @@ const Hero = () => {
             <Box
               component="img"
               src="/images/roi-calculater/roi-calculater.png"
-              alt="ROI Calculator Hero"
+              alt="ROI Calculator illustration showing charts, graphs, and financial metrics"
+              loading="lazy"
               sx={{
                 width: '100%',
                 height: 'auto',

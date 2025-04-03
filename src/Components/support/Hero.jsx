@@ -16,6 +16,9 @@ const Hero = () => {
 
   return (
     <Box
+      component="section"
+      id="support-hero"
+      aria-labelledby="hero-heading"
       sx={{
         backgroundColor: theme.palette.background.default,
         position: 'relative',
@@ -36,14 +39,16 @@ const Hero = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={4} alignItems="center">
-          <Grid item xs={12} md={6}>
+        <Grid container spacing={4} alignItems="center" justifyContent={'center'}>
+          <Grid item xs={12} md={5}>
             <Typography
               component="h1"
-              variant="h2"
+              variant="h1"
+              id="hero-heading"
               color="text.primary"
               sx={{
                 fontWeight: 700,
@@ -54,6 +59,7 @@ const Hero = () => {
             </Typography>
             <Typography
               variant="h5"
+              component="p"
               color="text.secondary"
               sx={{ mb: 4, maxWidth: '600px' }}
             >
@@ -65,18 +71,20 @@ const Hero = () => {
                 variant="contained"
                 size="large"
                 component={RouterLink}
-            to="/support/form"
-                startIcon={<SupportAgentIcon />}
+                to="/support/form"
+                aria-label="Contact our support team for assistance"
+                startIcon={<SupportAgentIcon aria-hidden="true" />}
                 sx={{ borderRadius: 2 }}
               >
                 Contact Support
               </Button>
               <Button
                 variant="contained"
-                  component={RouterLink}
-            to="/check-ticket"
+                component={RouterLink}
+                to="/check-ticket"
+                aria-label="Check the status of your existing support ticket"
                 fullWidth
-                startIcon={<CheckCircle  />}
+                startIcon={<CheckCircle aria-hidden="true" />}
                 sx={{
                   width:'150px',
                   height: '56px',
@@ -94,7 +102,8 @@ const Hero = () => {
             <Box
               component="img"
               src="/images/support/support.png"
-              alt="Support Hero"
+              alt="Customer support representative helping clients with technical issues"
+              loading="lazy"
               sx={{
                 width: '100%',
                 height: 'auto',

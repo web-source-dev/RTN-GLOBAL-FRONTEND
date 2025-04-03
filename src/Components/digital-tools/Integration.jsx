@@ -23,6 +23,7 @@ const integrations = [
     icon: WebIcon,
     color: '#2196f3',
     features: ['Wix API', 'Custom Widgets', 'Third-party Services'],
+    id: 'wix-development'
   },
   {
     title: 'MERN Stack',
@@ -30,6 +31,7 @@ const integrations = [
     icon: StorageIcon,
     color: '#4caf50',
     features: ['Database Design', 'RESTful APIs', 'State Management'],
+    id: 'mern-stack'
   },
   {
     title: 'React Native',
@@ -37,6 +39,7 @@ const integrations = [
     icon: CodeIcon,
     color: '#ff9800',
     features: ['Native Modules', 'Mobile SDKs', 'Push Services'],
+    id: 'react-native'
   },
   {
     title: 'Security',
@@ -44,6 +47,7 @@ const integrations = [
     icon: SecurityIcon,
     color: '#e91e63',
     features: ['Authentication', 'Data Encryption', 'Security Audits'],
+    id: 'security'
   },
   {
     title: 'Performance',
@@ -51,6 +55,7 @@ const integrations = [
     icon: SpeedIcon,
     color: '#9c27b0',
     features: ['Code Splitting', 'Caching', 'Load Balancing'],
+    id: 'performance'
   },
   {
     title: 'API Development',
@@ -58,6 +63,7 @@ const integrations = [
     icon: ApiIcon,
     color: '#00bcd4',
     features: ['REST/GraphQL', 'Microservices', 'Documentation'],
+    id: 'api-development'
   },
 ];
 
@@ -67,6 +73,9 @@ const Integration = () => {
 
   return (
     <Box
+      component="section"
+      id="technical-capabilities"
+      aria-labelledby="capabilities-heading"
       py={12}
       sx={{
         background: theme.palette.background.default,
@@ -86,10 +95,13 @@ const Integration = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="capabilities-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -117,6 +129,7 @@ const Integration = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ mb: 8, maxWidth: '800px', mx: 'auto', opacity: 0.9 }}
@@ -129,6 +142,8 @@ const Integration = () => {
           {integrations.map((integration) => (
             <Grid item xs={12} md={4} key={integration.title}>
               <Card
+                component="article"
+                id={integration.id}
                 sx={{
                   height: '100%',
                   display: 'flex',
@@ -163,15 +178,21 @@ const Integration = () => {
                           backgroundColor: `${integration.color}25`
                         }
                       }}
+                      aria-hidden="true"
                     >
                       <integration.icon sx={{ color: integration.color, fontSize: 28 }} />
                     </Box>
-                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                    <Typography 
+                      variant="h5" 
+                      component="h3"
+                      sx={{ fontWeight: 600 }}
+                    >
                       {integration.title}
                     </Typography>
                   </Box>
                   <Typography
                     variant="body1"
+                    component="p"
                     color="text.secondary"
                     paragraph
                     sx={{ mb: 3, lineHeight: 1.7 }}
@@ -179,15 +200,19 @@ const Integration = () => {
                     {integration.description}
                   </Typography>
                   <Box
+                    component="ul"
                     sx={{
                       display: 'flex',
                       flexWrap: 'wrap',
                       gap: 1.5,
-                      mt: 'auto'
+                      mt: 'auto',
+                      pl: 0,
+                      listStyle: 'none'
                     }}
                   >
                     {integration.features.map((feature) => (
                       <Typography
+                        component="li"
                         key={feature}
                         variant="body2"
                         sx={{

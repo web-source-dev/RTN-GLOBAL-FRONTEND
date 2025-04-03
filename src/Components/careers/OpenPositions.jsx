@@ -22,6 +22,7 @@ const positions = [
     type: 'Full-time',
     experience: '5+ years',
     description: 'Lead digital marketing strategies for enterprise clients.',
+    slug: 'senior-digital-marketing-strategist'
   },
   {
     title: 'Content Marketing Manager',
@@ -30,6 +31,7 @@ const positions = [
     type: 'Full-time',
     experience: '3+ years',
     description: 'Create and manage content marketing campaigns.',
+    slug: 'content-marketing-manager'
   },
   {
     title: 'SEO Specialist',
@@ -38,6 +40,7 @@ const positions = [
     type: 'Full-time',
     experience: '2+ years',
     description: 'Optimize client websites and improve search rankings.',
+    slug: 'seo-specialist'
   },
 ];
 
@@ -45,10 +48,16 @@ const OpenPositions = () => {
   const theme = useTheme();
 
   return (
-    <Box py={12} sx={{ background: theme.palette.background.default ,
-      position: 'relative',
-      overflow: 'hidden',
-    }}
+    <Box 
+      component="section"
+      id="open-positions"
+      aria-labelledby="open-positions-heading"
+      py={12} 
+      sx={{ 
+        background: theme.palette.background.default,
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
       <Box
         sx={{
@@ -62,10 +71,13 @@ const OpenPositions = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="open-positions-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -81,6 +93,7 @@ const OpenPositions = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
@@ -92,6 +105,9 @@ const OpenPositions = () => {
           {positions.map((position, index) => (
             <Grid item xs={12} md={6} lg={4} key={index}>
               <Card
+                component="article"
+                itemScope
+                itemType="https://schema.org/JobPosting"
                 sx={{
                   height: '100%',
                   transition: 'transform 0.3s ease',
@@ -101,39 +117,60 @@ const OpenPositions = () => {
                 }}
               >
                 <CardContent sx={{ p: 4 }}>
-                  <Typography variant="h5" gutterBottom fontWeight="bold">
+                  <meta itemProp="datePosted" content={new Date().toISOString()} />
+                  <meta itemProp="employmentType" content="FULL_TIME" />
+                  <meta itemProp="hiringOrganization" content="RTN Global" />
+
+                  <Typography 
+                    variant="h5" 
+                    component="h3"
+                    itemProp="title"
+                    gutterBottom 
+                    fontWeight="bold"
+                  >
                     {position.title}
                   </Typography>
                   <Box sx={{ mb: 3 }}>
                     <Chip
                       icon={<WorkIcon />}
                       label={position.department}
+                      itemProp="occupationalCategory"
                       sx={{ mr: 1, mb: 1 }}
                     />
                     <Chip
                       icon={<LocationOnIcon />}
                       label={position.location}
+                      itemProp="jobLocation"
                       sx={{ mr: 1, mb: 1 }}
                     />
                     <Chip
                       icon={<AccessTimeIcon />}
                       label={position.type}
                       sx={{ mb: 1 }}
+                      aria-label={`Job type: ${position.type}`}
                     />
                   </Box>
-                  <Typography color="text.secondary" paragraph>
+                  <Typography 
+                    color="text.secondary" 
+                    paragraph
+                    component="p"
+                    itemProp="description"
+                  >
                     {position.description}
                   </Typography>
                   <Typography
                     variant="subtitle2"
+                    component="p"
                     color="text.secondary"
                     sx={{ mb: 3 }}
                   >
-                    Experience Required: {position.experience}
+                    <span itemProp="qualifications">Experience Required: {position.experience}</span>
                   </Typography>
                   <Button
                     variant="contained"
                     fullWidth
+                    href={`/careers/apply/${position.slug}`}
+                    aria-label={`Apply for ${position.title} position`}
                     sx={{
                       borderRadius: 2,
                       py: 1.5,

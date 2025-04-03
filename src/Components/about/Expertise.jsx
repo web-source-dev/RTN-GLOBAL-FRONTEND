@@ -57,15 +57,18 @@ const Expertise = () => {
 
   return (
     <Box
+      component="section"
+      id="expertise"
+      aria-label="Our Expertise Section"
       sx={{
         py: 12,
         position: 'relative',
         background: theme => theme.palette.mode.default,
         overflow: 'hidden'
       }}
-      >
-         {/* Background Pattern with enhanced animation */}
-         <Box
+    >
+      {/* Background Pattern with enhanced animation */}
+      <Box
         sx={{
           position: 'absolute',
           top: 0,
@@ -96,6 +99,7 @@ const Expertise = () => {
             </Typography>
             <Typography
               variant="h2"
+              component="h2"
               gutterBottom
               sx={{
                 fontWeight: 800,
@@ -111,6 +115,7 @@ const Expertise = () => {
             </Typography>
             <Typography
               variant="h5"
+              component="p"
               color="text.secondary"
               sx={{ maxWidth: '800px', mx: 'auto', mb: 4 }}
             >
@@ -119,7 +124,7 @@ const Expertise = () => {
           </Box>
         </Fade>
 
-        <Grid container spacing={4}>
+        <Grid container spacing={4} role="list">
           {services.map((service, index) => {
             const isAnimated = animatedItems.includes(index);
             return (
@@ -131,6 +136,7 @@ const Expertise = () => {
                 key={index}
                 className="expertise-item"
                 data-index={index}
+                role="listitem"
               >
                 <Card
                   elevation={6}
@@ -201,6 +207,7 @@ const Expertise = () => {
                         boxShadow: `0 0 20px ${service.color}90, 0 0 0 8px ${service.color}40`
                       }
                     }}
+                    aria-hidden="true"
                   >
                     {React.cloneElement(service.icon, { 
                       sx: { 

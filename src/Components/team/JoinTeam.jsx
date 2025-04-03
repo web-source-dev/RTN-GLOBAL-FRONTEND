@@ -18,21 +18,25 @@ import styled from 'styled-components';
 
 const benefits = [
   {
+    id: 'salary',
     title: 'Competitive Salary',
     description: 'We offer industry-leading compensation packages to attract and retain top talent.',
     icon: <TrendingUpIcon sx={{ fontSize: '2.5rem' }} />,
   },
   {
+    id: 'growth',
     title: 'Professional Growth',
     description: 'Continuous learning opportunities and clear career advancement paths.',
     icon: <EmojiPeopleIcon sx={{ fontSize: '2.5rem' }} />,
   },
   {
+    id: 'balance',
     title: 'Work-Life Balance',
     description: 'Flexible working hours and remote work options to support your lifestyle.',
     icon: <BalanceIcon sx={{ fontSize: '2.5rem' }} />,
   },
   {
+    id: 'benefits',
     title: 'Great Benefits',
     description: 'Comprehensive health insurance, retirement plans, and other attractive perks.',
     icon: <MedicalServicesIcon sx={{ fontSize: '2.5rem' }} />,
@@ -137,6 +141,9 @@ const JoinTeam = () => {
       bgcolor={bgColor} 
       textcolor={textColor} 
       ref={containerRef}
+      component="section"
+      id="join-team-section"
+      aria-labelledby="join-team-heading"
     >
       {/* Decorative background elements */}
       <FloatingShape 
@@ -150,6 +157,7 @@ const JoinTeam = () => {
           height: '400px', 
           y: y1
         }}
+        aria-hidden="true"
       />
       <FloatingShape 
         bg={theme.palette.secondary.main}
@@ -162,6 +170,7 @@ const JoinTeam = () => {
           height: '350px',
           y: y2
         }}
+        aria-hidden="true"
       />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
@@ -189,6 +198,7 @@ const JoinTeam = () => {
           <Typography
             component="h2"
             variant="h2"
+            id="join-team-heading"
             color="text.primary"
             sx={{
               fontWeight: 800,
@@ -206,6 +216,7 @@ const JoinTeam = () => {
           </Typography>
           <Typography
             variant="h6"
+            component="p"
             color="text.secondary"
             sx={{ 
               maxWidth: '800px', 
@@ -227,6 +238,8 @@ const JoinTeam = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
+          role="list"
+          aria-label="Employee benefits"
         >
           {benefits.map((benefit, index) => (
             <Grid 
@@ -234,24 +247,30 @@ const JoinTeam = () => {
               xs={12} 
               sm={6} 
               md={3} 
-              key={index}
+              key={benefit.id}
               component={motion.div}
               variants={itemVariants}
+              role="listitem"
             >
               <BenefitCard 
                 bgcolor={cardBgColor}
                 whileHover={{ 
                   boxShadow: `0 20px 40px ${theme.palette.primary.main}33`,
                 }}
+                component="article"
+                id={`benefit-${benefit.id}`}
+                aria-labelledby={`benefit-title-${benefit.id}`}
               >
                 <IconWrapper 
                   bgcolor={theme.palette.primary.main}
+                  aria-hidden="true"
                 >
-                  {benefit.icon}
+                  {React.cloneElement(benefit.icon, { 'aria-hidden': 'true' })}
                 </IconWrapper>
                 <Typography
                   variant="h5"
                   component="h3"
+                  id={`benefit-title-${benefit.id}`}
                   sx={{ 
                     fontWeight: 700, 
                     mb: 2,
@@ -262,6 +281,7 @@ const JoinTeam = () => {
                 </Typography>
                 <Typography 
                   variant="body1" 
+                  component="p"
                   color="text.secondary"
                   sx={{ 
                     fontSize: '1rem',
@@ -290,7 +310,9 @@ const JoinTeam = () => {
             <Button
               variant="contained"
               size="large"
-              startIcon={<WorkIcon />}
+              startIcon={<WorkIcon aria-hidden="true" />}
+              aria-label="View current job openings and career opportunities"
+              href="/careers"
               sx={{ 
                 borderRadius: 3,
                 padding: { xs: '12px 24px', md: '16px 32px' },

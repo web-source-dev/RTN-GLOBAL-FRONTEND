@@ -12,21 +12,25 @@ import styled from 'styled-components';
 
 const culturePoints = [
   {
+    id: 'innovation',
     title: 'Innovation First',
     description: 'We embrace new technologies and creative solutions to drive digital marketing forward. Our team constantly explores emerging trends and tools to stay ahead of the competition. We foster a culture where experimentation is encouraged and failure is seen as a stepping stone to success.',
     icon: '🚀',
   },
   {
+    id: 'collaboration',
     title: 'Collaboration',
     description: 'We believe in the power of teamwork and open communication to achieve exceptional results. Our collaborative approach brings together diverse perspectives and skills. Weve created an environment where ideas can flow freely and every team member input is valued.',
     icon: '🤝',
   },
   {
+    id: 'client-success',
     title: 'Client Success',
     description: 'Our team is dedicated to delivering measurable results and exceeding client expectations. We take the time to understand each client unique needs and goals. By focusing on outcomes rather than outputs, we build lasting partnerships based on trust and proven results.',
     icon: '🏆',
   },
   {
+    id: 'learning',
     title: 'Continuous Learning',
     description: 'We invest in our team growth through ongoing training and professional development. Learning is integrated into our daily workflow, with regular knowledge sharing sessions and access to industry-leading resources. We believe that when our team grows, our clients benefit.',
     icon: '📚',
@@ -243,11 +247,21 @@ const Culture = () => {
     setProgress(0);
   };
 
+  const handleTabKeyPress = (event, index) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleTabClick(index);
+    }
+  };
+
   return (
     <CultureContainer 
       bgcolor={bgColor} 
       textcolor={textColor}
       ref={containerRef}
+      component="section"
+      id="culture-section"
+      aria-labelledby="culture-title"
     >
       {/* Background decorative elements */}
       <CircleDecoration
@@ -269,6 +283,7 @@ const Culture = () => {
           width: '200px',
           height: '200px',
         }}
+        aria-hidden="true"
       />
       
       <ShapeDecoration
@@ -294,6 +309,7 @@ const Culture = () => {
           width: '250px',
           height: '250px',
         }}
+        aria-hidden="true"
       />
       
       <ShapeDecoration
@@ -315,6 +331,7 @@ const Culture = () => {
           width: '180px',
           height: '180px',
         }}
+        aria-hidden="true"
       />
 
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
@@ -335,6 +352,7 @@ const Culture = () => {
           <Typography
             variant="h2"
             component="h2"
+            id="culture-title"
             sx={{ 
               fontWeight: 700, 
               mb: 2,
@@ -349,6 +367,7 @@ const Culture = () => {
           </Typography>
           <Typography
             variant="body1"
+            component="p"
             sx={{ 
               maxWidth: '700px', 
               margin: '0 auto', 
@@ -362,7 +381,10 @@ const Culture = () => {
 
         <Grid container spacing={3} alignItems="stretch">
           <Grid item xs={12} md={4}>
-            <TabsContainer>
+            <TabsContainer 
+              role="tablist" 
+              aria-label="Company culture values"
+            >
               {culturePoints.map((point, index) => (
                 <Tab
                   key={index}
@@ -380,15 +402,25 @@ const Culture = () => {
                     boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
                   }}
                   onClick={() => handleTabClick(index)}
+                  onKeyDown={(e) => handleTabKeyPress(e, index)}
+                  tabIndex={0}
+                  role="tab"
+                  id={`tab-${point.id}`}
+                  aria-selected={activeTab === index}
+                  aria-controls={`panel-${point.id}`}
                   layout
                 >
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, position: 'relative' }}>
-                    <TabIconWrapper bgcolor={`${theme.palette.primary.main}22`}>
-                      <span>{point.icon}</span>
+                    <TabIconWrapper 
+                      bgcolor={`${theme.palette.primary.main}22`}
+                      aria-hidden="true"
+                    >
+                      <span role="img" aria-hidden="true">{point.icon}</span>
                     </TabIconWrapper>
                     <Box>
                       <Typography 
                         variant="h6" 
+                        component={activeTab === index ? "h3" : "div"}
                         fontWeight={600}
                         color={activeTab === index ? theme.palette.primary.main : 'inherit'}
                       >
@@ -399,6 +431,7 @@ const Culture = () => {
                           primarycolor={theme.palette.primary.main}
                           initial={{ width: 0 }}
                           animate={{ width: `${progress}%` }}
+                          aria-hidden="true"
                         />
                       )}
                     </Box>
@@ -423,6 +456,7 @@ const Culture = () => {
                           duration: 2,
                           ease: "easeInOut"
                         }}
+                        aria-hidden="true"
                       />
                     )}
                   </Box>
@@ -441,6 +475,9 @@ const Culture = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -50 }}
                   transition={{ duration: 0.4 }}
+                  role="tabpanel"
+                  id={`panel-${culturePoints[activeTab].id}`}
+                  aria-labelledby={`tab-${culturePoints[activeTab].id}`}
                 >
                   <Box sx={{ position: 'relative', height: '100%' }}>
                     <CircleDecoration
@@ -453,10 +490,12 @@ const Culture = () => {
                         width: '100px',
                         height: '100px',
                       }}
+                      aria-hidden="true"
                     />
                     
                     <Typography
                       variant="h4"
+                      component="h3"
                       sx={{ 
                         mb: 3, 
                         fontWeight: 700,
@@ -477,10 +516,12 @@ const Culture = () => {
                           opacity: 0.5
                         }}
                         layoutId="underline"
+                        aria-hidden="true"
                       />
                     </Typography>
                     <Typography
                       variant="body1"
+                      component="p"
                       sx={{ 
                         mb: 4, 
                         fontSize: '1.1rem',
@@ -509,6 +550,7 @@ const Culture = () => {
                           height: '120px',
                           position: 'absolute'
                         }}
+                        aria-hidden="true"
                       />
                       <motion.div
                         key={`icon-${activeTab}`}
@@ -520,6 +562,7 @@ const Culture = () => {
                           damping: 20,
                           delay: 0.2
                         }}
+                        aria-hidden="true"
                       >
                         <Box
                           sx={{
@@ -528,8 +571,9 @@ const Culture = () => {
                             position: 'relative',
                             zIndex: 2
                           }}
+                          aria-hidden="true"
                         >
-                          {culturePoints[activeTab].icon}
+                          <span role="img" aria-hidden="true">{culturePoints[activeTab].icon}</span>
                         </Box>
                       </motion.div>
                     </Box>

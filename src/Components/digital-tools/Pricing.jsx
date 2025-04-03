@@ -31,7 +31,8 @@ const plans = [
       '2 Rounds of Revisions'
     ],
     color: '#2196f3',
-    popular: false
+    popular: false,
+    id: 'basic-website-plan'
   },
   {
     title: 'Custom Web App',
@@ -47,7 +48,8 @@ const plans = [
       '3 Months Support'
     ],
     color: '#4caf50',
-    popular: true
+    popular: true,
+    id: 'custom-webapp-plan'
   },
   {
     title: 'Mobile App',
@@ -65,7 +67,8 @@ const plans = [
       '3 Months Support'
     ],
     color: '#9c27b0',
-    popular: false
+    popular: false,
+    id: 'mobile-app-plan'
   }
 ];
 
@@ -75,6 +78,9 @@ const Pricing = () => {
 
   return (
     <Box
+      component="section"
+      id="development-packages"
+      aria-labelledby="pricing-heading"
       py={12}
       sx={{
         background: theme.palette.background.default,
@@ -94,10 +100,13 @@ const Pricing = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="pricing-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -115,6 +124,7 @@ const Pricing = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{
@@ -134,6 +144,8 @@ const Pricing = () => {
           {plans.map((plan) => (
             <Grid item xs={12} md={4} key={plan.title}>
               <Card
+                component="article"
+                id={plan.id}
                 sx={{
                   height: '100%',
                   display: 'flex',
@@ -151,6 +163,9 @@ const Pricing = () => {
               >
                 {plan.popular && (
                   <Box
+                    component="span"
+                    role="presentation"
+                    aria-hidden="true"
                     sx={{
                       position: 'absolute',
                       top: 20,
@@ -171,7 +186,7 @@ const Pricing = () => {
                 <CardContent sx={{ flexGrow: 1, p: { xs: 3, md: 4 } }}>
                   <Typography
                     variant="h4"
-                    component="h2"
+                    component="h3"
                     gutterBottom
                     sx={{
                       fontWeight: 700,
@@ -194,6 +209,7 @@ const Pricing = () => {
                     </Typography>
                     <Typography
                       variant="subtitle1"
+                      component="span"
                       color="text.secondary"
                       sx={{ ml: 1, fontSize: '1.1rem' }}
                     >
@@ -202,6 +218,7 @@ const Pricing = () => {
                   </Box>
                   <Typography
                     variant="subtitle1"
+                    component="p"
                     sx={{
                       mb: 4,
                       color: isDark ? 'rgba(255,255,255,0.7)' : 'text.secondary',
@@ -211,7 +228,10 @@ const Pricing = () => {
                   >
                     {plan.description}
                   </Typography>
-                  <List sx={{ mb: 4 }}>
+                  <List 
+                    aria-label={`Features included in ${plan.title} package`}
+                    sx={{ mb: 4 }}
+                  >
                     {plan.features.map((feature) => (
                       <ListItem
                         key={feature}
@@ -226,6 +246,7 @@ const Pricing = () => {
                       >
                         <ListItemIcon sx={{ minWidth: 36 }}>
                           <CheckCircleIcon
+                            aria-hidden="true"
                             sx={{
                               color: plan.color,
                               fontSize: '1.4rem'
@@ -248,6 +269,7 @@ const Pricing = () => {
                     variant="contained"
                     fullWidth
                     size="large"
+                    aria-label={`Get started with ${plan.title} package`}
                     sx={{
                       mt: 'auto',
                       backgroundColor: plan.color,

@@ -17,6 +17,8 @@ const CustomScrollbar = () => {
 
   return (
     <Box
+      role="presentation"
+      aria-hidden="true"
       sx={{
         position: 'fixed',
         top: 0,
@@ -24,6 +26,7 @@ const CustomScrollbar = () => {
         width: '9px',
         height: '100%',
         zIndex: 9999,
+        pointerEvents: 'none',
       }}
     >
       <Box

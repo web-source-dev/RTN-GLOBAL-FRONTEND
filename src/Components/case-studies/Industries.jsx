@@ -23,6 +23,7 @@ const industries = [
     icon: ShoppingBagIcon,
     color: '#2196f3',
     metrics: ['200% Revenue Growth', 'Enhanced UX', 'Cart Recovery'],
+    id: 'ecommerce',
   },
   {
     title: 'B2B Services',
@@ -30,6 +31,7 @@ const industries = [
     icon: BusinessIcon,
     color: '#4caf50',
     metrics: ['Lead Generation', 'Account-Based Marketing', 'Sales Enablement'],
+    id: 'b2b-services',
   },
   {
     title: 'Healthcare',
@@ -37,6 +39,7 @@ const industries = [
     icon: LocalHospitalIcon,
     color: '#ff9800',
     metrics: ['HIPAA Compliant', 'Patient Engagement', 'Practice Growth'],
+    id: 'healthcare',
   },
   {
     title: 'Education',
@@ -44,6 +47,7 @@ const industries = [
     icon: SchoolIcon,
     color: '#e91e63',
     metrics: ['Student Enrollment', 'Brand Awareness', 'Community Building'],
+    id: 'education',
   },
   {
     title: 'Retail',
@@ -51,6 +55,7 @@ const industries = [
     icon: StoreIcon,
     color: '#9c27b0',
     metrics: ['Foot Traffic', 'Online Presence', 'Customer Loyalty'],
+    id: 'retail',
   },
   {
     title: 'Food & Beverage',
@@ -58,6 +63,7 @@ const industries = [
     icon: RestaurantIcon,
     color: '#00bcd4',
     metrics: ['Local SEO', 'Social Proof', 'Order Volume'],
+    id: 'food-beverage',
   },
 ];
 
@@ -67,6 +73,9 @@ const Industries = () => {
 
   return (
     <Box
+      component="section"
+      id="industries-we-serve"
+      aria-labelledby="industries-heading"
       py={12}
       sx={{
         background: theme.palette.background.default,
@@ -87,11 +96,14 @@ const Industries = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
 
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="industries-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -107,6 +119,7 @@ const Industries = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
@@ -114,10 +127,12 @@ const Industries = () => {
           Tailored digital marketing solutions for your industry's unique challenges
         </Typography>
 
-        <Grid container spacing={4}>
+        <Grid container spacing={4} role="list">
           {industries.map((industry, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item xs={12} sm={6} md={4} key={index} role="listitem">
               <Card
+                component="article"
+                id={industry.id}
                 sx={{
                   height: '100%',
                   transition: 'all 0.3s ease',
@@ -142,10 +157,12 @@ const Industries = () => {
                     background: `radial-gradient(circle at top right, ${industry.color}15, transparent 70%)`,
                     borderRadius: '0 0 0 100%',
                   }}
+                  aria-hidden="true"
                 />
                 <CardContent sx={{ p: 4 }}>
                   <IconButton
                     className="industry-icon"
+                    aria-hidden="true"
                     sx={{
                       mb: 2,
                       bgcolor: `${industry.color}15`,
@@ -157,15 +174,24 @@ const Industries = () => {
                   >
                     <industry.icon fontSize="large" />
                   </IconButton>
-                  <Typography variant="h5" gutterBottom fontWeight="bold">
+                  <Typography variant="h5" component="h3" gutterBottom fontWeight="bold">
                     {industry.title}
                   </Typography>
-                  <Typography color="text.secondary" paragraph>
+                  <Typography component="p" color="text.secondary" paragraph>
                     {industry.description}
                   </Typography>
-                  <Box sx={{ mt: 3 }}>
+                  <Box 
+                    component="ul" 
+                    aria-label={`${industry.title} benefits`} 
+                    sx={{ 
+                      mt: 3, 
+                      pl: 0, 
+                      listStyle: 'none' 
+                    }}
+                  >
                     {industry.metrics.map((metric, idx) => (
                       <Box
+                        component="li"
                         key={idx}
                         sx={{
                           display: 'flex',
@@ -181,7 +207,7 @@ const Industries = () => {
                           },
                         }}
                       >
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" component="span" color="text.secondary">
                           {metric}
                         </Typography>
                       </Box>

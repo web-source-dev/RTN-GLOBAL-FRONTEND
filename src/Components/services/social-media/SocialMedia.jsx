@@ -13,25 +13,32 @@ import ShareIcon from '@mui/icons-material/Share';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import GroupIcon from '@mui/icons-material/Group';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import { Helmet } from 'react-helmet-async';
 
 const features = [
   {
+    id: 'platform-strategy',
     title: 'Platform Strategy',
     description: 'Tailored strategies for each social media platform to maximize engagement',
     icon: ShareIcon,
-    color: '#2196f3'
+    color: '#2196f3',
+    ariaLabel: 'Learn about our platform-specific social media strategies'
   },
   {
+    id: 'content-creation',
     title: 'Content Creation',
     description: 'Engaging content that resonates with your target audience',
     icon: CampaignIcon,
-    color: '#4caf50'
+    color: '#4caf50',
+    ariaLabel: 'Discover our content creation services for social media'
   },
   {
+    id: 'community-management',
     title: 'Community Management',
     description: 'Active engagement and community building across social platforms',
     icon: GroupIcon,
-    color: '#ff9800'
+    color: '#ff9800',
+    ariaLabel: 'Find out about our community management approach'
   }
 ];
 
@@ -47,11 +54,41 @@ const benefits = [
 const SocialMedia = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  
+  // Define structured data for Social Media Marketing service
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Social Media Marketing",
+    "provider": {
+      "@type": "Organization",
+      "name": "RTN Global"
+    },
+    "description": "Build and engage your community with strategic social media marketing. We provide platform strategy, content creation, and community management services.",
+    "serviceType": "Digital Marketing",
+    "offers": {
+      "@type": "Offer",
+      "price": "500.00",
+      "priceCurrency": "USD",
+      "description": "Starting price for social media marketing services"
+    }
+  };
 
   return (
-    <Box>
+    <Box component="main" id="social-media-marketing">
+      <Helmet>
+        <title>Social Media Marketing Services | RTN Global</title>
+        <meta name="description" content="Build and engage your community with strategic social media marketing. Discover our platform strategy, content creation, and community management services." />
+        <script type="application/ld+json">
+          {JSON.stringify(serviceSchema)}
+        </script>
+      </Helmet>
+      
       {/* Hero Section */}
       <Box
+        component="section"
+        id="social-media-hero"
+        aria-labelledby="social-media-heading"
         sx={{
           pt: 15,
           pb: 8,
@@ -72,12 +109,15 @@ const SocialMedia = () => {
                         radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
             zIndex: 1
           }}
+          aria-hidden="true"
         />
         <Container sx={{ position: 'relative', zIndex: 2 }}>
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>
               <Typography
                 variant="h1"
+                component="h1"
+                id="social-media-heading"
                 sx={{
                   fontWeight: 800,
                   mb: 3,
@@ -90,12 +130,14 @@ const SocialMedia = () => {
               >
                 Social Media Marketing
               </Typography>
-              <Typography variant="h4" color="text.secondary" paragraph>
+              <Typography variant="h4" component="p" color="text.secondary" paragraph>
                 Build and engage your community with strategic social media marketing
               </Typography>
               <Button
                 variant="contained"
                 size="large"
+                href="#contact-us"
+                aria-label="Get started with social media marketing"
                 sx={{
                   mt: 2,
                   borderRadius: 2,
@@ -121,6 +163,7 @@ const SocialMedia = () => {
                     color: theme.palette.primary.main,
                     opacity: 0.1,
                   }}
+                  aria-hidden="true"
                 />
               </Box>
             </Grid>
@@ -129,9 +172,16 @@ const SocialMedia = () => {
       </Box>
 
       {/* Features Section */}
-      <Container sx={{ py: 8 }}>
+      <Container 
+        component="section" 
+        id="social-media-services" 
+        aria-labelledby="services-heading"
+        sx={{ py: 8 }}
+      >
         <Typography
           variant="h2"
+          component="h2"
+          id="services-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -140,10 +190,23 @@ const SocialMedia = () => {
         >
           Our Social Media Services
         </Typography>
-        <Grid container spacing={4}>
-          {features.map((feature, index) => (
-            <Grid item xs={12} md={4} key={index}>
+        <Grid 
+          container 
+          spacing={4}
+          role="list"
+          aria-label="Social media marketing services"
+        >
+          {features.map((feature) => (
+            <Grid 
+              item 
+              xs={12} 
+              md={4} 
+              key={feature.id}
+              role="listitem"
+            >
               <Card
+                component="article"
+                id={`feature-${feature.id}`}
                 sx={{
                   height: '100%',
                   transition: 'all 0.3s ease',
@@ -152,6 +215,7 @@ const SocialMedia = () => {
                     boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
                   },
                 }}
+                aria-labelledby={`feature-title-${feature.id}`}
               >
                 <CardContent sx={{ p: 4 }}>
                   <Box
@@ -166,13 +230,23 @@ const SocialMedia = () => {
                       color: feature.color,
                       mb: 2,
                     }}
+                    aria-hidden="true"
                   >
-                    <feature.icon fontSize="large" />
+                    <feature.icon fontSize="large" aria-hidden="true" />
                   </Box>
-                  <Typography variant="h5" gutterBottom fontWeight="bold">
+                  <Typography 
+                    variant="h5" 
+                    component="h3" 
+                    id={`feature-title-${feature.id}`}
+                    gutterBottom 
+                    sx={{ fontWeight: 'bold' }}
+                  >
                     {feature.title}
                   </Typography>
-                  <Typography color="text.secondary">
+                  <Typography 
+                    color="text.secondary"
+                    component="p"
+                  >
                     {feature.description}
                   </Typography>
                 </CardContent>
@@ -184,6 +258,9 @@ const SocialMedia = () => {
 
       {/* Benefits Section */}
       <Box
+        component="section"
+        id="social-media-benefits"
+        aria-labelledby="benefits-heading"
         sx={{
           py: 8,
           background: theme.palette.background.default,
@@ -203,10 +280,13 @@ const SocialMedia = () => {
                         radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
             zIndex: 1
           }}
+          aria-hidden="true"
         />
         <Container sx={{ position: 'relative', zIndex: 2 }}>
           <Typography
             variant="h2"
+            component="h2"
+            id="benefits-heading"
             textAlign="center"
             sx={{
               fontWeight: 800,
@@ -215,9 +295,20 @@ const SocialMedia = () => {
           >
             Benefits of Social Media Marketing
           </Typography>
-          <Grid container spacing={3}>
+          <Grid 
+            container 
+            spacing={3}
+            role="list"
+            aria-label="Benefits of social media marketing"
+          >
             {benefits.map((benefit, index) => (
-              <Grid item xs={12} md={6} key={index}>
+              <Grid 
+                item 
+                xs={12} 
+                md={6} 
+                key={`benefit-${index}`}
+                role="listitem"
+              >
                 <Box
                   sx={{
                     display: 'flex',
@@ -240,8 +331,11 @@ const SocialMedia = () => {
                       bgcolor: theme.palette.primary.main,
                       mr: 2,
                     }}
+                    aria-hidden="true"
                   />
-                  <Typography variant="h6">{benefit}</Typography>
+                  <Typography variant="h6" component="p">
+                    {benefit}
+                  </Typography>
                 </Box>
               </Grid>
             ))}
@@ -250,12 +344,24 @@ const SocialMedia = () => {
       </Box>
 
       {/* CTA Section */}
-      <Container sx={{ py: 8, textAlign: 'center' }}>
-        <Typography variant="h3" gutterBottom fontWeight="bold">
+      <Container 
+        component="section" 
+        id="contact-us" 
+        aria-labelledby="cta-heading"
+        sx={{ py: 8, textAlign: 'center' }}
+      >
+        <Typography 
+          variant="h3" 
+          component="h2" 
+          id="cta-heading"
+          gutterBottom 
+          sx={{ fontWeight: 'bold' }}
+        >
           Ready to Grow Your Social Media Presence?
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           sx={{ mb: 4, maxWidth: 800, mx: 'auto' }}
         >
@@ -264,6 +370,8 @@ const SocialMedia = () => {
         <Button
           variant="contained"
           size="large"
+          href="/contact"
+          aria-label="Start your social media marketing journey"
           sx={{
             borderRadius: 2,
             textTransform: 'none',

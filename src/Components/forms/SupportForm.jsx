@@ -92,25 +92,25 @@ const SupportForm = () => {
     {
       label: 'User Information',
       description: 'Your contact details',
-      icon: <PersonIcon />,
+      icon: <PersonIcon aria-hidden="true" />,
       fields: ['name', 'email']
     },
     {
       label: 'Issue Classification',
       description: 'Categorize your issue',
-      icon: <CategoryIcon />,
+      icon: <CategoryIcon aria-hidden="true" />,
       fields: ['issueCategory', 'priority', 'subject']
     },
     {
       label: 'Issue Details',
       description: 'Describe your problem',
-      icon: <DescriptionIcon />,
+      icon: <DescriptionIcon aria-hidden="true" />,
       fields: ['description', 'attachments', 'subscribeToUpdates']
     },
     {
       label: 'Review & Submit',
       description: 'Final review',
-      icon: <CheckCircleIcon />,
+      icon: <CheckCircleIcon aria-hidden="true" />,
       fields: []
     }
   ];
@@ -231,6 +231,9 @@ const SupportForm = () => {
 
   return (
     <Box
+      component="section"
+      id="support-ticket-form"
+      aria-labelledby="support-heading"
       sx={{
         py: 8,
         background: theme.palette.background.default,
@@ -248,10 +251,13 @@ const SupportForm = () => {
           opacity: 0.05,
           zIndex: -1,
         }}
+        aria-hidden="true"
       />
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <Typography
           variant="h3"
+          component="h1"
+          id="support-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -266,6 +272,7 @@ const SupportForm = () => {
           Technical Support
         </Typography>
         <Typography
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ mb: 6, maxWidth: '600px', mx: 'auto' }}
@@ -278,6 +285,8 @@ const SupportForm = () => {
           {/* Left Sidebar */}
           <Grid item xs={12} md={4}>
             <Paper
+              component="nav"
+              aria-label="Support process navigation"
               sx={{
                 p: 2,
                 backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'white',
@@ -287,16 +296,17 @@ const SupportForm = () => {
                 top: 20,
               }}
             >
-              <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 'bold' }}>
+              <Typography variant="h6" component="h2" gutterBottom sx={{ mb: 2, fontWeight: 'bold' }}>
                 Support Process
               </Typography>
-              <List component="nav" sx={{ mb: 2 }}>
+              <List component="ol" sx={{ mb: 2 }}>
                 {steps.map((step, index) => (
                   <React.Fragment key={step.label}>
                     <ListItem 
                       button
                       onClick={() => handleStepClick(index)}
                       selected={activeStep === index}
+                      aria-current={activeStep === index ? "step" : undefined}
                       sx={{
                         borderRadius: 1,
                         mb: 1,
@@ -339,6 +349,7 @@ const SupportForm = () => {
                   size="small" 
                   variant="outlined"
                   sx={{ borderRadius: 4 }}
+                  aria-label="Contact support team directly for urgent matters"
                 >
                   Contact Support
                 </Button>
@@ -356,19 +367,30 @@ const SupportForm = () => {
                 boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
               }}
             >
-              <Box component="form" onSubmit={handleSubmit}>
-                <Stepper activeStep={activeStep} orientation="horizontal" sx={{ mb: 4 }}>
+              <Box 
+                component="form" 
+                id="support-form"
+                onSubmit={handleSubmit}
+                noValidate
+                aria-labelledby="support-heading"
+              >
+                <Stepper 
+                  activeStep={activeStep} 
+                  orientation="horizontal" 
+                  sx={{ mb: 4 }}
+                  aria-label="Support ticket creation process"
+                >
                   {steps.map((step, index) => (
-                    <Step key={step.label}>
+                    <Step key={step.label} completed={activeStep > index}>
                       <StepLabel>{step.label}</StepLabel>
                     </Step>
                   ))}
                 </Stepper>
 
                 {activeStep === steps.length ? (
-                  <Box sx={{ mt: 3, textAlign: 'center' }}>
-                    <CheckCircleIcon color="success" sx={{ fontSize: 60, mb: 2 }} />
-                    <Typography variant="h5" gutterBottom>
+                  <Box sx={{ mt: 3, textAlign: 'center' }} role="alert" aria-live="polite">
+                    <CheckCircleIcon color="success" sx={{ fontSize: 60, mb: 2 }} aria-hidden="true" />
+                    <Typography variant="h5" component="h2" gutterBottom>
                       Support Ticket Submitted Successfully!
                     </Typography>
                     <Typography variant="body1" paragraph>
@@ -378,6 +400,7 @@ const SupportForm = () => {
                       variant="contained"
                       onClick={() => window.location.href = `${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/support`}
                       sx={{ mt: 2 }}
+                      aria-label="View your support tickets in the dashboard"
                     >
                       View My Support Tickets
                     </Button>
@@ -388,7 +411,7 @@ const SupportForm = () => {
                     {activeStep === 0 && (
                       <Grid container spacing={3}>
                         <Grid item xs={12}>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" component="h2" gutterBottom>
                             User Information
                           </Typography>
                         </Grid>
@@ -397,27 +420,45 @@ const SupportForm = () => {
                             fullWidth
                             label="Name"
                             name="name"
+                            id="name"
                             value={formData.name}
                             onChange={handleChange}
                             error={!!errors.name}
                             helperText={errors.name}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.name}
+                            aria-describedby={errors.name ? "name-error" : undefined}
                             disabled={!!user}
                           />
+                          {errors.name && (
+                            <span id="name-error" className="sr-only">
+                              {errors.name}
+                            </span>
+                          )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <TextField
                             fullWidth
                             label="Email"
                             name="email"
+                            id="email"
                             type="email"
                             value={formData.email}
                             onChange={handleChange}
                             error={!!errors.email}
                             helperText={errors.email}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.email}
+                            aria-describedby={errors.email ? "email-error" : undefined}
                             disabled={!!user}
                           />
+                          {errors.email && (
+                            <span id="email-error" className="sr-only">
+                              {errors.email}
+                            </span>
+                          )}
                         </Grid>
                       </Grid>
                     )}
@@ -426,7 +467,7 @@ const SupportForm = () => {
                     {activeStep === 1 && (
                       <Grid container spacing={3}>
                         <Grid item xs={12}>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" component="h2" gutterBottom>
                             Issue Classification
                           </Typography>
                         </Grid>
@@ -436,11 +477,15 @@ const SupportForm = () => {
                             select
                             label="Issue Category"
                             name="issueCategory"
+                            id="issueCategory"
                             value={formData.issueCategory}
                             onChange={handleChange}
                             error={!!errors.issueCategory}
                             helperText={errors.issueCategory}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.issueCategory}
+                            aria-describedby={errors.issueCategory ? "category-error" : undefined}
                           >
                             {ISSUE_CATEGORIES.map((category) => (
                               <MenuItem key={category} value={category}>
@@ -448,6 +493,11 @@ const SupportForm = () => {
                               </MenuItem>
                             ))}
                           </TextField>
+                          {errors.issueCategory && (
+                            <span id="category-error" className="sr-only">
+                              {errors.issueCategory}
+                            </span>
+                          )}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                           <TextField
@@ -455,11 +505,15 @@ const SupportForm = () => {
                             select
                             label="Priority"
                             name="priority"
+                            id="priority"
                             value={formData.priority}
                             onChange={handleChange}
                             error={!!errors.priority}
                             helperText={errors.priority}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.priority}
+                            aria-describedby={errors.priority ? "priority-error" : undefined}
                           >
                             {PRIORITY_LEVELS.map((level) => (
                               <MenuItem key={level} value={level}>
@@ -467,18 +521,32 @@ const SupportForm = () => {
                               </MenuItem>
                             ))}
                           </TextField>
+                          {errors.priority && (
+                            <span id="priority-error" className="sr-only">
+                              {errors.priority}
+                            </span>
+                          )}
                         </Grid>
                         <Grid item xs={12}>
                           <TextField
                             fullWidth
                             label="Subject"
                             name="subject"
+                            id="subject"
                             value={formData.subject}
                             onChange={handleChange}
                             error={!!errors.subject}
                             helperText={errors.subject}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.subject}
+                            aria-describedby={errors.subject ? "subject-error" : undefined}
                           />
+                          {errors.subject && (
+                            <span id="subject-error" className="sr-only">
+                              {errors.subject}
+                            </span>
+                          )}
                         </Grid>
                       </Grid>
                     )}
@@ -487,7 +555,7 @@ const SupportForm = () => {
                     {activeStep === 2 && (
                       <Grid container spacing={3}>
                         <Grid item xs={12}>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" component="h2" gutterBottom>
                             Issue Details
                           </Typography>
                         </Grid>
@@ -498,13 +566,22 @@ const SupportForm = () => {
                             rows={6}
                             label="Description"
                             name="description"
+                            id="description"
                             value={formData.description}
                             onChange={handleChange}
                             error={!!errors.description}
                             helperText={errors.description}
                             required
+                            aria-required="true"
+                            aria-invalid={!!errors.description}
+                            aria-describedby={errors.description ? "description-error" : undefined}
                             placeholder="Please provide as much detail as possible about your issue..."
                           />
+                          {errors.description && (
+                            <span id="description-error" className="sr-only">
+                              {errors.description}
+                            </span>
+                          )}
                         </Grid>
                         <Grid item xs={12}>
                           <Button
@@ -512,14 +589,17 @@ const SupportForm = () => {
                             variant="outlined"
                             fullWidth
                             sx={{ height: 56 }}
+                            aria-label="Upload attachments (optional)"
                           >
                             Upload Attachments (Optional)
                             <input
                               type="file"
                               hidden
                               name="attachments"
+                              id="attachments"
                               onChange={handleChange}
                               accept="image/*,.pdf,.doc,.docx"
+                              aria-label="Upload attachments"
                             />
                           </Button>
                           {formData.attachments && (
@@ -535,6 +615,7 @@ const SupportForm = () => {
                                 checked={formData.subscribeToUpdates}
                                 onChange={handleChange}
                                 name="subscribeToUpdates"
+                                id="subscribeToUpdates"
                                 color="primary"
                               />
                             }
@@ -548,7 +629,7 @@ const SupportForm = () => {
                     {activeStep === 3 && (
                       <Grid container spacing={3}>
                         <Grid item xs={12}>
-                          <Typography variant="h6" gutterBottom>
+                          <Typography variant="h6" component="h2" gutterBottom>
                             Review & Submit
                           </Typography>
                           <Typography variant="body2" color="text.secondary" paragraph>
@@ -637,6 +718,7 @@ const SupportForm = () => {
                         variant="outlined"
                         onClick={handleBack}
                         disabled={activeStep === 0}
+                        aria-label={activeStep === 0 ? "Back button (disabled)" : "Go back to previous step"}
                         sx={{ mr: 1 }}
                       >
                         Back
@@ -644,9 +726,11 @@ const SupportForm = () => {
                       <Box sx={{ flex: '1 1 auto' }} />
                       {activeStep === steps.length - 1 ? (
                         <Button
+                          type="submit"
                           variant="contained"
                           onClick={handleSubmit}
                           disabled={isSubmitting}
+                          aria-busy={isSubmitting}
                           sx={{
                             minWidth: 160,
                             borderRadius: 2,
@@ -658,8 +742,9 @@ const SupportForm = () => {
                         >
                           {isSubmitting ? (
                             <>
-                              <CircularProgress size={24} sx={{ mr: 1, color: 'white' }} />
-                              Submitting...
+                              <CircularProgress size={24} sx={{ mr: 1, color: 'white' }} aria-hidden="true" />
+                              <span aria-hidden={isSubmitting}>Submitting...</span>
+                              <span className="sr-only">Submitting support ticket, please wait</span>
                             </>
                           ) : (
                             'Submit Ticket'
@@ -669,6 +754,7 @@ const SupportForm = () => {
                         <Button
                           variant="contained"
                           onClick={handleNext}
+                          aria-label="Proceed to next step"
                           sx={{
                             minWidth: 120,
                             borderRadius: 2
@@ -694,6 +780,7 @@ const SupportForm = () => {
             onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
             severity={snackbar.severity}
             sx={{ width: '100%' }}
+            aria-live="assertive"
           >
             {snackbar.message}
           </Alert>

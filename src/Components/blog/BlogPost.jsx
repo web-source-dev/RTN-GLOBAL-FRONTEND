@@ -34,6 +34,7 @@ import {
 } from '@mui/icons-material';
 import { useAuth } from '../../contexts/AuthContext';
 import API from '../../BackendAPi/ApiProvider';
+import SEO from '../common/SEO';
 
 const BlogPost = () => {
   const { id } = useParams();
@@ -207,8 +208,49 @@ const BlogPost = () => {
 
   if (!blog) return null;
 
+  // Create structured data for the blog post
+  const blogPostSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": blog.title,
+    "description": blog.description,
+    "image": blog.image ? `${process.env.REACT_APP_API_URL}${blog.image}` : "https://rtnglobal.site/images/og-default.png",
+    "datePublished": blog.createdAt,
+    "dateModified": blog.updatedAt || blog.createdAt,
+    "author": {
+      "@type": "Person",
+      "name": blog.author ? `${blog.author.firstName} ${blog.author.lastName}` : "RTN Global Team"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "RTN Global",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://rtnglobal.site/images/logo.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://rtnglobal.site/blog/post/${blog._id}`
+    },
+    "commentCount": comments.length,
+    "keywords": blog.tags ? blog.tags.join(", ") : "web development, digital marketing, technology"
+  };
+
+  // Extract keywords from blog content if available
+  const blogKeywords = blog.tags ? blog.tags.join(", ") : "web development, digital marketing, technology";
+
   return (
     <>
+      <SEO
+        title={`${blog.title} | RTN Global Blog`}
+        description={blog.description || blog.content?.substring(0, 160)}
+        keywords={blogKeywords}
+        canonicalUrl={`/blog/post/${blog._id}`}
+        ogType="article"
+        ogImage={blog.image ? `${process.env.REACT_APP_API_URL}${blog.image}` : "/images/og-default.png"}
+        schema={blogPostSchema}
+      />
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8}>

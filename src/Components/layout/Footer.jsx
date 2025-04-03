@@ -81,7 +81,23 @@ const Footer = () => {
     { name: 'FAQ', path: '/faq' },
     { name: 'Support', path: '/support' },
   ];
-
+  <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": 'RTN GLOBAL',
+      "url": "https://rtnglobal.site",
+      "logo": "https://rtnglobal.site/logo.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "availableLanguage": ["English"]
+      },
+    })
+  }}
+/>
   return (
     <Box
       component="footer"

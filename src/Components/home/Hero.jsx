@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography, Button, Stack, Grid } from '@mui/material';
+import { Box, Container, Typography, Button, Stack, Grid, useTheme } from '@mui/material';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { useAuth } from '../../contexts/AuthContext';
 const Hero = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const theme = useTheme();
 
   const handleGetStarted = () => {
     window.location.href = isAuthenticated ? `${process.env.REACT_APP_USER_DASHBOARD_URL}/dashboard/user/orders` : `/auth/login`;
@@ -19,48 +20,28 @@ const Hero = () => {
 
   return (
     <Box
+      component="section"
+      id="hero-section"
+      aria-label="Web Development Services Hero"
       sx={{
-        minHeight: '100vh',
+        minHeight: '90vh',
+        padding: '10px 20px',
         display: 'flex',
         alignItems: 'center',
-        background: (theme) => `linear-gradient(135deg, 
-          ${theme.palette.primary.dark} 0%,
-          ${theme.palette.primary.main} 50%,
-          ${theme.palette.secondary.main} 100%)`,
+        background: theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden',
+        justifyContent: 'center',
       }}
     >
-      {/* Animated background elements */}
-      {[...Array(5)].map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            position: 'absolute',
-            width: '20vw',
-            height: '20vw',
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.05)',
-            animation: 'float 15s infinite',
-            animationDelay: `${i * 2}s`,
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            '@keyframes float': {
-              '0%': { transform: 'translate(0, 0)' },
-              '50%': { transform: 'translate(100px, -100px)' },
-              '100%': { transform: 'translate(0, 0)' },
-            },
-          }}
-        />
-      ))}
-
-      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={4} alignItems="center">
+      <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
+        <Grid container spacing={4} alignItems="center" justifyContent="center">
           <Grid item xs={12} md={6}>
             <Box>
               <Typography
                 variant="h1"
-                color="white"
+                component="h1"
+                color="text.primary"
                 fontWeight="800"
                 sx={{
                   fontSize: { xs: '2.5rem', md: '3.5rem' },
@@ -73,11 +54,7 @@ const Hero = () => {
                   component="span"
                   sx={{
                     display: 'block',
-                    background: 'linear-gradient(45deg, #fff, #f5f5f5)',
-                    backgroundClip: 'text',
-                    textFillColor: 'transparent',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
+                    color: 'text.primary'
                   }}
                 >
                   That Drive Results
@@ -85,14 +62,15 @@ const Hero = () => {
               </Typography>
               <Typography
                 variant="h4"
+                component="h2"
                 sx={{
-                  color: 'rgba(255,255,255,0.9)',
+                  color: 'text.secondary',
                   mb: 4,
                   fontSize: { xs: '1.2rem', md: '1.5rem' },
                   fontWeight: 300,
                 }}
               >
-                Wix Development, MERN Stack Web Apps, and React Native Mobile Solutions
+                Wix Website Development, MERN Stack Web Applications, and React Native Mobile Solutions
               </Typography>
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
@@ -104,6 +82,7 @@ const Hero = () => {
                   size="large"
                   startIcon={<RocketLaunchIcon />}
                   onClick={handleGetStarted}
+                  aria-label="Get started with web development services"
                   sx={{
                     py: 1.5,
                     px: 4,
@@ -126,37 +105,45 @@ const Hero = () => {
                   size="large"
                   startIcon={<PlayArrowIcon />}
                   onClick={handleBookConsultation}
+                  aria-label="Book a free web development consultation"
                   sx={{
                     py: 1.5,
                     px: 4,
                     borderRadius: '30px',
                     fontSize: '1.1rem',
                     textTransform: 'none',
-                    color: 'white',
-                    borderColor: 'rgba(255,255,255,0.5)',
+                    color: 'text.primary',
+                    borderWidth:'1px',
+                    borderStyle:'solid',
+                    borderColor: 'rgb(0, 0, 0)',
                     '&:hover': {
                       borderColor: 'white',
                       backgroundColor: 'rgba(255,255,255,0.1)',
                     },
                   }}
                 >
-                    Book a Free Consultation
-                  </Button>
+                  Book a Free Consultation
+                </Button>
               </Stack>
               <Box
+                component="ul"
                 sx={{
                   display: 'flex',
                   gap: 2,
                   flexWrap: 'wrap',
+                  listStyle: 'none',
+                  p: 0,
+                  m: 0,
                 }}
               >
                 {[
-                  'Fast & Scalable',
-                  'User-Friendly',
-                  'Custom Solutions',
-                  'Expert Team',
+                  'Fast & Scalable Web Development',
+                  'User-Friendly Interfaces',
+                  'Custom Web Solutions',
+                  'Expert Development Team',
                 ].map((item) => (
                   <Box
+                    component="li"
                     key={item}
                     sx={{
                       display: 'flex',
@@ -171,10 +158,11 @@ const Hero = () => {
                         borderRadius: '50%',
                         bgcolor: 'secondary.light',
                       }}
+                      aria-hidden="true"
                     />
                     <Typography
                       sx={{
-                        color: 'rgba(255,255,255,0.9)',
+                        color: 'text.secondary',
                         fontWeight: 500,
                       }}
                     >
@@ -189,10 +177,14 @@ const Hero = () => {
             <Box
               component="img"
               src="/images/hero-illustration.png"
-              alt="Hero Illustration"
+              alt="Professional web development services illustration showing websites and mobile apps"
+              loading="eager"
+              width="100%"
+              height="auto"
               sx={{
-                width: '100%',
-                height: '500px',
+                display: 'block',
+                maxWidth: '100%',
+                height: 'auto',
                 borderRadius: '20px',
                 transform: 'perspective(1000px) rotateY(-5deg)',
                 transition: 'transform 0.5s ease',

@@ -116,15 +116,18 @@ const CasesList = () => {
 
   return (
     <Box
-    py={12}
-    sx={{
-      background: isDark
-        ? 'background.default'
-        : 'background.default',
-      position: 'relative',
-      overflow: 'hidden',
-    }}
-  >
+      component="section"
+      id="case-studies-list"
+      aria-labelledby="success-stories-heading"
+      py={12}
+      sx={{
+        background: isDark
+          ? 'background.default'
+          : 'background.default',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
     {/* Background Pattern */}
     <Box
       sx={{
@@ -138,10 +141,13 @@ const CasesList = () => {
                     radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 40%)`,
         zIndex: 1,
       }}
+      aria-hidden="true"
     />
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="success-stories-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -157,6 +163,7 @@ const CasesList = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
@@ -165,7 +172,11 @@ const CasesList = () => {
         </Typography>
 
         {/* Industry filters */}
-        <Box sx={{ mb: 6, display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 1 }}>
+        <Box 
+          component="nav" 
+          aria-label="Filter case studies by industry"
+          sx={{ mb: 6, display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 1 }}
+        >
           {uniqueIndustries.map((industry) => (
             <Chip
               key={industry}
@@ -173,16 +184,20 @@ const CasesList = () => {
               onClick={() => setFilter(industry)}
               color={filter === industry ? 'primary' : 'default'}
               variant={filter === industry ? 'filled' : 'outlined'}
+              aria-pressed={filter === industry}
+              role="button"
+              tabIndex={0}
               sx={{ m: 0.5 }}
             />
           ))}
         </Box>
 
         {/* Case studies grid */}
-        <Grid container spacing={4}>
+        <Grid container spacing={4} role="list">
           {filteredCases.map((caseStudy) => (
-            <Grid item xs={12} sm={6} md={4} key={caseStudy.id}>
+            <Grid item xs={12} sm={6} md={4} key={caseStudy.id} role="listitem">
               <Card 
+                component="article"
                 sx={{ 
                   height: '100%', 
                   display: 'flex', 
@@ -198,13 +213,14 @@ const CasesList = () => {
                   component="img"
                   height="200"
                   image={caseStudy.featuredImage}
-                  alt={caseStudy.title}
+                  alt={`${caseStudy.title} case study featured image`}
+                  loading="lazy"
                 />
                 <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
+                  <Typography variant="h5" component="h3" gutterBottom fontWeight="bold">
                     {caseStudy.title}
                   </Typography>
-                  <Typography variant="body1" color="text.secondary" paragraph>
+                  <Typography variant="body1" component="p" color="text.secondary" paragraph>
                     {caseStudy.excerpt}
                   </Typography>
                   <Stack direction="row" spacing={1} sx={{ mt: 2, mb: 1, flexWrap: 'wrap', gap: 0.5 }}>
@@ -226,9 +242,10 @@ const CasesList = () => {
                       bgcolor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
                       borderRadius: 1
                     }}
+                    aria-label={`Results: ${caseStudy.metrics.improvement}% improvement with ${caseStudy.metrics.users.toLocaleString()} users over ${caseStudy.metrics.timeframe}`}
                   >
-                    <TrendingUpIcon color="success" sx={{ mr: 1 }} />
-                    <Typography variant="body2" fontWeight="medium">
+                    <TrendingUpIcon color="success" sx={{ mr: 1 }} aria-hidden="true" />
+                    <Typography variant="body2" component="p" fontWeight="medium">
                       {caseStudy.metrics.improvement}% improvement • {caseStudy.metrics.users.toLocaleString()} users • {caseStudy.metrics.timeframe}
                     </Typography>
                   </Box>
@@ -240,6 +257,7 @@ const CasesList = () => {
                     variant="contained" 
                     color="primary" 
                     endIcon={<LaunchIcon />}
+                    aria-label={`View full case study about ${caseStudy.title}`}
                     fullWidth
                   >
                     View Case Study

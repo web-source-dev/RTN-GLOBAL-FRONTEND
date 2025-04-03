@@ -4,21 +4,25 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 const achievements = [
-  'Over 10 years of web development excellence',
-  'Served 500+ satisfied clients worldwide',
-  'Award-winning web solutions',
-  'Industry-leading performance for clients',
+  'Over 10 years of professional web development experience',
+  'Served 500+ satisfied clients with custom web solutions',
+  'Award-winning website design and development',
+  'Industry-leading performance optimization for client websites',
 ];
 
 const About = () => {
   const theme = useTheme();
   return (
-    <Box py={12}
-    sx={{
-      position: 'relative',
-      overflow: 'hidden',
-      background: theme.palette.background.default,
-    }}
+    <Box 
+      component="section" 
+      id="about-section"
+      aria-label="About Our Web Development Company"
+      py={12}
+      sx={{
+        position: 'relative',
+        overflow: 'hidden',
+        background: theme.palette.background.default,
+      }}
     >
       <Box
         sx={{
@@ -58,11 +62,14 @@ const About = () => {
                 <Box
                   component="img"
                   src="/images/about/about.png"
-                  alt="Web Development Team"
+                  alt="Professional web development team working on custom web solutions"
+                  loading="lazy"
+                  width="100%"
+                  height="auto"
                   sx={{
+                    display: 'block',
                     width: '100%',
                     height: 'auto',
-                    display: 'block',
                     transform: 'scale(1.1)',
                     transition: 'transform 0.3s ease',
                     '&:hover': {
@@ -84,10 +91,10 @@ const About = () => {
                   maxWidth: 200,
                 }}
               >
-                <Typography variant="h4" color="primary" fontWeight="bold" gutterBottom>
+                <Typography variant="h4" component="p" color="primary" fontWeight="bold" gutterBottom>
                   95%
                 </Typography>
-                <Typography variant="body1" color="text.secondary">
+                <Typography variant="body1" component="p" color="text.secondary">
                   Client Satisfaction Rate
                 </Typography>
               </Paper>
@@ -95,7 +102,7 @@ const About = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography
-              component="span"
+              component="p"
               sx={{
                 color: 'primary.main',
                 fontWeight: 600,
@@ -105,10 +112,11 @@ const About = () => {
                 mb: 2,
               }}
             >
-              About Us
+              About Our Web Development Company
             </Typography>
             <Typography
               variant="h2"
+              component="h2"
               gutterBottom
               sx={{
                 fontWeight: 800,
@@ -119,21 +127,21 @@ const About = () => {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Your Partner in Web Development
+              Your Partner in Custom Web Development
             </Typography>
-            <Typography variant="h5" color="text.secondary" paragraph>
-              Transforming Businesses Through Custom Web Solutions
+            <Typography variant="body1" component="p" color="text.secondary" paragraph>
+              Transforming Businesses Through Professional Web Solutions
             </Typography>
-            <Typography paragraph color="text.secondary">
+            <Typography component="p" paragraph color="text.secondary">
               We are a team of web development experts passionate about helping businesses establish a powerful online presence. 
-              With years of experience and a user-centered approach, we deliver fast, scalable, and user-friendly digital experiences.
+              With years of experience in Wix development, MERN stack applications, and React Native mobile apps, we deliver fast, scalable, and user-friendly digital experiences tailored to your business needs.
             </Typography>
             
-            <Box my={4}>
+            <Box component="ul" my={4} sx={{ listStyle: 'none', p: 0 }}>
               {achievements.map((achievement, index) => (
-                <Box key={index} display="flex" alignItems="center" mb={2}>
-                  <CheckCircleIcon sx={{ color: 'primary.main', mr: 2 }} />
-                  <Typography>{achievement}</Typography>
+                <Box component="li" key={index} display="flex" alignItems="center" mb={2}>
+                  <CheckCircleIcon sx={{ color: 'primary.main', mr: 2 }} aria-hidden="true" />
+                  <Typography component="span">{achievement}</Typography>
                 </Box>
               ))}
             </Box>
@@ -142,6 +150,7 @@ const About = () => {
               <Button
                 variant="contained"
                 size="large"
+                aria-label="Get started with our web development services"
                 sx={{
                   borderRadius: '30px',
                   px: 4,
@@ -162,6 +171,7 @@ const About = () => {
                 variant="outlined"
                 size="large"
                 startIcon={<PlayArrowIcon />}
+                aria-label="Watch a demo of our web development process"
                 sx={{
                   borderRadius: '30px',
                   px: 4,

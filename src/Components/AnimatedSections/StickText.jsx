@@ -6,19 +6,19 @@ const sectionData = [
   {
     text: "Our Projects",
     images: [
-      { src: "/images/portfolio/project1.png", width: 500, height: 350, position: 'left' },
-      { src: "/images/portfolio/project2.jpg", width: 600, height: 400, position: 'right' },
-      { src: "/images/portfolio/project3.jpg", width: 600, height: 400, position: 'center' },
-      { src: "/images/portfolio/project4.png", width: 400, height: 500, position: 'right' }
+      { src: "/images/portfolio/project1.png", width: 100, height: 350, position: 'left', alt: "Project 1 - Modern dashboard interface" },
+      { src: "/images/portfolio/project2.jpg", width: 200, height: 400, position: 'right', alt: "Project 2 - E-commerce website design" },
+      { src: "/images/portfolio/project3.jpg", width: 150, height: 400, position: 'center', alt: "Project 3 - Mobile app interface" },
+      { src: "/images/portfolio/project4.png", width: 100, height: 500, position: 'right', alt: "Project 4 - Brand identity design" }
     ]
   },
   {
     text: "Our Projects",
     images: [
-      { src: "/images/portfolio/project5.jpg", width: 500, height: 500, position: 'left' },
-      { src: "/images/portfolio/project6.png", width: 300, height: 600, position: 'right' },
-      { src: "/images/portfolio/project1.png", width: 500, height: 500, position: 'left' },
-      { src: "/images/portfolio/project4.png", width: 400, height: 360, position: 'right' }
+      { src: "/images/portfolio/project5.jpg", width: 100, height: 100, position: 'left', alt: "Project 5 - Web application interface" },
+      { src: "/images/portfolio/project6.png", width: 200, height: 100, position: 'center', alt: "Project 6 - Mobile responsive design" },
+      { src: "/images/portfolio/project1.png", width: 100, height: 100, position: 'right', alt: "Project 1 - Modern dashboard interface" },
+      { src: "/images/portfolio/project4.png", width: 100, height: 100, position: 'left', alt: "Project 4 - Brand identity design" }
     ]
   }
 ];
@@ -81,8 +81,8 @@ const FloatingImage = styled('img')(({
 
   return {
     position: 'absolute',
-    width: `${width}px`,
-    height: `${height}px`,
+    width: `${width}vh`,
+    height: `${height}vh`,
     objectFit: 'cover',
     opacity: opacity,
     transform: `translate(${translateX}, ${translateY})`,
@@ -211,7 +211,12 @@ const StickTextSection = () => {
   };
 
   return (
-    <Container ref={containerRef}>
+    <Container 
+      ref={containerRef} 
+      component="section" 
+      id="projects-showcase" 
+      aria-label="Project Portfolio Showcase"
+    >
       <Box
         sx={{
           position: 'absolute',
@@ -224,20 +229,29 @@ const StickTextSection = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
-      <StickyContainer>
-        <StickText sx={{
-          opacity: currentSection === 0 ? 1 : 0,
-          transform: currentSection === 0 ? 'translateY(0)' : 'translateY(-50vh)',
-          transition: 'all 0.8s ease-in-out'
-        }}>
+      <StickyContainer aria-live="polite">
+        <StickText 
+          sx={{
+            opacity: currentSection === 0 ? 1 : 0,
+            transform: currentSection === 0 ? 'translateY(0)' : 'translateY(-50vh)',
+            transition: 'all 0.8s ease-in-out'
+          }}
+          variant="h2"
+          component="h2"
+        >
           {sectionData[0].text}
         </StickText>
-        <StickText sx={{
-          opacity: currentSection === 1 ? 1 : 0,
-          transform: currentSection === 1 ? 'translateY(0)' : 'translateY(50vh)',
-          transition: 'all 0.8s ease-in-out'
-        }}>
+        <StickText 
+          sx={{
+            opacity: currentSection === 1 ? 1 : 0,
+            transform: currentSection === 1 ? 'translateY(0)' : 'translateY(50vh)',
+            transition: 'all 0.8s ease-in-out'
+          }}
+          variant="h2"
+          component="h2"
+        >
           {sectionData[1].text}
         </StickText>
         
@@ -246,11 +260,13 @@ const StickTextSection = () => {
           <FloatingImage
             key={`image-${currentSection}-${index}`}
             src={image.src}
-            alt={`Project ${index + 1}`}
+            alt={image.alt}
             width={image.width}
             height={image.height}
             position={image.position}
             animationState={getImageAnimationState(index)}
+            loading="lazy"
+            aria-hidden={getImageAnimationState(index) !== 'active'}
           />
         ))}
       </StickyContainer>

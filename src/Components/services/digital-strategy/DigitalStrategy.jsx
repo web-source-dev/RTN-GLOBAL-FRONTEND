@@ -13,25 +13,32 @@ import StrategyIcon from '@mui/icons-material/Lightbulb';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TimelineIcon from '@mui/icons-material/Timeline';
+import { Helmet } from 'react-helmet-async';
 
 const features = [
   {
+    id: 'market-analysis',
     title: 'Market Analysis',
     description: 'In-depth analysis of your market position and competitive landscape',
     icon: AnalyticsIcon,
-    color: '#2196f3'
+    color: '#2196f3',
+    ariaLabel: 'Learn about our market analysis services'
   },
   {
+    id: 'growth-planning',
     title: 'Growth Planning',
     description: 'Strategic roadmap for sustainable digital growth and expansion',
     icon: TrendingUpIcon,
-    color: '#4caf50'
+    color: '#4caf50',
+    ariaLabel: 'Discover our growth planning strategies'
   },
   {
+    id: 'digital-transformation',
     title: 'Digital Transformation',
     description: 'Comprehensive digital transformation strategies for your business',
     icon: TimelineIcon,
-    color: '#ff9800'
+    color: '#ff9800',
+    ariaLabel: 'Learn about our digital transformation approach'
   }
 ];
 
@@ -47,11 +54,41 @@ const benefits = [
 const DigitalStrategy = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  
+  // Define structured data for Digital Strategy service
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Digital Strategy",
+    "provider": {
+      "@type": "Organization",
+      "name": "RTN Global"
+    },
+    "description": "Transform your business with data-driven digital strategies that deliver results. We provide market analysis, growth planning, and digital transformation services.",
+    "serviceType": "Business Consulting",
+    "offers": {
+      "@type": "Offer",
+      "price": "1000.00",
+      "priceCurrency": "USD",
+      "description": "Starting price for digital strategy consulting services"
+    }
+  };
 
   return (
-    <Box>
+    <Box component="main" id="digital-strategy-service">
+      <Helmet>
+        <title>Digital Strategy Services | RTN Global</title>
+        <meta name="description" content="Transform your business with data-driven digital strategies that deliver results. Our digital transformation and growth planning services help your business thrive." />
+        <script type="application/ld+json">
+          {JSON.stringify(serviceSchema)}
+        </script>
+      </Helmet>
+      
       {/* Hero Section */}
       <Box
+        component="section"
+        id="digital-strategy-hero"
+        aria-labelledby="digital-strategy-heading"
         sx={{
           pt: 15,
           pb: 8,
@@ -72,12 +109,15 @@ const DigitalStrategy = () => {
                         radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
             zIndex: 1
           }}
+          aria-hidden="true"
         />
         <Container sx={{ position: 'relative', zIndex: 2 }}>
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>
               <Typography
                 variant="h1"
+                component="h1"
+                id="digital-strategy-heading"
                 sx={{
                   fontWeight: 800,
                   mb: 3,
@@ -90,12 +130,14 @@ const DigitalStrategy = () => {
               >
                 Digital Strategy
               </Typography>
-              <Typography variant="h4" color="text.secondary" paragraph>
+              <Typography variant="h4" component="p" color="text.secondary" paragraph>
                 Transform your business with data-driven digital strategies that deliver results
               </Typography>
               <Button
                 variant="contained"
                 size="large"
+                href="#contact-us"
+                aria-label="Get started with digital strategy services"
                 sx={{
                   mt: 2,
                   borderRadius: 2,
@@ -121,6 +163,7 @@ const DigitalStrategy = () => {
                     color: theme.palette.primary.main,
                     opacity: 0.1,
                   }}
+                  aria-hidden="true"
                 />
               </Box>
             </Grid>
@@ -129,9 +172,16 @@ const DigitalStrategy = () => {
       </Box>
 
       {/* Features Section */}
-      <Container sx={{ py: 8 }}>
+      <Container 
+        component="section" 
+        id="digital-strategy-approach" 
+        aria-labelledby="approach-heading"
+        sx={{ py: 8 }}
+      >
         <Typography
           variant="h2"
+          component="h2"
+          id="approach-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -140,10 +190,23 @@ const DigitalStrategy = () => {
         >
           Our Approach
         </Typography>
-        <Grid container spacing={4}>
-          {features.map((feature, index) => (
-            <Grid item xs={12} md={4} key={index}>
+        <Grid 
+          container 
+          spacing={4}
+          role="list"
+          aria-label="Digital strategy approach features"
+        >
+          {features.map((feature) => (
+            <Grid 
+              item 
+              xs={12} 
+              md={4} 
+              key={feature.id}
+              role="listitem"
+            >
               <Card
+                component="article"
+                id={`feature-${feature.id}`}
                 sx={{
                   height: '100%',
                   transition: 'all 0.3s ease',
@@ -152,6 +215,7 @@ const DigitalStrategy = () => {
                     boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
                   },
                 }}
+                aria-labelledby={`feature-title-${feature.id}`}
               >
                 <CardContent sx={{ p: 4 }}>
                   <Box
@@ -166,13 +230,23 @@ const DigitalStrategy = () => {
                       color: feature.color,
                       mb: 2,
                     }}
+                    aria-hidden="true"
                   >
-                    <feature.icon fontSize="large" />
+                    <feature.icon fontSize="large" aria-hidden="true" />
                   </Box>
-                  <Typography variant="h5" gutterBottom fontWeight="bold">
+                  <Typography 
+                    variant="h5" 
+                    component="h3"
+                    id={`feature-title-${feature.id}`}
+                    gutterBottom 
+                    sx={{ fontWeight: 'bold' }}
+                  >
                     {feature.title}
                   </Typography>
-                  <Typography color="text.secondary">
+                  <Typography 
+                    color="text.secondary"
+                    component="p"
+                  >
                     {feature.description}
                   </Typography>
                 </CardContent>
@@ -184,6 +258,9 @@ const DigitalStrategy = () => {
 
       {/* Benefits Section */}
       <Box
+        component="section"
+        id="digital-strategy-benefits"
+        aria-labelledby="benefits-heading"
         sx={{
           py: 8,
           background: theme.palette.background.default,
@@ -203,10 +280,13 @@ const DigitalStrategy = () => {
                         radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
             zIndex: 1
           }}
+          aria-hidden="true"
         />
         <Container sx={{ position: 'relative', zIndex: 2 }}>
           <Typography
             variant="h2"
+            component="h2"
+            id="benefits-heading"
             textAlign="center"
             sx={{
               fontWeight: 800,
@@ -215,9 +295,20 @@ const DigitalStrategy = () => {
           >
             Benefits
           </Typography>
-          <Grid container spacing={3}>
+          <Grid 
+            container 
+            spacing={3}
+            role="list"
+            aria-label="Benefits of digital strategy services"
+          >
             {benefits.map((benefit, index) => (
-              <Grid item xs={12} md={6} key={index}>
+              <Grid 
+                item 
+                xs={12} 
+                md={6} 
+                key={`benefit-${index}`}
+                role="listitem"
+              >
                 <Box
                   sx={{
                     display: 'flex',
@@ -240,8 +331,9 @@ const DigitalStrategy = () => {
                       bgcolor: theme.palette.primary.main,
                       mr: 2,
                     }}
+                    aria-hidden="true"
                   />
-                  <Typography variant="h6">{benefit}</Typography>
+                  <Typography variant="h6" component="p">{benefit}</Typography>
                 </Box>
               </Grid>
             ))}
@@ -250,12 +342,24 @@ const DigitalStrategy = () => {
       </Box>
 
       {/* CTA Section */}
-      <Container sx={{ py: 8, textAlign: 'center' }}>
-        <Typography variant="h3" gutterBottom fontWeight="bold">
+      <Container 
+        component="section" 
+        id="contact-us" 
+        aria-labelledby="cta-heading"
+        sx={{ py: 8, textAlign: 'center' }}
+      >
+        <Typography 
+          variant="h3" 
+          component="h2"
+          id="cta-heading"
+          gutterBottom 
+          sx={{ fontWeight: 'bold' }}
+        >
           Ready to Transform Your Digital Presence?
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           sx={{ mb: 4, maxWidth: 800, mx: 'auto' }}
         >
@@ -264,6 +368,8 @@ const DigitalStrategy = () => {
         <Button
           variant="contained"
           size="large"
+          href="/contact"
+          aria-label="Schedule a digital strategy consultation"
           sx={{
             borderRadius: 2,
             textTransform: 'none',

@@ -66,6 +66,13 @@ const NotificationComponent = () => {
     setAnchorEl(null);
   };
 
+  const handleKeyPress = (event, callback) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      callback();
+    }
+  };
+
   const markAsRead = async (notificationId) => {
     try {
       await API.patch(`/api/user/notifications/${notificationId}/read`);
@@ -109,55 +116,55 @@ const NotificationComponent = () => {
     if (notification.metadata && notification.metadata.orderId) {
       // This is likely an order notification
       if (type === 'success') {
-        return <CheckCircleIcon color="success" />;
+        return <CheckCircleIcon color="success" aria-hidden="true" />;
       } else if (type === 'warning') {
-        return <WarningIcon color="warning" />;
+        return <WarningIcon color="warning" aria-hidden="true" />;
       } else if (type === 'error') {
-        return <ErrorIcon color="error" />;
+        return <ErrorIcon color="error" aria-hidden="true" />;
       }
       
       // Check for specific order notification scenarios based on title
       const title = notification.title.toLowerCase();
       if (title.includes('payment')) {
-        return <MoneyIcon color="success" />;
+        return <MoneyIcon color="success" aria-hidden="true" />;
       } else if (title.includes('review')) {
-        return <RateReviewIcon color="primary" />;
+        return <RateReviewIcon color="primary" aria-hidden="true" />;
       } else if (title.includes('revision')) {
-        return <BuildIcon color="warning" />;
+        return <BuildIcon color="warning" aria-hidden="true" />;
       } else if (title.includes('offer')) {
-        return <ShoppingCartIcon color="primary" />;
+        return <ShoppingCartIcon color="primary" aria-hidden="true" />;
       } else if (title.includes('status')) {
-        return <InfoIcon color="info" />;
+        return <InfoIcon color="info" aria-hidden="true" />;
       } else if (title.includes('tip')) {
-        return <MoneyIcon color="success" />;
+        return <MoneyIcon color="success" aria-hidden="true" />;
       } else if (title.includes('invoice') || title.includes('receipt')) {
-        return <ReceiptIcon color="primary" />;
+        return <ReceiptIcon color="primary" aria-hidden="true" />;
       }
       
       // Default icon for orders
-      return <ShoppingCartIcon color="primary" />;
+      return <ShoppingCartIcon color="primary" aria-hidden="true" />;
     }
     
     // Handle standard notification types
     switch (type) {
       case 'system':
-        return <InfoIcon color="info" />;
+        return <InfoIcon color="info" aria-hidden="true" />;
       case 'support':
-        return <SupportIcon color="warning" />;
+        return <SupportIcon color="warning" aria-hidden="true" />;
       case 'message':
-        return <EmailIcon color="primary" />;
+        return <EmailIcon color="primary" aria-hidden="true" />;
       case 'consultation':
-        return <EventNoteIcon color="success" />;
+        return <EventNoteIcon color="success" aria-hidden="true" />;
       case 'info':
-        return <InfoIcon color="info" />;
+        return <InfoIcon color="info" aria-hidden="true" />;
       case 'success':
-        return <CheckCircleIcon color="success" />;
+        return <CheckCircleIcon color="success" aria-hidden="true" />;
       case 'warning':
-        return <WarningIcon color="warning" />;
+        return <WarningIcon color="warning" aria-hidden="true" />;
       case 'error':
-        return <ErrorIcon color="error" />;
+        return <ErrorIcon color="error" aria-hidden="true" />;
       default:
-        return <InfoIcon />;
+        return <InfoIcon aria-hidden="true" />;
     }
   };
 
@@ -185,6 +192,10 @@ const NotificationComponent = () => {
         cursor: 'pointer'
       }}
       onClick={() => markAsRead(notification.id)}
+      onKeyDown={(e) => handleKeyPress(e, () => markAsRead(notification.id))}
+      tabIndex={0}
+      role="button"
+      aria-label={`${notification.read ? 'Read' : 'Unread'} notification: ${notification.title}`}
     >
       <ListItemIcon>
         {getNotificationIcon(notification)}
@@ -192,7 +203,7 @@ const NotificationComponent = () => {
       <ListItemText
         primary={
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography variant="subtitle2" component="div">
+            <Typography variant="subtitle2" component="div" id={`notification-title-${notification.id}`}>
               {notification.title}
             </Typography>
             {notification.priority && (
@@ -201,28 +212,48 @@ const NotificationComponent = () => {
                 size="small" 
                 color={getPriorityColor(notification.priority)}
                 sx={{ height: 20, fontSize: '0.7rem' }}
+                aria-label={`Priority: ${notification.priority}`}
               />
             )}
           </Box>
         }
         secondary={
           <React.Fragment>
-            <Typography variant="body2" color="text.secondary" component="div">
+            <Typography 
+              variant="body2" 
+              color="text.secondary" 
+              component="div"
+              id={`notification-message-${notification.id}`}
+            >
               {notification.message}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography 
+              variant="caption" 
+              color="text.secondary"
+              component="time"
+              dateTime={new Date(notification.createdAt).toISOString()}
+            >
               {format(new Date(notification.createdAt), 'MMM d, yyyy HH:mm')}
             </Typography>
           </React.Fragment>
         }
+        aria-labelledby={`notification-title-${notification.id}`}
+        aria-describedby={`notification-message-${notification.id}`}
       />
     </ListItem>
   );
 
   return (
-    <Box>
+    <Box component="div" role="region" aria-label="Notifications">
       <Tooltip title="Notifications">
-        <IconButton color="inherit" onClick={handleNotificationClick}>
+        <IconButton 
+          color="inherit" 
+          onClick={handleNotificationClick}
+          aria-label={`Notifications ${unreadCount > 0 ? `(${unreadCount} unread)` : '(no unread)'}`}
+          aria-haspopup="menu"
+          aria-expanded={Boolean(anchorEl)}
+          aria-controls={anchorEl ? "notifications-menu" : undefined}
+        >
           <Badge badgeContent={unreadCount} color="error">
             <NotificationsIcon />
           </Badge>
@@ -230,6 +261,7 @@ const NotificationComponent = () => {
       </Tooltip>
 
       <Menu
+        id="notifications-menu"
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={handleClose}
@@ -248,13 +280,21 @@ const NotificationComponent = () => {
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        aria-labelledby="notifications-title"
       >
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+        <Box 
+          sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}
+          component="div"
+        >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h6">Notifications</Typography>
+            <Typography variant="h6" id="notifications-title">Notifications</Typography>
             {unreadCount > 0 && (
               <Tooltip title="Mark all as read">
-                <IconButton size="small" onClick={markAllAsRead}>
+                <IconButton 
+                  size="small" 
+                  onClick={markAllAsRead}
+                  aria-label="Mark all notifications as read"
+                >
                   <DoneAllIcon />
                 </IconButton>
               </Tooltip>
@@ -263,22 +303,36 @@ const NotificationComponent = () => {
         </Box>
 
         {loading ? (
-          <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-            <CircularProgress size={20} />
+          <Box 
+            sx={{ p: 2, display: 'flex', justifyContent: 'center' }}
+            role="status"
+            aria-live="polite"
+          >
+            <CircularProgress size={20} aria-label="Loading notifications" />
           </Box>
         ) : error ? (
-          <Box sx={{ p: 2 }}>
+          <Box 
+            sx={{ p: 2 }}
+            role="alert"
+          >
             <Typography color="error">{error}</Typography>
           </Box>
         ) : notifications.length === 0 ? (
-          <Box sx={{ p: 2 }}>
+          <Box 
+            sx={{ p: 2 }}
+            aria-live="polite"
+          >
             <Typography color="text.secondary">No notifications</Typography>
           </Box>
         ) : (
-          <List sx={{ p: 0, maxHeight: 400, overflowY: 'auto' }}>
+          <List 
+            sx={{ p: 0, maxHeight: 400, overflowY: 'auto' }}
+            aria-label="Notification list"
+            role="list"
+          >
             {notifications.map((notification, index) => (
               <React.Fragment key={notification.id}>
-                {index > 0 && <Divider />}
+                {index > 0 && <Divider role="separator" />}
                 {renderNotificationContent(notification)}
               </React.Fragment>
             ))}

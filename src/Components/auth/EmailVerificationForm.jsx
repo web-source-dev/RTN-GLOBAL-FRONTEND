@@ -161,19 +161,21 @@ const EmailVerificationForm = () => {
 
   return (
     <Box
+      component="main"
       sx={{
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background:theme.palette.background.default,
+        background: theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden',
         py: { xs: 4, md: 0 },
       }}
+      aria-label="Email Verification Page"
     >
-               {/* Background Pattern with enhanced animation */}
-       <Box
+      {/* Background Pattern with enhanced animation */}
+      <Box
         sx={{
           position: 'absolute',
           top: 0,
@@ -185,6 +187,7 @@ const EmailVerificationForm = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
     
       
@@ -211,7 +214,8 @@ const EmailVerificationForm = () => {
               >
                 <img
                   src="/images/auth/email-verify.png"
-                  alt="Email Verification"
+                  alt="Email verification illustration"
+                  loading="lazy"
                   style={{ 
                     maxWidth: '90%', 
                     height: 'auto',
@@ -233,7 +237,7 @@ const EmailVerificationForm = () => {
                 backdropFilter: 'blur(10px)',
                 background: theme.palette.background.default,
                 border: '1px solid',
-                borderColor:theme.palette.background.default,
+                borderColor: theme.palette.background.default,
                 transform: 'translateZ(0)',
                 transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                 '&:hover': {
@@ -264,6 +268,7 @@ const EmailVerificationForm = () => {
                     mx: 'auto',
                     mb: 2,
                   }}
+                  aria-hidden="true"
                 >
                   <VerifiedIcon 
                     color="primary" 
@@ -280,7 +285,8 @@ const EmailVerificationForm = () => {
                 </Box>
                 
                 <Typography 
-                  variant="h4" 
+                  variant="h4"
+                  component="h1" 
                   fontWeight="bold" 
                   gutterBottom
                   sx={{
@@ -296,6 +302,8 @@ const EmailVerificationForm = () => {
                 </Typography>
                 
                 <Typography 
+                  variant="body1"
+                  component="p"
                   color="text.secondary"
                   sx={{
                     fontSize: '0.95rem',
@@ -308,19 +316,28 @@ const EmailVerificationForm = () => {
                 </Typography>
               </Box>
 
-              <form onSubmit={handleVerify}>
+              <Box 
+                component="form" 
+                onSubmit={handleVerify}
+                noValidate
+                aria-label="Email verification form"
+              >
                 <Grid container spacing={3}>
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
                       label="Email Address"
+                      id="email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={loading || !!location.state?.email || countdown > 0}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
-                            <EmailIcon color="action" />
+                            <EmailIcon color="action" aria-hidden="true" />
                           </InputAdornment>
                         ),
                         sx: {
@@ -344,6 +361,7 @@ const EmailVerificationForm = () => {
                           WebkitTextFillColor: 'transparent',
                         },
                       }}
+                      aria-describedby="email-helper"
                     />
                   </Grid>
                   
@@ -351,6 +369,11 @@ const EmailVerificationForm = () => {
                     <TextField
                       fullWidth
                       label="Verification Code (6 digits)"
+                      id="verification-code"
+                      name="verification-code"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
                       value={verificationCode}
                       onChange={(e) => setVerificationCode(e.target.value)}
                       error={!!error}
@@ -358,7 +381,7 @@ const EmailVerificationForm = () => {
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
-                            <LockIcon color="action" />
+                            <LockIcon color="action" aria-hidden="true" />
                           </InputAdornment>
                         ),
                         sx: {
@@ -382,6 +405,7 @@ const EmailVerificationForm = () => {
                           WebkitTextFillColor: 'transparent',
                         },
                       }}
+                      aria-describedby={error ? "verification-code-error" : undefined}
                     />
                   </Grid>
                   
@@ -391,6 +415,7 @@ const EmailVerificationForm = () => {
                       variant="contained"
                       fullWidth
                       disabled={loading}
+                      aria-label="Verify Email Address"
                       sx={{
                         borderRadius: 2,
                         textTransform: 'none',
@@ -416,7 +441,7 @@ const EmailVerificationForm = () => {
                       }}
                     >
                       {loading ? (
-                        <CircularProgress size={24} color="inherit" />
+                        <CircularProgress size={24} color="inherit" aria-hidden="true" />
                       ) : (
                         'Verify Email'
                       )}
@@ -434,10 +459,13 @@ const EmailVerificationForm = () => {
                             borderRadius: 2,
                             background: isDark ? 'rgba(0,0,0,0.2)' : 'rgba(0,0,0,0.05)',
                           }}
+                          role="timer"
+                          aria-label="Time remaining before resending code"
                         >
-                          <TimerIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} />
+                          <TimerIcon fontSize="small" sx={{ mr: 1, color: theme.palette.warning.main }} aria-hidden="true" />
                           <Typography 
                             variant="body2"
+                            component="span"
                             sx={{
                               fontFamily: 'monospace',
                               fontWeight: 600,
@@ -451,6 +479,7 @@ const EmailVerificationForm = () => {
                         <Button
                           onClick={handleResendCode}
                           disabled={loading}
+                          aria-label="Resend verification code"
                           sx={{
                             textTransform: 'none',
                             borderRadius: 2,
@@ -467,7 +496,7 @@ const EmailVerificationForm = () => {
                     </Box>
                   </Grid>
                 </Grid>
-              </form>
+              </Box>
             </Paper>
           </Grid>
         </Grid>

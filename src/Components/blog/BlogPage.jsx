@@ -19,6 +19,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { Visibility, ThumbUp, Comment } from '@mui/icons-material';
 import API from '../../BackendAPi/ApiProvider';
+import SEO from '../common/SEO';
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
@@ -63,6 +64,33 @@ const BlogPage = () => {
   const currentBlogs = blogs.slice(1).slice(indexOfFirstBlog, indexOfLastBlog);
   const pageCount = Math.ceil((blogs.length - 1) / blogsPerPage);
 
+  // Define structured data for the blog listing page
+  const blogListSchema = {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "headline": "Web Development & Digital Marketing Blog | RTN Global",
+    "description": "Stay updated with the latest web development trends, digital marketing strategies, and technology insights from RTN Global's expert team.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "RTN Global",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://rtnglobal.site/images/logo.png"
+      }
+    },
+    "blogPost": blogs.slice(0, 5).map(blog => ({
+      "@type": "BlogPosting",
+      "headline": blog.title,
+      "description": blog.description,
+      "datePublished": blog.createdAt,
+      "author": {
+        "@type": "Person",
+        "name": blog.author ? `${blog.author.firstName} ${blog.author.lastName}` : "RTN Global Team"
+      },
+      "url": `https://rtnglobal.site/blog/post/${blog._id}`
+    }))
+  };
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
@@ -73,6 +101,15 @@ const BlogPage = () => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
+      <SEO
+        title="Web Development & Digital Marketing Blog | Expert Insights"
+        description="Stay updated with the latest web development trends, digital marketing strategies, and technology insights from RTN Global's expert team."
+        keywords="web development blog, digital marketing blog, web design tips, SEO strategy, technology trends, MERN stack development, React Native tutorials, Wix customization, web optimization"
+        canonicalUrl="/blog"
+        ogType="blog"
+        ogImage="/images/og-blog.png"
+        schema={blogListSchema}
+      />
       {/* Featured Blog */}
       {blogs.length > 0 && (
         <Box mb={8}>

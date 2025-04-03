@@ -77,6 +77,7 @@ const ForgotPasswordForm = () => {
   return (
     <>
       <Box
+        component="main"
         sx={{
           minHeight: '100vh',
           display: 'flex',
@@ -87,24 +88,26 @@ const ForgotPasswordForm = () => {
           overflow: 'hidden',
           py: { xs: 4, md: 0 },
         }}
+        aria-label="Password Recovery Page"
       >
-              {/* Background Pattern with enhanced animation */}
-              <Box
-        sx={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          opacity: 0.2,
-          background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
-                      radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
-          zIndex: 1,
-        }}
-      />
+        {/* Background Pattern with enhanced animation */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            opacity: 0.2,
+            background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
+                        radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
+            zIndex: 1,
+          }}
+          aria-hidden="true"
+        />
         
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
-          <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center"justifyContent={'center'}>
+          <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center" justifyContent="center">
             {/* Left side - Enhanced Illustration with animations */}
             <Grid item xs={12} md={5} sx={{ display: { xs: 'none', md: 'block' } }}>
               <Box
@@ -131,7 +134,8 @@ const ForgotPasswordForm = () => {
                   
                   <img
                     src="/images/auth/forget.svg"
-                    alt="Forgot Password"
+                    alt="Forgot password illustration"
+                    loading="lazy" 
                     style={{ 
                       maxWidth: '100%', 
                       height: 'auto',
@@ -140,13 +144,13 @@ const ForgotPasswordForm = () => {
                     }}
                   />
                 </Box>
-
               </Box>
             </Grid>
 
             {/* Right side - Enhanced Form with animations */}
             <Grid item xs={12} md={6}>
               <Box
+                component="article"
                 sx={{
                   backgroundColor: theme.palette.background.paper,
                   borderRadius: 3,
@@ -169,6 +173,7 @@ const ForgotPasswordForm = () => {
               >
                 <Typography
                   variant="h4"
+                  component="h1"
                   textAlign="center"
                   sx={{
                     fontWeight: 700,
@@ -185,6 +190,8 @@ const ForgotPasswordForm = () => {
                 </Typography>
 
                 <Typography
+                  variant="body1"
+                  component="p"
                   color="text.secondary"
                   textAlign="center"
                   sx={{ 
@@ -198,21 +205,30 @@ const ForgotPasswordForm = () => {
                   Enter your email address and we'll send you instructions to reset your password.
                 </Typography>
 
-                <form onSubmit={handleSubmit}>
+                <Box 
+                  component="form" 
+                  onSubmit={handleSubmit}
+                  noValidate
+                  aria-label="Password recovery form"
+                >
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
                         label="Email"
                         type="email"
+                        id="email"
+                        name="email"
+                        autoComplete="email"
                         value={email}
                         onChange={handleChange}
                         error={!!error}
                         helperText={error}
+                        aria-describedby={error ? "email-error" : undefined}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              <EmailIcon color="action" />
+                              <EmailIcon color="action" aria-hidden="true" />
                             </InputAdornment>
                           ),
                           sx: {
@@ -245,6 +261,7 @@ const ForgotPasswordForm = () => {
                         variant="contained"
                         fullWidth
                         size="large"
+                        aria-label="Send password reset instructions"
                         sx={{
                           borderRadius: 2,
                           textTransform: 'none',
@@ -273,11 +290,12 @@ const ForgotPasswordForm = () => {
                       </Button>
 
                       <Box sx={{ mt: 2, textAlign: 'center' }}>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" component="p" color="text.secondary">
                           Remember your password?{' '}
                           <Link
                             component={RouterLink}
                             to="/auth/login"
+                            aria-label="Back to login page"
                             sx={{
                               color: theme.palette.primary.main,
                               fontWeight: 600,
@@ -307,7 +325,7 @@ const ForgotPasswordForm = () => {
                       </Box>
                     </Grid>
                   </Grid>
-                </form>
+                </Box>
               </Box>
             </Grid>
           </Grid>

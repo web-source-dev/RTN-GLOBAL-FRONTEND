@@ -13,6 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import SpeedIcon from '@mui/icons-material/Speed';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import SEO from '../../common/SEO';
 
 const features = [
   {
@@ -48,8 +49,45 @@ const SeoOptimization = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
 
+  // Define structured data for SEO service page
+  const seoServiceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "SEO Optimization Services",
+    "provider": {
+      "@type": "Organization",
+      "name": "RTN Global",
+      "url": "https://rtnglobal.site"
+    },
+    "description": "Boost your online visibility and drive organic traffic with our data-driven SEO strategies and optimization services.",
+    "serviceType": "Search Engine Optimization",
+    "offers": {
+      "@type": "Offer",
+      "price": "Starting from $499",
+      "priceCurrency": "USD"
+    },
+    "areaServed": {
+      "@type": "GeoCircle",
+      "geoMidpoint": {
+        "@type": "GeoCoordinates",
+        "latitude": "35.1068",
+        "longitude": "-106.6293"
+      },
+      "geoRadius": "Global"
+    }
+  };
+
   return (
     <Box>
+      <SEO
+        title="SEO Optimization Services | Boost Your Online Visibility"
+        description="Improve your search engine rankings and drive more organic traffic with our data-driven SEO optimization services. Keyword research, technical SEO, and content optimization."
+        keywords="SEO services, search engine optimization, keyword research, technical SEO, content optimization, local SEO, SEO audit, SEO strategy, organic traffic, search rankings"
+        canonicalUrl="/services/seo-optimization"
+        ogType="website"
+        ogImage="/images/og-seo-services.png"
+        schema={seoServiceSchema}
+      />
       {/* Hero Section */}
       <Box
         sx={{

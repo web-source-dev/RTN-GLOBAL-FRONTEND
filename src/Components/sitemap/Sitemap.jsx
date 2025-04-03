@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   Box, 
@@ -13,12 +13,18 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
-  Chip
+  Chip,
+  Tabs,
+  Tab,
+  Alert
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
 import MapIcon from '@mui/icons-material/Map';
 import PrintIcon from '@mui/icons-material/Print';
+import CodeIcon from '@mui/icons-material/Code';
+import DownloadIcon from '@mui/icons-material/Download';
+import SEO from '../common/SEO';
 
 const SitemapSection = ({ title, links, icon }) => {
   const theme = useTheme();
@@ -86,6 +92,9 @@ const Sitemap = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState(0);
+  const [xmlContent, setXmlContent] = useState('');
+  const [showXmlGeneratedAlert, setShowXmlGeneratedAlert] = useState(false);
 
   // Icons for categories
   const categoryIcons = {
@@ -178,6 +187,54 @@ const Sitemap = () => {
     },
   ];
 
+  // Generate XML sitemap
+  const generateXMLSitemap = () => {
+    const baseUrl = 'https://rtnglobal.site';
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    
+    // Add all pages from the sitemap data
+    const allLinks = [];
+    sitemapData.forEach(section => {
+      section.links.forEach(link => {
+        allLinks.push(link);
+      });
+    });
+    
+    // Remove duplicates
+    const uniqueLinks = allLinks.filter((link, index, self) => 
+      index === self.findIndex((l) => l.path === link.path)
+    );
+    
+    // Generate XML entries
+    uniqueLinks.forEach(link => {
+      xml += '  <url>\n';
+      xml += `    <loc>${baseUrl}${link.path}</loc>\n`;
+      xml += '    <changefreq>weekly</changefreq>\n';
+      xml += '    <priority>0.8</priority>\n';
+      xml += '  </url>\n';
+    });
+    
+    xml += '</urlset>';
+    setXmlContent(xml);
+    setShowXmlGeneratedAlert(true);
+    setTimeout(() => setShowXmlGeneratedAlert(false), 3000);
+    return xml;
+  };
+  
+  // Download XML sitemap
+  const downloadXMLSitemap = () => {
+    const xml = generateXMLSitemap();
+    const blob = new Blob([xml], { type: 'application/xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sitemap.xml';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   // Filter links based on search term
   const filteredSitemapData = sitemapData.map(section => ({
     ...section,
@@ -190,8 +247,35 @@ const Sitemap = () => {
     window.print();
   };
 
+  // Create structured data for sitemap page
+  const sitemapSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Sitemap | RTN Global",
+    "description": "Complete sitemap of RTN Global website with all pages and sections organized for easy navigation.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "RTN Global",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://rtnglobal.site/images/logo.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://rtnglobal.site/sitemap"
+    }
+  };
+
   return (
     <Box sx={{ py: 6, backgroundColor: 'background.default' }}>
+      <SEO
+        title="Sitemap | Website Structure & Navigation"
+        description="Complete sitemap of RTN Global website with all pages and sections organized for easy navigation. Find the content you're looking for quickly."
+        keywords="sitemap, website structure, site navigation, RTN Global pages, website map, site index"
+        canonicalUrl="/sitemap"
+        schema={sitemapSchema}
+      />
       <Container maxWidth="lg">
         {/* Breadcrumb Navigation */}
         <Breadcrumbs aria-label="breadcrumb" sx={{ mb: 3 }}>
@@ -209,60 +293,112 @@ const Sitemap = () => {
           <Typography variant="h2" gutterBottom component="div">
             Sitemap
           </Typography>
-          <Button 
-            variant="outlined" 
-            startIcon={<PrintIcon />} 
-            onClick={handlePrint}
-            sx={{ display: { xs: 'none', sm: 'flex' } }}
-          >
-            Print
-          </Button>
+          <Box>
+            <Button 
+              variant="outlined" 
+              startIcon={<PrintIcon />} 
+              onClick={handlePrint}
+              sx={{ display: { xs: 'none', sm: 'flex' }, mr: 2 }}
+            >
+              Print
+            </Button>
+            <Button 
+              variant="contained" 
+              color="primary"
+              startIcon={<DownloadIcon />} 
+              onClick={downloadXMLSitemap}
+              sx={{ display: { xs: 'none', sm: 'flex' } }}
+            >
+              XML Sitemap
+            </Button>
+          </Box>
         </Box>
         
         <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 4 }}>
           Find everything you need on our website
         </Typography>
 
-        {/* Search Box */}
-        <TextField
-          fullWidth
-          placeholder="Search pages..."
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ mb: 4 }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-        />
+        {showXmlGeneratedAlert && (
+          <Alert 
+            severity="success" 
+            sx={{ mb: 2 }}
+            onClose={() => setShowXmlGeneratedAlert(false)}
+          >
+            XML Sitemap generated successfully!
+          </Alert>
+        )}
 
-        <Grid container spacing={3}>
-          {filteredSitemapData.map((section, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <SitemapSection 
-                title={section.title} 
-                links={section.links} 
-                icon={categoryIcons[section.title]}
-              />
+        <Tabs 
+          value={activeTab} 
+          onChange={(e, newValue) => setActiveTab(newValue)} 
+          sx={{ mb: 3 }}
+          variant="fullWidth"
+        >
+          <Tab icon={<MapIcon />} label="HTML Sitemap" />
+          <Tab icon={<CodeIcon />} label="XML Sitemap" />
+        </Tabs>
+
+        {activeTab === 0 ? (
+          <>
+            {/* Search Box */}
+            <TextField
+              fullWidth
+              placeholder="Search pages..."
+              variant="outlined"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              sx={{ mb: 4 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+
+            <Grid container spacing={3}>
+              {filteredSitemapData.map((section, index) => (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <SitemapSection 
+                    title={section.title} 
+                    links={section.links} 
+                    icon={categoryIcons[section.title]}
+                  />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
-
-        {filteredSitemapData.length === 0 && (
-          <Box sx={{ textAlign: 'center', py: 5 }}>
-            <Typography variant="h6">No pages found matching "{searchTerm}"</Typography>
-            <Button 
-              variant="contained" 
-              color="primary" 
-              sx={{ mt: 2 }}
-              onClick={() => setSearchTerm('')}
-            >
-              Clear Search
-            </Button>
+          </>
+        ) : (
+          <Box sx={{ mt: 2 }}>
+            <Paper sx={{ p: 3, bgcolor: theme.palette.mode === 'dark' ? '#1e1e1e' : '#f5f5f5' }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                <Typography variant="h6">XML Sitemap Preview</Typography>
+                <Button 
+                  variant="contained" 
+                  size="small" 
+                  startIcon={<DownloadIcon />}
+                  onClick={downloadXMLSitemap}
+                >
+                  Download
+                </Button>
+              </Box>
+              <Box 
+                sx={{ 
+                  p: 2, 
+                  bgcolor: theme.palette.mode === 'dark' ? '#121212' : '#fff',
+                  border: '1px solid',
+                  borderColor: theme.palette.mode === 'dark' ? '#333' : '#ddd',
+                  borderRadius: 1,
+                  maxHeight: '500px',
+                  overflow: 'auto'
+                }}
+              >
+                <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                  {xmlContent || generateXMLSitemap()}
+                </pre>
+              </Box>
+            </Paper>
           </Box>
         )}
       </Container>

@@ -13,17 +13,18 @@ import {
   useTheme,
   alpha,
   Paper,
+  useMediaQuery
 } from '@mui/material';
 import LaunchIcon from '@mui/icons-material/Launch';
 import StarIcon from '@mui/icons-material/Star';
 
 const portfolioItems = [
   {
-    title: 'Premium Wix Website for Luxury Boutique',
-    description: 'Designed and developed a custom Wix website for a high-end fashion boutique, featuring e-commerce integration, appointment booking, and responsive design that increased online sales by 245%.',
+    title: 'Premium Wix Website for Luxury Fashion Boutique',
+    description: 'Designed and developed a custom Wix website for a high-end fashion boutique, featuring e-commerce integration, appointment booking system, and responsive design that increased online sales by 245% within three months.',
     image: '/images/portfolio/project1.png',
     category: 'Wix Website',
-    tags: ['Wix', 'E-commerce', 'Responsive Design'],
+    tags: ['Wix Website Development', 'E-commerce Website', 'Responsive Web Design'],
     stats: {
       performance: 'Outstanding',
       duration: '3 weeks',
@@ -32,11 +33,11 @@ const portfolioItems = [
     featured: true
   },
   {
-    title: 'MERN Stack Property Management Platform',
-    description: 'Built a comprehensive property management web application using MongoDB, Express, React, and Node.js, featuring real-time updates, user authentication, and advanced filtering capabilities.',
+    title: 'MERN Stack Property Management Web Application',
+    description: 'Built a comprehensive property management web application using MongoDB, Express.js, React, and Node.js, featuring real-time updates, secure user authentication, and advanced property filtering capabilities.',
     image: '/images/portfolio/project2.jpg',
     category: 'MERN Stack',
-    tags: ['MongoDB', 'Express', 'React', 'Node.js'],
+    tags: ['MongoDB Database', 'Express.js Backend', 'React Frontend', 'Node.js Server'],
     stats: {
       performance: 'Excellent',
       duration: '8 weeks',
@@ -45,11 +46,11 @@ const portfolioItems = [
     featured: true
   },
   {
-    title: 'React Native Fitness Tracking App',
-    description: 'Developed a cross-platform mobile application for fitness tracking using React Native, featuring workout plans, progress tracking, and social sharing capabilities for both iOS and Android users.',
+    title: 'React Native Fitness Tracking Mobile App',
+    description: 'Developed a cross-platform mobile application for fitness tracking using React Native, featuring personalized workout plans, progress tracking dashboard, and social sharing capabilities for both iOS and Android users.',
     image: '/images/portfolio/project3.jpg',
     category: 'React Native',
-    tags: ['Mobile App', 'iOS', 'Android', 'Cross-platform'],
+    tags: ['Mobile App Development', 'iOS Application', 'Android Application', 'Cross-platform Development'],
     stats: {
       performance: 'Top-tier',
       duration: '7 weeks',
@@ -58,11 +59,11 @@ const portfolioItems = [
     featured: false
   },
   {
-    title: 'MERN Stack E-Learning Platform',
-    description: 'Created a scalable online learning platform with MongoDB, Express, React and Node.js, featuring video courses, interactive quizzes, and a comprehensive admin dashboard for content management.',
+    title: 'MERN Stack E-Learning Platform Website',
+    description: 'Created a scalable online learning platform with MongoDB, Express.js, React and Node.js, featuring video course delivery, interactive quiz system, and a comprehensive admin dashboard for content management.',
     image: '/images/portfolio/project4.png',
     category: 'MERN Stack',
-    tags: ['Full Stack', 'Education', 'User Authentication'],
+    tags: ['Full Stack Web Development', 'Education Website', 'User Authentication System'],
     stats: {
       performance: 'Superior',
       duration: '10 weeks',
@@ -71,11 +72,11 @@ const portfolioItems = [
     featured: true
   },
   {
-    title: 'Wix Healthcare Provider Website',
-    description: 'Designed a HIPAA-compliant Wix website for a medical practice, featuring online appointment scheduling, patient portal integration, and optimized mobile experience that improved patient acquisition.',
+    title: 'Wix Healthcare Provider Professional Website',
+    description: 'Designed a HIPAA-compliant Wix website for a medical practice, featuring online appointment scheduling, secure patient portal integration, and optimized mobile experience that improved patient acquisition by 150%.',
     image: '/images/portfolio/project5.jpg',
     category: 'Wix Website',
-    tags: ['Healthcare', 'Appointment Booking', 'Responsive Design'],
+    tags: ['Healthcare Website', 'Appointment Booking System', 'Responsive Web Design'],
     stats: {
       performance: 'Excellent',
       duration: '2.5 weeks',
@@ -84,11 +85,11 @@ const portfolioItems = [
     featured: false
   },
   {
-    title: 'React Native Delivery Service App',
-    description: 'Built a high-performance food delivery mobile application using React Native with real-time order tracking, payment processing, and push notifications for both restaurant partners and customers.',
+    title: 'React Native Food Delivery Mobile Application',
+    description: 'Built a high-performance food delivery mobile application using React Native with real-time order tracking, secure payment processing integration, and push notifications for both restaurant partners and customers.',
     image: '/images/portfolio/project6.png',
     category: 'React Native',
-    tags: ['Mobile App', 'Geolocation', 'Payment Integration'],
+    tags: ['Mobile App Development', 'Geolocation Services', 'Payment Gateway Integration'],
     stats: {
       performance: 'Best-in-class',
       duration: '9 weeks',
@@ -104,9 +105,12 @@ const Portfolio = () => {
   const [activeCategory, setActiveCategory] = useState('All');
 
   const categories = ['All', ...new Set(portfolioItems.map(item => item.category))];
-
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <Box
+      component="section"
+      id="portfolio-section"
+      aria-label="Web Development Portfolio"
       py={12}
       sx={{
         background: theme.palette.background.default,
@@ -132,7 +136,7 @@ const Portfolio = () => {
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Box textAlign="center" mb={8}>
           <Typography
-            component="span"
+            component="p"
             sx={{
               color: 'primary.main',
               fontWeight: 600,
@@ -142,10 +146,11 @@ const Portfolio = () => {
               mb: 2,
             }}
           >
-            Our Portfolio
+            Our Web Development Portfolio
           </Typography>
           <Typography
             variant="h2"
+            component="h2"
             gutterBottom
             sx={{
               fontWeight: 800,
@@ -156,18 +161,21 @@ const Portfolio = () => {
               WebkitTextFillColor: 'transparent',
             }}
           >
-            Fast, Scalable & User-Friendly Solutions
+            Fast, Scalable & User-Friendly Web Solutions
           </Typography>
           <Typography
-            variant="h5"
+            variant="body1"
+            component="p"
             color="text.secondary"
             sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
           >
-            Explore our portfolio of custom web solutions including Wix websites, MERN stack applications, and React Native mobile apps
+            Explore our portfolio of custom web development solutions including Wix websites, MERN stack applications, and React Native mobile apps
           </Typography>
 
           {/* Category Filter */}
           <Box
+            component="nav"
+            aria-label="Portfolio categories"
             sx={{
               display: 'flex',
               justifyContent: 'center',
@@ -181,6 +189,9 @@ const Portfolio = () => {
                 key={category}
                 variant={activeCategory === category ? 'contained' : 'outlined'}
                 onClick={() => setActiveCategory(category)}
+                aria-pressed={activeCategory === category}
+                aria-controls="portfolio-grid"
+                aria-label={`Filter by ${category}`}
                 sx={{
                   borderRadius: '20px',
                   px: 3,
@@ -199,25 +210,27 @@ const Portfolio = () => {
           </Box>
         </Box>
 
-        <Grid container spacing={4}>
-          {portfolioItems
+        <Grid container spacing={4} component="ul" id="portfolio-grid" sx={{ listStyle: 'none', p: 0 }}>
+          {portfolioItems.slice(isMobile ? 3 : 0)
             .filter(item => activeCategory === 'All' || item.category === activeCategory)
             .map((item, index) => (
-              <Grid item xs={12} md={4} key={index}>
+              <Grid item xs={12} md={4} key={index} component="li">
                 <Paper
-                elevation={0}
-                sx={{
-                  p: 2,
-                  height: '100%',
-                  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
-                  },
-                  borderRadius: 2,
-                  position: 'relative',
-                  overflow: 'hidden',
-                }}
+                  component="article"
+                  aria-labelledby={`portfolio-item-title-${index}`}
+                  elevation={0}
+                  sx={{
+                    p: 2,
+                    height: '100%',
+                    transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'translateY(-8px)',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+                    },
+                    borderRadius: 2,
+                    position: 'relative',
+                    overflow: 'hidden',
+                  }}
                 >
                   {item.featured && (
                     <Box
@@ -236,7 +249,7 @@ const Portfolio = () => {
                         gap: 1,
                       }}
                     >
-                      <StarIcon fontSize="small" />
+                      <StarIcon fontSize="small" aria-hidden="true" />
                       <Typography variant="body2" fontWeight="bold">
                         Featured
                       </Typography>
@@ -247,7 +260,8 @@ const Portfolio = () => {
                     <CardMedia
                       component="img"
                       image={item.image}
-                      alt={item.title}
+                      alt={`${item.title} - ${item.category} project by RTN Global`}
+                      loading="lazy"
                       className="portfolio-image"
                       sx={{
                         position: 'absolute',
@@ -276,6 +290,7 @@ const Portfolio = () => {
                       }}
                     >
                       <IconButton
+                        aria-label={`View details of ${item.title}`}
                         sx={{
                           color: 'white',
                           bgcolor: 'rgba(255,255,255,0.2)',
@@ -291,41 +306,57 @@ const Portfolio = () => {
 
                   <CardContent>
                     <Typography
-                      variant="h5"
+                      variant="h3"
+                      component="h3"
+                      id={`portfolio-item-title-${index}`}
                       gutterBottom
                       sx={{
                         fontWeight: 600,
                         color: isDark ? 'white' : 'text.primary',
+                        fontSize: '1.5rem'
                       }}
                     >
                       {item.title}
                     </Typography>
 
                     <Typography
-  variant="body2"
-  sx={{
-    color: "text.secondary",
-    mb: 1,
-    lineHeight: 1.6,
-    display: "-webkit-box",
-    WebkitBoxOrient: "vertical",
-    WebkitLineClamp: 2, // Limits to 2 lines
-    overflow: "hidden",
-  }}
->
-  {item.description}
-</Typography>
-                    <Box sx={{ mb: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                      variant="body2"
+                      component="p"
+                      sx={{
+                        color: "text.secondary",
+                        mb: 1,
+                        lineHeight: 1.6,
+                        display: "-webkit-box",
+                        WebkitBoxOrient: "vertical",
+                        WebkitLineClamp: 2, // Limits to 2 lines
+                        overflow: "hidden",
+                      }}
+                    >
+                      {item.description}
+                    </Typography>
+                    <Box 
+                      component="ul" 
+                      aria-label="Project technologies"
+                      sx={{ 
+                        mb: 2, 
+                        display: 'flex', 
+                        gap: 1, 
+                        flexWrap: 'wrap',
+                        listStyle: 'none',
+                        p: 0
+                      }}
+                    >
                       {item.tags.map((tag, idx) => (
-                        <Chip
-                          key={idx}
-                          label={tag}
-                          size="small"
-                          sx={{
-                            bgcolor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-                            color: isDark ? 'rgba(255,255,255,0.8)' : 'text.primary',
-                          }}
-                        />
+                        <Box component="li" key={idx}>
+                          <Chip
+                            label={tag}
+                            size="small"
+                            sx={{
+                              bgcolor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+                              color: isDark ? 'rgba(255,255,255,0.8)' : 'text.primary',
+                            }}
+                          />
+                        </Box>
                       ))}
                     </Box>
 
@@ -339,14 +370,13 @@ const Portfolio = () => {
                         borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
                       }}
                     >
-                     
                       <Box>
-                        <Typography variant="body2" color="text.secondary">Duration</Typography>
-                        <Typography variant="h6" color="primary">{item.stats.duration}</Typography>
+                        <Typography variant="body2" component="p" color="text.secondary">Duration</Typography>
+                        <Typography variant="subtitle1" component="p" color="primary">{item.stats.duration}</Typography>
                       </Box>
                       <Box>
-                        <Typography variant="body2" color="text.secondary">Satisfaction</Typography>
-                        <Typography variant="h6" color="primary">{item.stats.satisfaction}</Typography>
+                        <Typography variant="body2" component="p" color="text.secondary">Satisfaction</Typography>
+                        <Typography variant="subtitle1" component="p" color="primary">{item.stats.satisfaction}</Typography>
                       </Box>
                     </Box>
                   </CardContent>

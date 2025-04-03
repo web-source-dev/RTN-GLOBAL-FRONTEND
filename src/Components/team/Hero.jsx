@@ -109,7 +109,14 @@ const Hero = () => {
   };
 
   return (
-    <HeroContainer bgcolor={bgColor} textcolor={textColor} ref={containerRef}>
+    <HeroContainer 
+      bgcolor={bgColor} 
+      textcolor={textColor} 
+      ref={containerRef}
+      component="section"
+      id="team-hero"
+      aria-labelledby="team-hero-heading"
+    >
       {/* Decorative background elements */}
       <FloatingShape 
         bg={theme.palette.primary.main}
@@ -123,6 +130,7 @@ const Hero = () => {
           x: useTransform(scrollYProgress, [0, 1], [0, -100]),
           y: useTransform(scrollYProgress, [0, 1], [0, 50])
         }}
+        aria-hidden="true"
       />
       <FloatingShape 
         bg={theme.palette.secondary.main}
@@ -136,6 +144,7 @@ const Hero = () => {
           x: useTransform(scrollYProgress, [0, 1], [0, 100]),
           y: useTransform(scrollYProgress, [0, 1], [0, -50])
         }}
+        aria-hidden="true"
       />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
@@ -168,6 +177,7 @@ const Hero = () => {
                 <Typography
                   component="h1"
                   variant="h2"
+                  id="team-hero-heading"
                   color="text.primary"
                   sx={{
                     fontWeight: 800,
@@ -188,6 +198,7 @@ const Hero = () => {
               <motion.div variants={itemVariants}>
                 <Typography
                   variant="h5"
+                  component="p"
                   color="text.secondary"
                   sx={{ 
                     mb: 5, 
@@ -209,7 +220,9 @@ const Hero = () => {
                 <Button
                   variant="contained"
                   size="large"
-                  startIcon={<GroupsIcon />}
+                  startIcon={<GroupsIcon aria-hidden="true" />}
+                  aria-label="Explore career opportunities at RTN Global"
+                  href="/careers"
                   sx={{ 
                     borderRadius: 3,
                     padding: { xs: '12px 24px', md: '16px 32px' },
@@ -245,7 +258,8 @@ const Hero = () => {
             >
               <AnimatedImage
                 src="/images/Team/tayyab.png"
-                alt="Team Hero"
+                alt="RTN Global team member showcasing our collaborative company culture"
+                loading="lazy"
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ 
                   opacity: 1, 

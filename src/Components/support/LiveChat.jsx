@@ -166,6 +166,10 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
   return (
     <Paper 
       elevation={3} 
+      component="section"
+      aria-labelledby="chat-header-title"
+      role="region"
+      aria-label="Live chat support interface"
       sx={{ 
         height: isAdmin ? '85vh' : '85vh',
         width : isAdmin ? '100%' : '50vw',
@@ -182,6 +186,8 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
     >
       {/* Chat Header */}
       <Box
+        component="header"
+        role="banner"
         sx={{
           p: 2,
           bgcolor: 'primary.main',
@@ -203,29 +209,47 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
               width: 40,
               height: 40,
             }}
+            aria-hidden="true"
           >
             {isAdmin ? 'A' : 'S'}
           </Avatar>
         </Badge>
         <Box sx={{ flexGrow: 1 }}>
-          <Typography variant="h6">
+          <Typography 
+            variant="h6" 
+            component="h2" 
+            id="chat-header-title"
+          >
             {isAdmin ? 'Customer Support' : 'Live Chat Support'}
           </Typography>
-          <Typography variant="caption">
+          <Typography 
+            variant="caption" 
+            component="p"
+            aria-live="polite"
+          >
             {sessionStatus === 'initialized' ? 'Start chatting...' :
              sessionStatus === 'waiting' ? 'Waiting for agent...' :
              sessionStatus === 'active' ? 'Chat active' : 'Chat ended'}
           </Typography>
         </Box>
         {onClose && (
-          <IconButton color="inherit" onClick={onClose} size="small">
-            <CloseIcon />
+          <IconButton 
+            color="inherit" 
+            onClick={onClose} 
+            size="small" 
+            aria-label="Close chat window"
+          >
+            <CloseIcon aria-hidden="true" />
           </IconButton>
         )}
       </Box>
 
       {/* Messages Area */}
       <Box
+        component="div"
+        role="log"
+        aria-label="Chat messages"
+        aria-live="polite"
         sx={{
           flexGrow: 1,
           overflow: 'auto',
@@ -239,6 +263,8 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
         {messages.map((message, index) => (
           <Box
             key={index}
+            role="article"
+            aria-label={`Message from ${message.sender?.firstName || 'Unknown'}`}
             sx={{
               display: 'flex',
               flexDirection: message.sender?._id === user?.id ? 'row-reverse' : 'row',
@@ -249,6 +275,7 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
           >
             <Avatar
               src={message.sender?.avatar}
+              alt={message.sender?.firstName || 'User avatar'}
               sx={{
                 width: 32,
                 height: 32,
@@ -286,9 +313,10 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
                     <Button
                       size="small"
                       variant="outlined"
-                      startIcon={<AttachFileIcon />}
+                      startIcon={<AttachFileIcon aria-hidden="true" />}
                       href={`${process.env.REACT_APP_API_URL}/${message.attachment.path}`}
                       target="_blank"
+                      aria-label={`Download attachment: ${message.attachment.filename}`}
                       sx={{
                         color: message.sender?._id === user?.id ? 'inherit' : 'primary',
                         borderColor: 'currentColor',
@@ -317,7 +345,9 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
                   />
                 )}
                 <Typography variant="caption" color="text.secondary">
-                  {new Date(message.timestamp).toLocaleTimeString()}
+                  <time dateTime={new Date(message.timestamp).toISOString()}>
+                    {new Date(message.timestamp).toLocaleTimeString()}
+                  </time>
                 </Typography>
               </Stack>
             </Box>
@@ -327,13 +357,26 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
       </Box>
 
       {/* Input Area */}
-      <Box sx={{ p: 2, bgcolor: 'background.paper' }}>
+      <Box 
+        component="footer" 
+        sx={{ p: 2, bgcolor: 'background.paper' }}
+      >
         {error && (
-          <Typography color="error" variant="caption" display="block" sx={{ mb: 1 }}>
+          <Typography 
+            color="error" 
+            variant="caption" 
+            display="block" 
+            role="alert"
+            sx={{ mb: 1 }}
+          >
             {error}
           </Typography>
         )}
-        <Box component="form" onSubmit={handleSendMessage}>
+        <Box 
+          component="form" 
+          onSubmit={handleSendMessage}
+          aria-label="Chat message form"
+        >
           <Stack direction="row" spacing={1}>
             <input
               type="file"
@@ -341,14 +384,18 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
               style={{ display: 'none' }}
               onChange={handleFileSelect}
               accept="image/*,.pdf,.doc,.docx"
+              aria-label="Attach file"
+              id="chat-file-upload"
             />
             <Tooltip title="Attach file">
               <IconButton
                 color="primary"
                 onClick={() => fileInputRef.current.click()}
                 disabled={loading || sessionStatus === 'closed'}
+                aria-label="Attach file (maximum 5MB)"
+                aria-controls="chat-file-upload"
               >
-                <AttachFileIcon />
+                <AttachFileIcon aria-hidden="true" />
               </IconButton>
             </Tooltip>
             <TextField
@@ -363,6 +410,7 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               disabled={loading || sessionStatus === 'closed'}
+              aria-label="Message text"
               InputProps={{
                 sx: { borderRadius: 3 }
               }}
@@ -371,6 +419,7 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
               type="submit"
               variant="contained"
               disabled={loading || (!newMessage.trim() && !file) || sessionStatus === 'closed'}
+              aria-label="Send message"
               sx={{ 
                 borderRadius: 3,
                 minWidth: 100,
@@ -378,11 +427,11 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
               }}
             >
               {loading ? (
-                <CircularProgress size={24} color="inherit" />
+                <CircularProgress size={24} color="inherit" aria-label="Sending message..." />
               ) : (
                 <>
                   Send
-                  <SendIcon sx={{ ml: 1 }} />
+                  <SendIcon sx={{ ml: 1 }} aria-hidden="true" />
                 </>
               )}
             </Button>
@@ -394,6 +443,7 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
               deleteIcon={<CloseIcon />}
               variant="outlined"
               size="small"
+              aria-label={`Selected file: ${file.name}`}
               sx={{ mt: 1 }}
             />
           )}
@@ -410,6 +460,8 @@ const LiveChat = ({ sessionId: propSessionId, isAdmin, onClose }) => {
             borderTop: 1,
             borderColor: 'divider',
           }}
+          role="status"
+          aria-live="polite"
         >
           <Typography variant="body2">
             Start chatting by sending your first message

@@ -14,6 +14,9 @@ const Hero = () => {
 
   return (
     <Box
+      component="section"
+      id="digital-tools-hero"
+      aria-labelledby="hero-heading"
       sx={{
         backgroundColor: theme.palette.background.default,
         position: 'relative',
@@ -21,7 +24,7 @@ const Hero = () => {
         pt: 12,
         pb: 8,
       }}
-        >
+    >
       <Box
         sx={{
           position: 'absolute',
@@ -34,6 +37,7 @@ const Hero = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
         <Grid container spacing={4} alignItems="center">
@@ -41,6 +45,7 @@ const Hero = () => {
             <Typography
               component="h1"
               variant="h2"
+              id="hero-heading"
               color="text.primary"
               sx={{
                 fontWeight: 700,
@@ -51,6 +56,7 @@ const Hero = () => {
             </Typography>
             <Typography
               variant="h5"
+              component="p"
               color="text.secondary"
               sx={{ mb: 4, maxWidth: '600px' }}
             >
@@ -63,6 +69,8 @@ const Hero = () => {
                 size="large"
                 startIcon={<CodeIcon />}
                 sx={{ borderRadius: 2 }}
+                aria-label="Explore our digital services"
+                href="#digital-tools-services"
               >
                 Explore Services
               </Button>
@@ -72,7 +80,8 @@ const Hero = () => {
             <Box
               component="img"
               src="/images/hero-illustration.png"
-              alt="Web Development Services"
+              alt="Web development services illustration showcasing custom digital solutions"
+              loading="lazy"
               sx={{
                 width: '100%',
                 height: 'auto',

@@ -13,25 +13,32 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import GroupIcon from '@mui/icons-material/Group';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import { Helmet } from 'react-helmet-async';
 
 const features = [
   {
+    id: 'content-strategy',
     title: 'Content Strategy',
     description: 'Develop a comprehensive content strategy aligned with your business goals',
     icon: DescriptionIcon,
-    color: '#2196f3'
+    color: '#2196f3',
+    ariaLabel: 'Learn about our content strategy services'
   },
   {
+    id: 'content-creation',
     title: 'Content Creation',
     description: 'Professional content creation that engages and converts your audience',
     icon: GroupIcon,
-    color: '#4caf50'
+    color: '#4caf50',
+    ariaLabel: 'Discover our content creation services'
   },
   {
+    id: 'content-distribution',
     title: 'Content Distribution',
     description: 'Strategic content distribution across multiple channels',
     icon: TrendingUpIcon,
-    color: '#ff9800'
+    color: '#ff9800',
+    ariaLabel: 'Learn about our content distribution strategies'
   }
 ];
 
@@ -47,11 +54,41 @@ const benefits = [
 const ContentMarketing = () => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
+  
+  // Define structured data for Content Marketing service
+  const serviceSchema = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "Content Marketing",
+    "provider": {
+      "@type": "Organization",
+      "name": "RTN Global"
+    },
+    "description": "Create compelling content that drives engagement and delivers measurable results. We provide content strategy, creation, and distribution services.",
+    "serviceType": "Digital Marketing",
+    "offers": {
+      "@type": "Offer",
+      "price": "750.00",
+      "priceCurrency": "USD",
+      "description": "Starting price for content marketing services"
+    }
+  };
 
   return (
-    <Box>
+    <Box component="main" id="content-marketing-service">
+      <Helmet>
+        <title>Content Marketing Services | RTN Global</title>
+        <meta name="description" content="Create compelling content that drives engagement and delivers measurable results. Discover our content strategy, creation, and distribution services." />
+        <script type="application/ld+json">
+          {JSON.stringify(serviceSchema)}
+        </script>
+      </Helmet>
+      
       {/* Hero Section */}
       <Box
+        component="section"
+        id="content-marketing-hero"
+        aria-labelledby="content-marketing-heading"
         sx={{
           pt: 15,
           pb: 8,
@@ -72,12 +109,15 @@ const ContentMarketing = () => {
                         radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
             zIndex: 1
           }}
+          aria-hidden="true"
         />
         <Container sx={{ position: 'relative', zIndex: 2 }}>
           <Grid container spacing={4} alignItems="center">
             <Grid item xs={12} md={6}>
               <Typography
                 variant="h1"
+                component="h1"
+                id="content-marketing-heading"
                 sx={{
                   fontWeight: 800,
                   mb: 3,
@@ -90,12 +130,14 @@ const ContentMarketing = () => {
               >
                 Content Marketing
               </Typography>
-              <Typography variant="h4" color="text.secondary" paragraph>
+              <Typography variant="h4" component="p" color="text.secondary" paragraph>
                 Create compelling content that drives engagement and delivers measurable results
               </Typography>
               <Button
                 variant="contained"
                 size="large"
+                href="#contact-us"
+                aria-label="Get started with content marketing services"
                 sx={{
                   mt: 2,
                   borderRadius: 2,
@@ -121,6 +163,7 @@ const ContentMarketing = () => {
                     color: theme.palette.primary.main,
                     opacity: 0.1,
                   }}
+                  aria-hidden="true"
                 />
               </Box>
             </Grid>
@@ -129,9 +172,16 @@ const ContentMarketing = () => {
       </Box>
 
       {/* Features Section */}
-      <Container sx={{ py: 8 }}>
+      <Container 
+        component="section" 
+        id="content-services" 
+        aria-labelledby="services-heading"
+        sx={{ py: 8 }}
+      >
         <Typography
           variant="h2"
+          component="h2"
+          id="services-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -140,10 +190,23 @@ const ContentMarketing = () => {
         >
           Our Content Services
         </Typography>
-        <Grid container spacing={4}>
-          {features.map((feature, index) => (
-            <Grid item xs={12} md={4} key={index}>
+        <Grid 
+          container 
+          spacing={4}
+          role="list"
+          aria-label="Content marketing services"
+        >
+          {features.map((feature) => (
+            <Grid 
+              item 
+              xs={12} 
+              md={4} 
+              key={feature.id}
+              role="listitem"
+            >
               <Card
+                component="article"
+                id={`feature-${feature.id}`}
                 sx={{
                   height: '100%',
                   transition: 'all 0.3s ease',
@@ -152,6 +215,7 @@ const ContentMarketing = () => {
                     boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
                   },
                 }}
+                aria-labelledby={`feature-title-${feature.id}`}
               >
                 <CardContent sx={{ p: 4 }}>
                   <Box
@@ -166,13 +230,23 @@ const ContentMarketing = () => {
                       color: feature.color,
                       mb: 2,
                     }}
+                    aria-hidden="true"
                   >
-                    <feature.icon fontSize="large" />
+                    <feature.icon fontSize="large" aria-hidden="true" />
                   </Box>
-                  <Typography variant="h5" gutterBottom fontWeight="bold">
+                  <Typography 
+                    variant="h5" 
+                    component="h3"
+                    id={`feature-title-${feature.id}`} 
+                    gutterBottom 
+                    sx={{ fontWeight: 'bold' }}
+                  >
                     {feature.title}
                   </Typography>
-                  <Typography color="text.secondary">
+                  <Typography 
+                    color="text.secondary"
+                    component="p"
+                  >
                     {feature.description}
                   </Typography>
                 </CardContent>
@@ -184,6 +258,9 @@ const ContentMarketing = () => {
 
       {/* Benefits Section */}
       <Box
+        component="section"
+        id="content-benefits"
+        aria-labelledby="benefits-heading"
         sx={{
           py: 8,
           background: theme.palette.background.default,
@@ -202,11 +279,14 @@ const ContentMarketing = () => {
             background: `radial-gradient(circle at 20% 20%, ${theme.palette.primary.main} 0%, transparent 10%),
                         radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
             zIndex: 1
-          }}  
+          }}
+          aria-hidden="true"
         />
         <Container sx={{ position: 'relative', zIndex: 2 }}>
           <Typography
             variant="h2"
+            component="h2"
+            id="benefits-heading"
             textAlign="center"
             sx={{
               fontWeight: 800,
@@ -215,9 +295,20 @@ const ContentMarketing = () => {
           >
             Benefits of Content Marketing
           </Typography>
-          <Grid container spacing={3}>
+          <Grid 
+            container 
+            spacing={3}
+            role="list"
+            aria-label="Benefits of content marketing"
+          >
             {benefits.map((benefit, index) => (
-              <Grid item xs={12} md={6} key={index}>
+              <Grid 
+                item 
+                xs={12} 
+                md={6} 
+                key={`benefit-${index}`}
+                role="listitem"
+              >
                 <Box
                   sx={{
                     display: 'flex',
@@ -240,8 +331,9 @@ const ContentMarketing = () => {
                       bgcolor: theme.palette.primary.main,
                       mr: 2,
                     }}
+                    aria-hidden="true"
                   />
-                  <Typography variant="h6">{benefit}</Typography>
+                  <Typography variant="h6" component="p">{benefit}</Typography>
                 </Box>
               </Grid>
             ))}
@@ -250,12 +342,24 @@ const ContentMarketing = () => {
       </Box>
 
       {/* CTA Section */}
-      <Container sx={{ py: 8, textAlign: 'center' }}>
-        <Typography variant="h3" gutterBottom fontWeight="bold">
+      <Container 
+        component="section" 
+        id="contact-us" 
+        aria-labelledby="cta-heading"
+        sx={{ py: 8, textAlign: 'center' }}
+      >
+        <Typography 
+          variant="h3" 
+          component="h2"
+          id="cta-heading" 
+          gutterBottom 
+          sx={{ fontWeight: 'bold' }}
+        >
           Ready to Create Engaging Content?
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           sx={{ mb: 4, maxWidth: 800, mx: 'auto' }}
         >
@@ -264,6 +368,8 @@ const ContentMarketing = () => {
         <Button
           variant="contained"
           size="large"
+          href="/contact"
+          aria-label="Start your content marketing journey"
           sx={{
             borderRadius: 2,
             textTransform: 'none',

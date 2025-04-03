@@ -22,42 +22,48 @@ const categories = [
     description: 'Learn the basics and get up and running quickly',
     icon: HelpIcon,
     color: '#2196f3',
-    count: 12
+    count: 12,
+    id: 'getting-started'
   },
   {
     title: 'Technical Support',
     description: 'Technical issues and troubleshooting guides',
     icon: BuildIcon,
     color: '#4caf50',
-    count: 15
+    count: 15,
+    id: 'technical-support'
   },
   {
     title: 'Security & Privacy',
     description: 'Information about data protection and privacy',
     icon: SecurityIcon,
     color: '#ff9800',
-    count: 8
+    count: 8,
+    id: 'security-privacy'
   },
   {
     title: 'Billing & Payments',
     description: 'Questions about pricing, billing and subscriptions',
     icon: PaymentIcon,
     color: '#e91e63',
-    count: 10
+    count: 10,
+    id: 'billing-payments'
   },
   {
     title: 'Integrations',
     description: 'Connect and use with other platforms and tools',
     icon: IntegrationInstructionsIcon,
     color: '#9c27b0',
-    count: 9
+    count: 9,
+    id: 'integrations'
   },
   {
     title: 'Account Support',
     description: 'Managing your account and user settings',
     icon: SupportIcon,
     color: '#00bcd4',
-    count: 11
+    count: 11,
+    id: 'account-support'
   }
 ];
 
@@ -67,6 +73,9 @@ const FaqCategories = () => {
 
   return (
     <Box
+      component="section"
+      id="faq-categories"
+      aria-labelledby="faq-categories-heading"
       py={8}
       sx={{
         background: theme.palette.background.default,
@@ -87,10 +96,13 @@ const FaqCategories = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="faq-categories-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -106,6 +118,7 @@ const FaqCategories = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
@@ -113,10 +126,12 @@ const FaqCategories = () => {
           Browse through our comprehensive FAQ sections to find the answers you need
         </Typography>
 
-        <Grid container spacing={4}>
+        <Grid container spacing={4} role="list">
           {categories.map((category, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid item xs={12} sm={6} md={4} key={index} role="listitem">
               <Card
+                component="article"
+                id={category.id}
                 sx={{
                   height: '100%',
                   transition: 'all 0.3s ease',
@@ -141,10 +156,12 @@ const FaqCategories = () => {
                     background: `radial-gradient(circle at top right, ${category.color}15, transparent 70%)`,
                     borderRadius: '0 0 0 100%',
                   }}
+                  aria-hidden="true"
                 />
-                <CardContent sx={{ p: 4 }}>
+                <CardContent sx={{ p: 4, position: 'relative', zIndex: 1 }}>
                   <IconButton
                     className="category-icon"
+                    aria-hidden="true"
                     sx={{
                       mb: 2,
                       bgcolor: `${category.color}15`,
@@ -156,13 +173,23 @@ const FaqCategories = () => {
                   >
                     <category.icon fontSize="large" />
                   </IconButton>
-                  <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+                  <Typography 
+                    variant="h5" 
+                    component="h3"
+                    gutterBottom 
+                    sx={{ fontWeight: 600 }}
+                  >
                     {category.title}
                   </Typography>
-                  <Typography color="text.secondary" paragraph>
+                  <Typography 
+                    component="p"
+                    color="text.secondary" 
+                    paragraph
+                  >
                     {category.description}
                   </Typography>
                   <Box
+                    component="span"
                     sx={{
                       display: 'inline-block',
                       px: 2,

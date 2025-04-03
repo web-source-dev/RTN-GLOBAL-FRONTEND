@@ -14,6 +14,9 @@ const Hero = () => {
 
   return (
     <Box
+      component="section"
+      id="faq-hero"
+      aria-labelledby="faq-hero-heading"
       sx={{
         backgroundColor: theme.palette.background.default,
         position: 'relative',
@@ -35,6 +38,7 @@ const Hero = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
 
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
@@ -43,6 +47,7 @@ const Hero = () => {
             <Typography
               component="h1"
               variant="h2"
+              id="faq-hero-heading"
               color="text.primary"
               sx={{
                 fontWeight: 700,
@@ -53,6 +58,7 @@ const Hero = () => {
             </Typography>
             <Typography
               variant="h5"
+              component="p"
               color="text.secondary"
               sx={{ mb: 4, maxWidth: '600px' }}
             >
@@ -64,6 +70,8 @@ const Hero = () => {
                 variant="contained"
                 size="large"
                 startIcon={<HelpOutlineIcon />}
+                href="#faq-categories"
+                aria-label="Browse our frequently asked questions"
                 sx={{ borderRadius: 2 }}
               >
                 Browse FAQs
@@ -74,7 +82,8 @@ const Hero = () => {
             <Box
               component="img"
               src="/images/faq/faq (2).png"
-              alt="FAQ Hero"
+              alt="Support team member answering customer questions and providing assistance"
+              loading="lazy"
               sx={{
                 width: '100%',
                 height: 'auto',

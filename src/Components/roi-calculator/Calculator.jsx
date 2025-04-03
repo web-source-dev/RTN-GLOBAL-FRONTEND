@@ -10,6 +10,10 @@ import {
   Button,
   Slider,
   useTheme,
+  InputAdornment,
+  FormControl,
+  FormLabel,
+  FormHelperText,
 } from '@mui/material';
 import CalculateIcon from '@mui/icons-material/Calculate';
 
@@ -58,6 +62,9 @@ const Calculator = () => {
 
   return (
     <Box
+      component="section"
+      id="roi-calculator-form"
+      aria-labelledby="calculator-heading"
       py={12}
       sx={{
         background: theme.palette.background.default,
@@ -78,11 +85,14 @@ const Calculator = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1
         }}
+        aria-hidden="true"
       />
 
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="calculator-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -98,6 +108,7 @@ const Calculator = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
@@ -116,68 +127,114 @@ const Calculator = () => {
                 backdropFilter: 'blur(20px)',
                 borderRadius: 2
               }}
+              component="form"
+              role="form"
+              aria-label="ROI Calculator Input Form"
             >
               <CardContent sx={{ p: 4 }}>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+                <Typography 
+                  variant="h5" 
+                  component="h3" 
+                  gutterBottom 
+                  sx={{ fontWeight: 600 }}
+                  id="input-details-heading"
+                >
                   Input Your Details
                 </Typography>
 
                 <Box sx={{ mt: 3 }}>
-                  <Typography gutterBottom>Monthly Marketing Budget ($)</Typography>
-                  <Slider
-                    value={formData.monthlyBudget}
-                    onChange={handleSliderChange('monthlyBudget')}
-                    min={1000}
-                    max={50000}
-                    step={1000}
-                    valueLabelDisplay="auto"
-                    valueLabelFormat={(value) => `$${value.toLocaleString()}`}
-                  />
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="monthlyBudget"
-                    value={formData.monthlyBudget}
-                    onChange={handleChange}
-                    sx={{ mt: 2 }}
-                  />
+                  <FormControl fullWidth sx={{ mb: 3 }}>
+                    <FormLabel htmlFor="monthlyBudget-slider" id="monthlyBudget-label">
+                      Monthly Marketing Budget ($)
+                    </FormLabel>
+                    <Slider
+                      id="monthlyBudget-slider"
+                      value={formData.monthlyBudget}
+                      onChange={handleSliderChange('monthlyBudget')}
+                      min={1000}
+                      max={50000}
+                      step={1000}
+                      valueLabelDisplay="auto"
+                      valueLabelFormat={(value) => `$${value.toLocaleString()}`}
+                      aria-labelledby="monthlyBudget-label"
+                    />
+                    <TextField
+                      fullWidth
+                      type="number"
+                      name="monthlyBudget"
+                      id="monthlyBudget"
+                      value={formData.monthlyBudget}
+                      onChange={handleChange}
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      }}
+                      aria-labelledby="monthlyBudget-label"
+                      sx={{ mt: 2 }}
+                    />
+                  </FormControl>
 
-                  <Typography gutterBottom sx={{ mt: 3 }}>Campaign Timeframe (Months)</Typography>
-                  <Slider
-                    value={formData.timeframe}
-                    onChange={handleSliderChange('timeframe')}
-                    min={3}
-                    max={24}
-                    step={1}
-                    valueLabelDisplay="auto"
-                  />
-                  <TextField
-                    fullWidth
-                    type="number"
-                    name="timeframe"
-                    value={formData.timeframe}
-                    onChange={handleChange}
-                    sx={{ mt: 2 }}
-                  />
+                  <FormControl fullWidth sx={{ mb: 3 }}>
+                    <FormLabel htmlFor="timeframe-slider" id="timeframe-label">
+                      Campaign Timeframe (Months)
+                    </FormLabel>
+                    <Slider
+                      id="timeframe-slider"
+                      value={formData.timeframe}
+                      onChange={handleSliderChange('timeframe')}
+                      min={3}
+                      max={24}
+                      step={1}
+                      valueLabelDisplay="auto"
+                      aria-labelledby="timeframe-label"
+                    />
+                    <TextField
+                      fullWidth
+                      type="number"
+                      name="timeframe"
+                      id="timeframe"
+                      value={formData.timeframe}
+                      onChange={handleChange}
+                      InputProps={{
+                        endAdornment: <InputAdornment position="end">months</InputAdornment>,
+                      }}
+                      aria-labelledby="timeframe-label"
+                      sx={{ mt: 2 }}
+                    />
+                  </FormControl>
 
-                  <TextField
-                    fullWidth
-                    label="Industry"
-                    name="industry"
-                    value={formData.industry}
-                    onChange={handleChange}
-                    sx={{ mt: 3 }}
-                  />
+                  <FormControl fullWidth sx={{ mb: 3 }}>
+                    <FormLabel htmlFor="industry" id="industry-label">
+                      Industry
+                    </FormLabel>
+                    <TextField
+                      fullWidth
+                      name="industry"
+                      id="industry"
+                      value={formData.industry}
+                      onChange={handleChange}
+                      placeholder="e.g. E-commerce, Tech, Healthcare"
+                      aria-labelledby="industry-label"
+                    />
+                    <FormHelperText>Enter your business industry for more accurate calculations</FormHelperText>
+                  </FormControl>
 
-                  <TextField
-                    fullWidth
-                    label="Current Annual Revenue ($)"
-                    type="number"
-                    name="currentRevenue"
-                    value={formData.currentRevenue}
-                    onChange={handleChange}
-                    sx={{ mt: 3 }}
-                  />
+                  <FormControl fullWidth sx={{ mb: 3 }}>
+                    <FormLabel htmlFor="currentRevenue" id="currentRevenue-label">
+                      Current Annual Revenue ($)
+                    </FormLabel>
+                    <TextField
+                      fullWidth
+                      type="number"
+                      name="currentRevenue"
+                      id="currentRevenue"
+                      value={formData.currentRevenue}
+                      onChange={handleChange}
+                      InputProps={{
+                        startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                      }}
+                      aria-labelledby="currentRevenue-label"
+                    />
+                  </FormControl>
 
                   <Button
                     fullWidth
@@ -185,6 +242,7 @@ const Calculator = () => {
                     size="large"
                     startIcon={<CalculateIcon />}
                     onClick={calculateROI}
+                    aria-label="Calculate ROI based on your input values"
                     sx={{
                       mt: 4,
                       py: 1.5,
@@ -213,12 +271,18 @@ const Calculator = () => {
               }}
             >
               <CardContent sx={{ p: 4 }}>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+                <Typography 
+                  variant="h5" 
+                  component="h3" 
+                  gutterBottom 
+                  sx={{ fontWeight: 600 }}
+                  id="results-heading"
+                >
                   Projected Results
                 </Typography>
 
                 {results ? (
-                  <Box sx={{ mt: 3 }}>
+                  <Box sx={{ mt: 3 }} aria-live="polite" role="region" aria-labelledby="results-heading">
                     <Grid container spacing={3}>
                       <Grid item xs={12}>
                         <Card
@@ -238,7 +302,11 @@ const Calculator = () => {
                       </Grid>
 
                       <Grid item xs={12} sm={6}>
-                        <Box sx={{ p: 2, borderRadius: 2, border: 1, borderColor: 'divider' }}>
+                        <Box 
+                          sx={{ p: 2, borderRadius: 2, border: 1, borderColor: 'divider' }}
+                          role="figure"
+                          aria-label={`Total Investment: $${results.totalInvestment.toLocaleString()}`}
+                        >
                           <Typography variant="h6" gutterBottom>
                             ${results.totalInvestment.toLocaleString()}
                           </Typography>
@@ -249,7 +317,11 @@ const Calculator = () => {
                       </Grid>
 
                       <Grid item xs={12} sm={6}>
-                        <Box sx={{ p: 2, borderRadius: 2, border: 1, borderColor: 'divider' }}>
+                        <Box 
+                          sx={{ p: 2, borderRadius: 2, border: 1, borderColor: 'divider' }}
+                          role="figure"
+                          aria-label={`Projected Revenue: $${results.projectedRevenue.toLocaleString()}`}
+                        >
                           <Typography variant="h6" gutterBottom>
                             ${results.projectedRevenue.toLocaleString()}
                           </Typography>
@@ -260,7 +332,11 @@ const Calculator = () => {
                       </Grid>
 
                       <Grid item xs={12}>
-                        <Box sx={{ p: 2, borderRadius: 2, border: 1, borderColor: 'divider' }}>
+                        <Box 
+                          sx={{ p: 2, borderRadius: 2, border: 1, borderColor: 'divider' }}
+                          role="figure"
+                          aria-label={`Projected Profit: $${results.profit.toLocaleString()}`}
+                        >
                           <Typography variant="h6" gutterBottom>
                             ${results.profit.toLocaleString()}
                           </Typography>
@@ -274,6 +350,7 @@ const Calculator = () => {
                     <Typography
                       variant="body2"
                       color="text.secondary"
+                      component="p"
                       sx={{ mt: 4, fontStyle: 'italic' }}
                     >
                       * These projections are estimates based on industry averages and historical data.

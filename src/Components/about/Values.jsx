@@ -63,6 +63,9 @@ const Values = () => {
 
   return (
     <Box
+      component="section"
+      id="values"
+      aria-label="Our Core Values Section"
       sx={{
         py: 12,
         position: 'relative',
@@ -102,6 +105,7 @@ const Values = () => {
             </Typography>
             <Typography
               variant="h2"
+              component="h2"
               gutterBottom
               sx={{
                 fontWeight: 800,
@@ -117,6 +121,7 @@ const Values = () => {
             </Typography>
             <Typography
               variant="h5"
+              component="p"
               color="text.secondary"
               sx={{ maxWidth: '800px', mx: 'auto', mb: 4 }}
             >
@@ -125,11 +130,20 @@ const Values = () => {
           </Box>
         </Fade>
 
-        <Grid container spacing={4}>
+        <Grid container spacing={4} role="list">
           {values.map((value, index) => {
             const isAnimated = animatedItems.includes(index);
             return (
-              <Grid item xs={12} sm={6} md={3} key={index} className="value-item" data-index={index}>
+              <Grid 
+                item 
+                xs={12} 
+                sm={6} 
+                md={3} 
+                key={index} 
+                className="value-item" 
+                data-index={index}
+                role="listitem"
+              >
                 <Card 
                   elevation={isAnimated ? 6 : 1}
                   sx={{
@@ -181,6 +195,7 @@ const Values = () => {
                           boxShadow: `0 0 20px ${value.color}60`
                         }
                       }}
+                      aria-hidden="true"
                     >
                       {value.icon}
                     </Avatar>

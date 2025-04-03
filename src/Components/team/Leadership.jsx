@@ -15,6 +15,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 
 const leaders = [
   {
+    id: 'john-smith',
     name: 'John Smith',
     position: 'Chief Executive Officer',
     image: '/images/team/leader1.jpg',
@@ -23,6 +24,7 @@ const leaders = [
     twitter: '#',
   },
   {
+    id: 'sarah-johnson',
     name: 'Sarah Johnson',
     position: 'Chief Marketing Officer',
     image: '/images/team/leader2.jpg',
@@ -31,6 +33,7 @@ const leaders = [
     twitter: '#',
   },
   {
+    id: 'michael-chen',
     name: 'Michael Chen',
     position: 'Chief Technology Officer',
     image: '/images/team/leader3.jpg',
@@ -45,6 +48,9 @@ const Leadership = () => {
 
   return (
     <Box 
+      component="section"
+      id="leadership-team"
+      aria-labelledby="leadership-heading"
       py={12} 
       sx={{ 
         background: theme.palette.mode === 'dark' 
@@ -56,6 +62,8 @@ const Leadership = () => {
         <Box textAlign="center" mb={8}>
           <Typography
             variant="h2"
+            component="h2"
+            id="leadership-heading"
             sx={{
               fontWeight: 800,
               mb: 3,
@@ -70,6 +78,7 @@ const Leadership = () => {
           </Typography>
           <Typography
             variant="h5"
+            component="p"
             color="text.secondary"
             sx={{ maxWidth: '800px', mx: 'auto' }}
           >
@@ -77,10 +86,25 @@ const Leadership = () => {
           </Typography>
         </Box>
 
-        <Grid container spacing={4}>
-          {leaders.map((leader, index) => (
-            <Grid item xs={12} md={4} key={index}>
+        <Grid 
+          container 
+          spacing={4}
+          role="list"
+          aria-label="Leadership team members"
+        >
+          {leaders.map((leader) => (
+            <Grid 
+              item 
+              xs={12} 
+              md={4} 
+              key={leader.id}
+              role="listitem"
+            >
               <Card
+                component="article"
+                id={`leader-${leader.id}`}
+                aria-labelledby={`leader-name-${leader.id}`}
+                aria-describedby={`leader-bio-${leader.id}`}
                 sx={{
                   height: '100%',
                   background: theme.palette.mode === 'dark'
@@ -96,6 +120,7 @@ const Leadership = () => {
                 <CardContent sx={{ textAlign: 'center', p: 4 }}>
                   <Avatar
                     src={leader.image}
+                    alt={`${leader.name}, ${leader.position}`}
                     sx={{
                       width: 120,
                       height: 120,
@@ -105,7 +130,13 @@ const Leadership = () => {
                       borderColor: 'primary.main',
                     }}
                   />
-                  <Typography variant="h5" gutterBottom fontWeight="bold">
+                  <Typography 
+                    variant="h5" 
+                    component="h3"
+                    id={`leader-name-${leader.id}`}
+                    gutterBottom 
+                    fontWeight="bold"
+                  >
                     {leader.name}
                   </Typography>
                   <Typography
@@ -113,26 +144,35 @@ const Leadership = () => {
                     color="primary"
                     gutterBottom
                     sx={{ fontWeight: 500 }}
+                    id={`leader-position-${leader.id}`}
                   >
                     {leader.position}
                   </Typography>
-                  <Typography color="text.secondary" paragraph>
+                  <Typography 
+                    color="text.secondary" 
+                    paragraph
+                    id={`leader-bio-${leader.id}`}
+                  >
                     {leader.bio}
                   </Typography>
                   <Box sx={{ mt: 2 }}>
                     <IconButton
                       href={leader.linkedin}
                       target="_blank"
+                      rel="noopener"
+                      aria-label={`Visit ${leader.name}'s LinkedIn profile`}
                       sx={{ color: 'primary.main', mr: 1 }}
                     >
-                      <LinkedInIcon />
+                      <LinkedInIcon aria-hidden="true" />
                     </IconButton>
                     <IconButton
                       href={leader.twitter}
                       target="_blank"
+                      rel="noopener"
+                      aria-label={`Visit ${leader.name}'s Twitter profile`}
                       sx={{ color: 'primary.main' }}
                     >
-                      <TwitterIcon />
+                      <TwitterIcon aria-hidden="true" />
                     </IconButton>
                   </Box>
                 </CardContent>

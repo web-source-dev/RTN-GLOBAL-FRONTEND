@@ -41,16 +41,18 @@ const SocialAuthSuccess = () => {
   
   return (
     <Box
+      component="main"
       sx={{
         display: 'flex',
         minHeight: '100vh',
-        background:theme.palette.background.default,
+        background: theme.palette.background.default,
         position: 'relative',
         overflow: 'hidden',
       }}
+      aria-label="Social Authentication Success"
     >
-          {/* Background Pattern with enhanced animation */}
-          <Box
+      {/* Background Pattern with enhanced animation */}
+      <Box
         sx={{
           position: 'absolute',
           top: 0,
@@ -62,6 +64,7 @@ const SocialAuthSuccess = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       
       <Paper
@@ -79,7 +82,7 @@ const SocialAuthSuccess = () => {
           textAlign: 'center',
           position: 'relative',
           zIndex: 2,
-          background:theme.palette.background.default,
+          background: theme.palette.background.default,
           backdropFilter: 'blur(10px)',
           border: '1px solid',
           borderColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
@@ -109,6 +112,7 @@ const SocialAuthSuccess = () => {
               '100%': { boxShadow: '0 0 0 0 rgba(46, 125, 50, 0)' },
             },
           }}
+          aria-hidden="true"
         >
           <CheckCircleIcon 
             color="success" 
@@ -126,6 +130,7 @@ const SocialAuthSuccess = () => {
         
         <Typography 
           variant="h4" 
+          component="h1"
           gutterBottom
           sx={{
             fontWeight: 700,
@@ -139,25 +144,49 @@ const SocialAuthSuccess = () => {
           Success!
         </Typography>
         
-        <Typography variant="h6" gutterBottom color="text.primary">
+        <Typography 
+          variant="h6" 
+          component="h2"
+          gutterBottom 
+          color="text.primary"
+        >
           Authentication Successful
         </Typography>
         
-        <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 3 }}>
+        <Typography 
+          variant="body1" 
+          component="p"
+          color="text.secondary" 
+          paragraph 
+          sx={{ mb: 3 }}
+        >
           You've successfully logged in with your social account. We're preparing your dashboard.
         </Typography>
         
-        <Box sx={{ position: 'relative', mb: 2 }}>
+        <Box 
+          sx={{ 
+            position: 'relative', 
+            mb: 2,
+            display: 'flex', 
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
           <CircularProgress 
             size={36} 
-            thickness={4} 
+            thickness={4}
+            aria-label="Loading dashboard" 
             sx={{ 
               color: theme.palette.success.main,
             }} 
           />
         </Box>
         
-        <Typography variant="body2" sx={{ opacity: 0.7 }}>
+        <Typography 
+          variant="body2" 
+          component="p"
+          sx={{ opacity: 0.7 }}
+        >
           Redirecting to dashboard...
         </Typography>
       </Paper>

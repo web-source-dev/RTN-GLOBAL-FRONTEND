@@ -71,6 +71,13 @@ const OrderNotifications = ({ orderId, limit = 5, showTitle = true, title = "Ord
     }
   };
 
+  const handleKeyPress = (event, callback) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      callback();
+    }
+  };
+
   const markAsRead = async (notificationId) => {
     try {
       await API.patch(`/api/user/notifications/${notificationId}/read`);
@@ -98,33 +105,33 @@ const OrderNotifications = ({ orderId, limit = 5, showTitle = true, title = "Ord
     // Check for specific order notification scenarios based on title
     const title = notification.title.toLowerCase();
     if (title.includes('payment')) {
-      return <MoneyIcon color="success" />;
+      return <MoneyIcon color="success" aria-hidden="true" />;
     } else if (title.includes('review')) {
-      return <RateReviewIcon color="primary" />;
+      return <RateReviewIcon color="primary" aria-hidden="true" />;
     } else if (title.includes('revision')) {
-      return <BuildIcon color="warning" />;
+      return <BuildIcon color="warning" aria-hidden="true" />;
     } else if (title.includes('offer')) {
-      return <ShoppingCartIcon color="primary" />;
+      return <ShoppingCartIcon color="primary" aria-hidden="true" />;
     } else if (title.includes('status')) {
-      return <InfoIcon color="info" />;
+      return <InfoIcon color="info" aria-hidden="true" />;
     } else if (title.includes('tip')) {
-      return <MoneyIcon color="success" />;
+      return <MoneyIcon color="success" aria-hidden="true" />;
     } else if (title.includes('invoice') || title.includes('receipt')) {
-      return <ReceiptIcon color="primary" />;
+      return <ReceiptIcon color="primary" aria-hidden="true" />;
     }
     
     // Default based on notification type
     switch (type) {
       case 'info':
-        return <InfoIcon color="info" />;
+        return <InfoIcon color="info" aria-hidden="true" />;
       case 'success':
-        return <CheckCircleIcon color="success" />;
+        return <CheckCircleIcon color="success" aria-hidden="true" />;
       case 'warning':
-        return <WarningIcon color="warning" />;
+        return <WarningIcon color="warning" aria-hidden="true" />;
       case 'error':
-        return <ErrorIcon color="error" />;
+        return <ErrorIcon color="error" aria-hidden="true" />;
       default:
-        return <ShoppingCartIcon color="primary" />;
+        return <ShoppingCartIcon color="primary" aria-hidden="true" />;
     }
   };
 
@@ -154,6 +161,10 @@ const OrderNotifications = ({ orderId, limit = 5, showTitle = true, title = "Ord
         mb: 1
       }}
       onClick={() => markAsRead(notification.id)}
+      onKeyDown={(e) => handleKeyPress(e, () => markAsRead(notification.id))}
+      tabIndex={0}
+      role="button"
+      aria-label={`${notification.read ? 'Read' : 'Unread'} notification: ${notification.title}`}
     >
       <ListItemIcon>
         {getNotificationIcon(notification)}
@@ -161,7 +172,11 @@ const OrderNotifications = ({ orderId, limit = 5, showTitle = true, title = "Ord
       <ListItemText
         primary={
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography variant="subtitle2" component="div">
+            <Typography 
+              variant="subtitle2" 
+              component="div"
+              id={`order-notification-title-${notification.id}`}
+            >
               {notification.title}
             </Typography>
             {notification.priority && (
@@ -170,46 +185,86 @@ const OrderNotifications = ({ orderId, limit = 5, showTitle = true, title = "Ord
                 size="small" 
                 color={getPriorityColor(notification.priority)}
                 sx={{ height: 20, fontSize: '0.7rem' }}
+                aria-label={`Priority: ${notification.priority}`}
               />
             )}
           </Box>
         }
         secondary={
           <React.Fragment>
-            <Typography variant="body2" color="text.secondary" component="div">
+            <Typography 
+              variant="body2" 
+              color="text.secondary" 
+              component="div"
+              id={`order-notification-message-${notification.id}`}
+            >
               {notification.message}
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography 
+              variant="caption" 
+              color="text.secondary"
+              component="time"
+              dateTime={new Date(notification.createdAt).toISOString()}
+            >
               {format(new Date(notification.createdAt), 'MMM d, yyyy HH:mm')}
             </Typography>
           </React.Fragment>
         }
+        aria-labelledby={`order-notification-title-${notification.id}`}
+        aria-describedby={`order-notification-message-${notification.id}`}
       />
     </ListItem>
   );
 
   return (
-    <Paper elevation={1} sx={{ p: 2, height: '100%' }}>
+    <Paper 
+      elevation={1} 
+      sx={{ p: 2, height: '100%' }}
+      component="section"
+      aria-labelledby={showTitle ? "order-notifications-title" : undefined}
+    >
       {showTitle && (
-        <Typography variant="h6" gutterBottom>
+        <Typography 
+          variant="h6" 
+          gutterBottom
+          id="order-notifications-title"
+        >
           {title}
         </Typography>
       )}
       
       {loading ? (
-        <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-          <CircularProgress size={20} />
+        <Box 
+          sx={{ p: 2, display: 'flex', justifyContent: 'center' }}
+          role="status"
+          aria-live="polite"
+        >
+          <CircularProgress size={20} aria-label="Loading order notifications" />
         </Box>
       ) : error ? (
-        <Alert severity="error">{error}</Alert>
+        <Alert 
+          severity="error"
+          role="alert"
+        >
+          {error}
+        </Alert>
       ) : notifications.length === 0 ? (
-        <Typography color="text.secondary">No notifications</Typography>
+        <Typography 
+          color="text.secondary"
+          aria-live="polite"
+        >
+          No notifications
+        </Typography>
       ) : (
-        <List sx={{ p: 0 }}>
+        <List 
+          sx={{ p: 0 }}
+          aria-label="Order notification list"
+          role="list"
+        >
           {notifications.map((notification, index) => (
             <React.Fragment key={notification.id}>
               {renderNotificationContent(notification)}
-              {index < notifications.length - 1 && <Divider sx={{ my: 1 }} />}
+              {index < notifications.length - 1 && <Divider sx={{ my: 1 }} role="separator" />}
             </React.Fragment>
           ))}
         </List>

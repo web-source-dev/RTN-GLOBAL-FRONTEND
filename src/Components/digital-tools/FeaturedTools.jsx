@@ -17,6 +17,7 @@ const featuredTools = [
     title: 'E-commerce Platform',
     description: 'Custom Wix website with advanced e-commerce capabilities',
     image: '/images/Tools/ecomtool.png',
+    imageAlt: 'E-commerce platform user interface showing product catalog and shopping cart',
     features: [
       'Custom product catalog',
       'Secure payment integration',
@@ -24,12 +25,14 @@ const featuredTools = [
       'Order tracking system'
     ],
     price: 'Starting at $2,999',
-    popular: true
+    popular: true,
+    id: 'ecommerce-platform'
   },
   {
     title: 'Enterprise Web Portal',
     description: 'Full-stack MERN application for business process management',
     image: '/images/Tools/WebPortal.png',
+    imageAlt: 'Enterprise web portal dashboard with data visualization and user management',
     features: [
       'User authentication',
       'Real-time data sync',
@@ -37,12 +40,14 @@ const featuredTools = [
       'API integration'
     ],
     price: 'Starting at $4,999',
-    popular: true
+    popular: true,
+    id: 'enterprise-web-portal'
   },
   {
     title: 'Mobile Delivery App',
     description: 'React Native app for seamless delivery management',
     image: '/images/Tools/MobileApp.jpg',
+    imageAlt: 'Mobile delivery app interface showing map navigation and order tracking',
     features: [
       'GPS tracking',
       'Push notifications',
@@ -50,7 +55,8 @@ const featuredTools = [
       'Route optimization'
     ],
     price: 'Starting at $3,999',
-    popular: false
+    popular: false,
+    id: 'mobile-delivery-app'
   }
 ];
 
@@ -60,6 +66,9 @@ const FeaturedTools = () => {
 
   return (
     <Box
+      component="section"
+      id="featured-projects"
+      aria-labelledby="featured-projects-heading"
       py={12}
       sx={{
         background: theme.palette.background.default,
@@ -79,10 +88,13 @@ const FeaturedTools = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="featured-projects-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -110,6 +122,7 @@ const FeaturedTools = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ mb: 8, maxWidth: '800px', mx: 'auto', opacity: 0.9 }}
@@ -122,6 +135,8 @@ const FeaturedTools = () => {
           {featuredTools.map((tool) => (
             <Grid item xs={12} md={4} key={tool.title}>
               <Card
+                component="article"
+                id={tool.id}
                 sx={{
                   height: '100%',
                   display: 'flex',
@@ -144,7 +159,8 @@ const FeaturedTools = () => {
                     component="img"
                     height="200"
                     image={tool.image}
-                    alt={tool.title}
+                    alt={tool.imageAlt}
+                    loading="lazy"
                     sx={{
                       transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                       objectFit: 'cover'
@@ -152,6 +168,9 @@ const FeaturedTools = () => {
                   />
                   {tool.popular && (
                     <Box
+                      component="span"
+                      role="presentation"
+                      aria-hidden="true"
                       sx={{
                         position: 'absolute',
                         top: 16,
@@ -174,22 +193,31 @@ const FeaturedTools = () => {
                   <Typography
                     gutterBottom
                     variant="h5"
-                    component="h2"
+                    component="h3"
                     sx={{ fontWeight: 600 }}
                   >
                     {tool.title}
                   </Typography>
                   <Typography
                     variant="body2"
+                    component="p"
                     color="text.secondary"
                     paragraph
                     sx={{ mb: 2 }}
                   >
                     {tool.description}
                   </Typography>
-                  <Box sx={{ mt: 2 }}>
+                  <Box 
+                    component="ul"
+                    sx={{ 
+                      mt: 2,
+                      pl: 0,
+                      listStyle: 'none'
+                    }}
+                  >
                     {tool.features.map((feature) => (
                       <Typography
+                        component="li"
                         key={feature}
                         variant="body2"
                         sx={{
@@ -222,6 +250,7 @@ const FeaturedTools = () => {
                 >
                   <Typography
                     variant="h6"
+                    component="p"
                     color="primary"
                     sx={{ mb: 2, fontWeight: 600 }}
                   >
@@ -231,6 +260,7 @@ const FeaturedTools = () => {
                     variant="contained"
                     endIcon={<LaunchIcon />}
                     fullWidth
+                    aria-label={`View details for ${tool.title}`}
                     sx={{
                       textTransform: 'none',
                       py: 1.5,

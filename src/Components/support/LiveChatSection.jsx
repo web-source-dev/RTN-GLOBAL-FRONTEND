@@ -8,6 +8,9 @@ const LiveChatSection = () => {
   const theme = useTheme();
   return (
     <Box
+      component="section"
+      id="live-chat-section"
+      aria-labelledby="live-chat-heading"
       sx={{
         background: theme.palette.background.default,
         position: 'relative',
@@ -26,8 +29,9 @@ const LiveChatSection = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
-    <Container maxWidth="md" sx={{ mb: 15,mt: 15, position: 'relative', zIndex: 2 }}>
+    <Container maxWidth="md" sx={{ mb: 15, mt: 15, position: 'relative', zIndex: 2 }}>
       <Box
         sx={{
           display: 'flex',
@@ -56,18 +60,26 @@ const LiveChatSection = () => {
             top: '-40px',
             right: '-40px',
           }}
+          aria-hidden="true"
         />
-        <Typography variant="h3" fontWeight="bold" gutterBottom>
+        <Typography 
+          variant="h3" 
+          component="h2" 
+          id="live-chat-heading" 
+          fontWeight="bold" 
+          gutterBottom
+        >
           Need Help? Chat With Us!
         </Typography>
-        <Typography variant="body1" gutterBottom>
+        <Typography variant="body1" component="p" gutterBottom>
           Our dedicated support team is available 24/7 to assist you. Get instant responses to your queries.
         </Typography>
         <Stack direction="row" spacing={2} sx={{ marginTop: '25px' }}>
           <Button
             variant="contained"
             color="secondary"
-            startIcon={<ChatIcon />}
+            startIcon={<ChatIcon aria-hidden="true" />}
+            aria-label="Start a live chat with our support team"
             sx={{
               padding: '12px 24px',
               fontSize: '18px',

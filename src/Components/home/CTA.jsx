@@ -24,9 +24,13 @@ const CTA = () => {
   };
 
   return (
-    <Box sx={{
+    <Box 
+      component="section" 
+      id="cta-section"
+      aria-labelledby="cta-heading"
+      sx={{
         position: 'relative',
-        bgcolor: isDarkMode ? 'background.defualt' : 'primary.main',
+        bgcolor: isDarkMode ? 'background.default' : 'primary.main',
         pt: 8,
         pb: 32,
         '&::after': {
@@ -42,7 +46,8 @@ const CTA = () => {
           backgroundSize: 'cover',
           opacity: isDarkMode ? 0.05 : 1
         }
-      }}>
+      }}
+    >
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
         <Paper
           elevation={24}
@@ -62,9 +67,10 @@ const CTA = () => {
             },
           }}
         >
-
           <Typography 
             variant="h2" 
+            component="h2"
+            id="cta-heading"
             gutterBottom
             sx={{
               fontWeight: 700,
@@ -81,7 +87,8 @@ const CTA = () => {
             Ready to Build Your Digital Presence?
           </Typography>
           <Typography 
-            variant="h5" 
+            variant="body1"
+            component="p"
             paragraph 
             sx={{ 
               color: isDarkMode ? 'text.secondary' : 'text.primary',
@@ -95,6 +102,7 @@ const CTA = () => {
             variant="contained"
             size="large"
             onClick={handleConsultationClick}
+            aria-label="Schedule a free web development consultation"
             sx={{
               px: 4,
               py: 1.5,

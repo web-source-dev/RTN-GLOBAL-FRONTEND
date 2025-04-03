@@ -9,7 +9,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 const stats = [
   {
     value: 500,
-    label: 'Clients Served',
+    label: 'Web Development Clients',
     suffix: '+',
     description: 'Trusted by businesses worldwide',
     icon: GroupIcon,
@@ -17,25 +17,25 @@ const stats = [
   },
   {
     value: 95,
-    label: 'Success Rate',
+    label: 'Project Success Rate',
     suffix: '%',
-    description: 'Proven track record of success',
+    description: 'Proven track record of successful web projects',
     icon: RocketLaunchIcon,
     color: '#4caf50',
   },
   {
     value: 50,
-    label: 'Team Experts',
+    label: 'Development Experts',
     suffix: '+',
-    description: 'Skilled marketing professionals',
+    description: 'Skilled web development professionals',
     icon: EmojiEventsIcon,
     color: '#ff9800',
   },
   {
     value: 300,
-    label: 'ROI Increase',
+    label: 'Website ROI Increase',
     suffix: '%',
-    description: 'Average client ROI improvement',
+    description: 'Average client ROI from our web solutions',
     icon: TrendingUpIcon,
     color: '#e91e63',
   },
@@ -45,6 +45,9 @@ const Stats = () => {
   const theme = useTheme();
   return (
     <Box 
+      component="section"
+      id="stats-section"
+      aria-label="Web Development Statistics"
       py={12} 
       sx={{
         background: theme.palette.background.default,
@@ -65,32 +68,14 @@ const Stats = () => {
           zIndex: 1,
         }}
       />
-      {[...Array(3)].map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            position: 'absolute',
-            width: '30vw',
-            height: '30vw',
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.03)',
-            animation: 'float 20s infinite',
-            animationDelay: `${i * 3}s`,
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            '@keyframes float': {
-              '0%': { transform: 'translate(0, 0) rotate(0deg)' },
-              '50%': { transform: 'translate(100px, -100px) rotate(180deg)' },
-              '100%': { transform: 'translate(0, 0) rotate(360deg)' },
-            },
-          }}
-        />
-      ))}
 
       <Container sx={{ position: 'relative', zIndex: 2 }}>
-        <Grid container spacing={4} justifyContent="center">
+        <Typography variant="h2" component="h2" sx={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', border: 0 }}>
+          Our Web Development Achievements
+        </Typography>
+        <Grid container spacing={4} justifyContent="center" component="ul" sx={{ listStyle: 'none', p: 0, m: 0 }}>
           {stats.map((stat, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
+            <Grid item xs={12} sm={6} md={3} key={index} component="li">
               <Paper
                 elevation={0}
                 sx={{
@@ -114,6 +99,7 @@ const Stats = () => {
               >
                 <Box
                   className="stat-icon"
+                  aria-hidden="true"
                   sx={{
                     display: 'inline-flex',
                     p: 2,
@@ -123,16 +109,18 @@ const Stats = () => {
                     mb: 3,
                     transition: 'transform 0.3s ease',
                   }}
+                  tabIndex={-1}
                 >
                   <stat.icon fontSize="large" />
                 </Box>
                 <Typography
-                  variant="h2"
+                  variant="h3"
+                  component="p"
                   sx={{
                     fontWeight: 700,
                     color: theme.palette.text.primary,
                     mb: 1,
-                    fontSize: { xs: '2.5rem', md: '3rem' },
+                    fontSize: { xs: '2rem', md: '2.5rem' },
                   }}
                 >
                   <CountUp
@@ -144,16 +132,19 @@ const Stats = () => {
                   />
                 </Typography>
                 <Typography
-                  variant="h5"
+                  variant="h4"
+                  component="h3"
                   sx={{
                     fontWeight: 500,
                     color: theme.palette.text.primary,
                     mb: 2,
+                    fontSize: '1.2rem',
                   }}
                 >
                   {stat.label}
                 </Typography>
                 <Typography
+                  component="p"
                   sx={{
                     color: theme.palette.text.secondary,
                     fontSize: '0.9rem',

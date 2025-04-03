@@ -189,7 +189,7 @@ const TestimonialsAnim = () => {
 
   // Content for left side
   const LeftContent = () => (
-    <Box sx={{ height: "fit-content", width: "100%", mt: 10, mb: 10 }}>
+    <Box sx={{ height: "fit-content", width: "100%", my:{xs: 0, md: 10} }}>
       <Box sx={{ mb: 5 }}>
         <Typography
           component="div"
@@ -317,7 +317,7 @@ const TestimonialsAnim = () => {
     <>
       {/* Mobile Layout */}
       {isMobile && (
-        <Box sx={{ bgcolor: theme.palette.background.default, py: 8 }}>
+        <Box sx={{ bgcolor: theme.palette.background.default, py: 0}}>
           <Container maxWidth="xl">
             <Box sx={{ display: "flex", flexDirection: "column", gap: 6 }}>
               <LeftContent />
@@ -354,7 +354,7 @@ const TestimonialsAnim = () => {
             <Box
               sx={{
                 display: "flex",
-                justifyContent: "space-between",
+                justifyContent: "center",
                 gap: 15,
                 maxWidth: "1200px",
                 mx: "auto",
@@ -366,6 +366,7 @@ const TestimonialsAnim = () => {
                   flex: 1,
                   position: "sticky",
                   top: "10vh",
+                  left: {xs: "0", md: "10vh"},
                   height: "fit-content",
                   maxWidth: "45%",
                 }}

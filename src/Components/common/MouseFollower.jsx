@@ -59,23 +59,23 @@ const MouseFollower = () => {
   if (!isHovered) return null;
 
   return (
-    <>
-      <Box
-        sx={{
-          position: "fixed",
-          pointerEvents: "none",
-          zIndex: 9999,
-          width: "12px",
-          height: "12px",
-          background: "radial-gradient(circle, #ff007f, #ff6b00)",
-          borderRadius: "50%",
-          transform: `translate(${position.x - 6}px, ${position.y - 6}px) scale(${scale})`,
-          transition: "transform 0.15s ease-out, background 0.3s ease",
-          mixBlendMode: "difference",
-          boxShadow: "0 0 10px rgba(255, 105, 180, 0.5)",
-        }}
-      />
-    </>
+    <Box
+      role="presentation"
+      aria-hidden="true"
+      sx={{
+        position: "fixed",
+        pointerEvents: "none",
+        zIndex: 9999,
+        width: "12px",
+        height: "12px",
+        background: "radial-gradient(circle, #ff007f, #ff6b00)",
+        borderRadius: "50%",
+        transform: `translate(${position.x - 6}px, ${position.y - 6}px) scale(${scale})`,
+        transition: "transform 0.15s ease-out, background 0.3s ease",
+        mixBlendMode: "difference",
+        boxShadow: "0 0 10px rgba(255, 105, 180, 0.5)",
+      }}
+    />
   );
 };
 

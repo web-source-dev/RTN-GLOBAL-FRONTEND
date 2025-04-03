@@ -110,9 +110,13 @@ const NewsletterForm = () => {
 
   return (
     <Box
+      component="section"
+      id="newsletter-subscription"
+      aria-labelledby="newsletter-heading"
       sx={{
         py: 8,
         background: theme.palette.background.default,
+        position: 'relative',
       }}
     >
       <Box
@@ -127,13 +131,15 @@ const NewsletterForm = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1
         }}
+        aria-hidden="true"
       />
       <Container maxWidth="lg">
-
         <Grid container spacing={5} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
           <Grid item xs={12} sm={6}>
             <Typography
               variant="h3"
+              component="h2"
+              id="newsletter-heading"
               textAlign="center"
               sx={{
                 fontWeight: 800,
@@ -145,9 +151,10 @@ const NewsletterForm = () => {
                 WebkitTextFillColor: 'transparent',
               }}
             >
-              Subscribe to Our NewsLetter
+              Subscribe to Our Newsletter
             </Typography>
             <Typography
+              component="p"
               color="text.secondary"
               textAlign="center"
               sx={{ mb: 6, maxWidth: '600px', mx: 'auto' }}
@@ -161,12 +168,13 @@ const NewsletterForm = () => {
               their brands with data-driven strategies. No spam—just actionable insights to help
               you grow faster!
             </Typography>
-
           </Grid>
           <Grid item xs={12} sm={6}>
             <Box
               component="form"
               onSubmit={handleSubmit}
+              noValidate
+              aria-labelledby="newsletter-heading"
               sx={{
                 backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'white',
                 p: 4,
@@ -180,47 +188,72 @@ const NewsletterForm = () => {
                     fullWidth
                     label="First Name"
                     name="firstName"
+                    id="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
                     error={!!errors.firstName}
                     helperText={errors.firstName}
                     required
+                    aria-required="true"
+                    aria-describedby={errors.firstName ? "firstName-error" : undefined}
                   />
+                  {errors.firstName && (
+                    <span id="firstName-error" className="sr-only">
+                      {errors.firstName}
+                    </span>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
                     label="Last Name"
                     name="lastName"
+                    id="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
                     error={!!errors.lastName}
                     helperText={errors.lastName}
                     required
+                    aria-required="true"
+                    aria-describedby={errors.lastName ? "lastName-error" : undefined}
                   />
+                  {errors.lastName && (
+                    <span id="lastName-error" className="sr-only">
+                      {errors.lastName}
+                    </span>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
                     label="Email"
                     name="email"
+                    id="email"
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
                     error={!!errors.email}
                     helperText={errors.email}
                     required
+                    aria-required="true"
+                    aria-describedby={errors.email ? "email-error" : undefined}
                   />
+                  {errors.email && (
+                    <span id="email-error" className="sr-only">
+                      {errors.email}
+                    </span>
+                  )}
                 </Grid>
                 <Grid item xs={12}>
-
                   <FormControlLabel
                     control={
                       <Checkbox
                         checked={formData.agreeToTerms}
                         onChange={handleChange}
                         name="agreeToTerms"
+                        id="agreeToTerms"
                         color="primary"
+                        aria-describedby={errors.agreeToTerms ? "terms-error" : undefined}
                       />
                     }
                     label={
@@ -232,9 +265,13 @@ const NewsletterForm = () => {
                       </>
                     }
                   />
-
                   {errors.agreeToTerms && (
-                    <Typography color="error" variant="caption" display="block">
+                    <Typography 
+                      color="error" 
+                      variant="caption" 
+                      display="block"
+                      id="terms-error"
+                    >
                       {errors.agreeToTerms}
                     </Typography>
                   )}
@@ -245,6 +282,7 @@ const NewsletterForm = () => {
                     variant="contained"
                     size="large"
                     fullWidth
+                    aria-label="Subscribe to our newsletter"
                     sx={{
                       mt: 2,
                       height: 56,
@@ -272,6 +310,7 @@ const NewsletterForm = () => {
             onClose={() => setSnackbar(prev => ({ ...prev, open: false }))}
             severity={snackbar.severity}
             sx={{ width: '100%' }}
+            aria-live="assertive"
           >
             {snackbar.message}
           </Alert>

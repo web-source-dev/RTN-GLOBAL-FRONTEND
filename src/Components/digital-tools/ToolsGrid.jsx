@@ -25,7 +25,8 @@ const tools = [
     icon: WebIcon,
     color: '#2196f3',
     features: ['Custom Design', 'E-commerce Solutions', 'SEO Optimization'],
-    category: 'Web Development'
+    category: 'Web Development',
+    id: 'wix-website-development'
   },
   {
     title: 'MERN Stack Applications',
@@ -33,7 +34,8 @@ const tools = [
     icon: DeveloperModeIcon,
     color: '#4caf50',
     features: ['Custom Development', 'API Integration', 'Database Design'],
-    category: 'Web Development'
+    category: 'Web Development',
+    id: 'mern-stack-applications'
   },
   {
     title: 'React Native Mobile Apps',
@@ -41,7 +43,8 @@ const tools = [
     icon: PhoneIphoneIcon,
     color: '#ff9800',
     features: ['Native Performance', 'Cross-platform', 'App Store Publishing'],
-    category: 'Mobile Development'
+    category: 'Mobile Development',
+    id: 'react-native-mobile-apps'
   },
   {
     title: 'Performance Optimization',
@@ -49,7 +52,8 @@ const tools = [
     icon: SpeedIcon,
     color: '#e91e63',
     features: ['Fast Loading', 'Code Optimization', 'Performance Monitoring'],
-    category: 'Development'
+    category: 'Development',
+    id: 'performance-optimization'
   },
   {
     title: 'Secure Development',
@@ -57,7 +61,8 @@ const tools = [
     icon: SecurityIcon,
     color: '#9c27b0',
     features: ['Data Protection', 'Authentication', 'Security Best Practices'],
-    category: 'Development'
+    category: 'Development',
+    id: 'secure-development'
   },
   {
     title: 'API Integration',
@@ -65,7 +70,8 @@ const tools = [
     icon: IntegrationInstructionsIcon,
     color: '#00bcd4',
     features: ['RESTful APIs', 'Custom Integration', 'Data Synchronization'],
-    category: 'Development'
+    category: 'Development',
+    id: 'api-integration'
   }
 ];
 
@@ -75,6 +81,9 @@ const ToolsGrid = () => {
 
   return (
     <Box
+      component="section"
+      id="digital-tools-services"
+      aria-labelledby="services-heading"
       py={12}
       sx={{
         background: theme.palette.background.default,
@@ -94,10 +103,13 @@ const ToolsGrid = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1,
         }}
+        aria-hidden="true"
       />
       <Container maxWidth="xl" sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="services-heading"
           align="center"
           sx={{
             fontWeight: 800,
@@ -125,6 +137,7 @@ const ToolsGrid = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           align="center"
           sx={{ mb: 8, maxWidth: '800px', mx: 'auto', opacity: 0.9 }}
@@ -135,6 +148,8 @@ const ToolsGrid = () => {
           {tools.map((tool) => (
             <Grid item xs={12} sm={6} md={4} key={tool.title}>
               <Card
+                id={tool.id}
+                component="article"
                 sx={{
                   height: '100%',
                   display: 'flex',
@@ -169,15 +184,21 @@ const ToolsGrid = () => {
                           backgroundColor: `${tool.color}25`
                         }
                       }}
+                      aria-hidden="true"
                     >
                       <tool.icon sx={{ color: tool.color, fontSize: 28 }} />
                     </Box>
-                    <Typography variant="h5" sx={{ fontWeight: 600 }}>
+                    <Typography 
+                      variant="h5" 
+                      component="h3"
+                      sx={{ fontWeight: 600 }}
+                    >
                       {tool.title}
                     </Typography>
                   </Box>
                   <Typography
                     variant="body1"
+                    component="p"
                     color="text.secondary"
                     paragraph
                     sx={{ mb: 3, lineHeight: 1.7 }}
@@ -185,15 +206,19 @@ const ToolsGrid = () => {
                     {tool.description}
                   </Typography>
                   <Box
+                    component="ul"
                     sx={{
                       display: 'flex',
                       flexWrap: 'wrap',
                       gap: 1.5,
-                      mt: 'auto'
+                      mt: 'auto',
+                      pl: 0,
+                      listStyle: 'none'
                     }}
                   >
                     {tool.features.map((feature) => (
                       <Typography
+                        component="li"
                         key={feature}
                         variant="body2"
                         sx={{
@@ -214,6 +239,15 @@ const ToolsGrid = () => {
                       </Typography>
                     ))}
                   </Box>
+                  <Button
+                    variant="text"
+                    color="primary"
+                    endIcon={<LaunchIcon />}
+                    sx={{ mt: 2 }}
+                    aria-label={`Learn more about ${tool.title}`}
+                  >
+                    Learn more
+                  </Button>
                 </CardContent>
               </Card>
             </Grid>

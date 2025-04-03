@@ -12,6 +12,9 @@ const Hero = () => {
 
   return (
     <Box
+      component="section"
+      id="about-hero"
+      aria-label="About RTN Global Hero Section"
       sx={{
         position: 'relative',
         overflow: 'hidden',
@@ -56,6 +59,7 @@ const Hero = () => {
             
             <Typography
               variant="h1"
+              component="h1"
               sx={{
                 fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4rem' },
                 fontWeight: 800,
@@ -75,6 +79,7 @@ const Hero = () => {
             
             <Typography
               variant="h4"
+              component="p"
               sx={{
                 color: 'text.secondary',
                 mb: 4,
@@ -85,9 +90,7 @@ const Hero = () => {
               }}
             >
               We specialize in creating powerful digital solutions through Wix websites, MERN stack applications, and React Native mobile apps.
-                          </Typography>
-            
-            
+            </Typography>
             
             <Box 
               sx={{ 
@@ -103,6 +106,7 @@ const Hero = () => {
                 variant="contained"
                 size="large"
                 href="/contact"
+                aria-label="Get Started with RTN Global"
                 sx={{
                   px: 4,
                   py: 1.5,
@@ -124,6 +128,7 @@ const Hero = () => {
                 variant="outlined"
                 size="large"
                 href="/services"
+                aria-label="Learn about our services"
                 sx={{
                   px: 4,
                   py: 1.5,

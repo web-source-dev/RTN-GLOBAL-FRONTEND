@@ -9,38 +9,51 @@ import {
   Chip,
   Button,
   useTheme,
+  Link,
 } from '@mui/material';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import GetAppIcon from '@mui/icons-material/GetApp';
 
 const pressReleases = [
   {
+    id: 'q4-2023-results',
     title: 'RTN Global Announces Record-Breaking Q4 2023 Results',
     summary: 'Company achieves unprecedented growth with 150% increase in revenue and expansion into new markets.',
     date: 'March 20, 2024',
+    isoDate: '2024-03-20',
     category: 'Financial Results',
-    downloadUrl: '/press/q4-2023-results.pdf'
+    downloadUrl: '/press/q4-2023-results.pdf',
+    ariaLabel: 'Download Q4 2023 financial results press release'
   },
   {
+    id: 'partnership-announcement',
     title: 'Strategic Partnership with Leading Tech Companies Announced',
     summary: 'RTN Global forms strategic alliances with major technology providers to enhance digital marketing capabilities.',
     date: 'March 15, 2024',
+    isoDate: '2024-03-15',
     category: 'Partnership',
-    downloadUrl: '/press/partnership-announcement.pdf'
+    downloadUrl: '/press/partnership-announcement.pdf',
+    ariaLabel: 'Download partnership announcement press release'
   },
   {
+    id: 'ai-platform-launch',
     title: 'New AI-Powered Marketing Platform Launch',
     summary: 'Revolutionary platform leverages artificial intelligence to transform digital marketing automation and optimization.',
     date: 'March 10, 2024',
+    isoDate: '2024-03-10',
     category: 'Product Launch',
-    downloadUrl: '/press/ai-platform-launch.pdf'
+    downloadUrl: '/press/ai-platform-launch.pdf',
+    ariaLabel: 'Download AI platform launch press release'
   },
   {
+    id: 'global-expansion',
     title: 'RTN Global Expands Global Operations',
     summary: 'Company announces major expansion into Asia-Pacific region with new offices in Singapore and Tokyo.',
     date: 'March 5, 2024',
+    isoDate: '2024-03-05',
     category: 'Company News',
-    downloadUrl: '/press/global-expansion.pdf'
+    downloadUrl: '/press/global-expansion.pdf',
+    ariaLabel: 'Download global expansion press release'
   }
 ];
 
@@ -50,6 +63,9 @@ const PressReleases = () => {
 
   return (
     <Box
+      component="section"
+      id="press-releases"
+      aria-labelledby="press-releases-heading"
       py={12}
       sx={{
         background: theme.palette.background.default,
@@ -70,11 +86,14 @@ const PressReleases = () => {
                       radial-gradient(circle at 80% 80%, ${theme.palette.secondary.main} 0%, transparent 10%)`,
           zIndex: 1
         }}
+        aria-hidden="true"
       />
 
       <Container sx={{ position: 'relative', zIndex: 2 }}>
         <Typography
           variant="h2"
+          component="h2"
+          id="press-releases-heading"
           textAlign="center"
           sx={{
             fontWeight: 800,
@@ -90,6 +109,7 @@ const PressReleases = () => {
         </Typography>
         <Typography
           variant="h5"
+          component="p"
           color="text.secondary"
           textAlign="center"
           sx={{ maxWidth: '800px', mx: 'auto', mb: 6 }}
@@ -97,10 +117,11 @@ const PressReleases = () => {
           Official announcements and press releases from RTN Global
         </Typography>
 
-        <Grid container spacing={4}>
-          {pressReleases.map((release, index) => (
-            <Grid item xs={12} md={6} key={index}>
+        <Grid container spacing={4} role="list">
+          {pressReleases.map((release) => (
+            <Grid item xs={12} md={6} key={release.id} role="listitem">
               <Card
+                component="article"
                 sx={{
                   height: '100%',
                   transition: 'all 0.3s ease',
@@ -109,6 +130,7 @@ const PressReleases = () => {
                     boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
                   }
                 }}
+                id={release.id}
               >
                 <CardContent sx={{ p: 4 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
@@ -119,28 +141,48 @@ const PressReleases = () => {
                         color: 'white',
                         fontWeight: 500
                       }}
+                      aria-label={`Category: ${release.category}`}
                     />
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <CalendarTodayIcon fontSize="small" color="action" />
-                      <Typography variant="body2" color="text.secondary">
+                      <CalendarTodayIcon fontSize="small" color="action" aria-hidden="true" />
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        component="time"
+                        dateTime={release.isoDate}
+                      >
                         {release.date}
                       </Typography>
                     </Box>
                   </Box>
 
-                  <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>
+                  <Typography 
+                    variant="h5" 
+                    component="h3"
+                    gutterBottom 
+                    sx={{ fontWeight: 600, mb: 2 }}
+                    id={`release-title-${release.id}`}
+                  >
                     {release.title}
                   </Typography>
 
-                  <Typography color="text.secondary" paragraph sx={{ mb: 4 }}>
+                  <Typography 
+                    color="text.secondary" 
+                    paragraph 
+                    sx={{ mb: 4 }}
+                    id={`release-desc-${release.id}`}
+                  >
                     {release.summary}
                   </Typography>
 
                   <Button
                     variant="outlined"
-                    startIcon={<GetAppIcon />}
+                    startIcon={<GetAppIcon aria-hidden="true" />}
                     href={release.downloadUrl}
                     target="_blank"
+                    aria-labelledby={`release-title-${release.id}`}
+                    aria-describedby={`release-desc-${release.id}`}
+                    aria-label={release.ariaLabel}
                     sx={{
                       borderRadius: 2,
                       '&:hover': {
