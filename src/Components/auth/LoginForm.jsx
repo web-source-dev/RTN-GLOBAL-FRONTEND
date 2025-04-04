@@ -33,6 +33,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import SecurityIcon from '@mui/icons-material/Security';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import API from '../../BackendAPi/ApiProvider';
+import SEO from '../common/SEO';
 
 const LoginForm = () => {
   const theme = useTheme();
@@ -362,6 +363,14 @@ const LoginForm = () => {
       />
 
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
+        {/* Add SEO component with noindex set to true */}
+        <SEO
+          title="Login to Your Account"
+          description="Securely login to your RTN Global account."
+          canonicalUrl="/auth/login"
+          noIndex={true}
+        />
+        
         <Grid container spacing={{ xs: 2, md: 4 }} alignItems="center">
           {/* Left side - Hidden on mobile */}
           <Grid item xs={12} md={5} sx={{ display: { xs: 'none', md: 'block' } }}>
@@ -372,11 +381,9 @@ const LoginForm = () => {
                 position: 'relative',
               }}
             >
-             
-
-          <Box>
-            <img src="/images/auth/login.svg" alt="RTN Global" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-          </Box>
+              <Box>
+                <img src="/images/auth/login.svg" alt="RTN Global" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              </Box>
             </Box>
           </Grid>
           

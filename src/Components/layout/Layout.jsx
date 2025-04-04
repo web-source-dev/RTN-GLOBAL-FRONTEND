@@ -7,6 +7,7 @@ import CustomScrollbar from '../common/CustomScrollbar';
 import MouseFollower from '../common/MouseFollower';
 import LoadingProgress from '../common/LoadingProgress';
 import { Helmet } from 'react-helmet-async';
+import Breadcrumbs from '../common/Breadcrumbs';
 
 const Layout = ({ children }) => {
   return (
@@ -16,7 +17,7 @@ const Layout = ({ children }) => {
         <html lang="en" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="format-detection" content="telephone=no" />
-        <link rel="canonical" href={window.location.href} />
+        {/* Removing conflicting canonical link - this is handled by the SEO component */}
         
         {/* Performance optimization */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -76,6 +77,7 @@ const Layout = ({ children }) => {
           role="main"
           aria-label="Main content"
         >
+          <Breadcrumbs hideOnMobile={true} />
           <PageTransition>
             {children}
           </PageTransition>

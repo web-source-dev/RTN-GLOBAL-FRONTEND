@@ -49,6 +49,7 @@ import VerifyInvoice from './Pages/VerifyInvoice';
 import VerifyReceipt from './Pages/VerifyReceipt';
 import EmailVerificationForm from './Components/auth/EmailVerificationForm';
 import SocialAuthSuccess from './Components/auth/SocialAuthSuccess';
+import AuthSEO from './Components/auth/AuthSEO';
 
 function App() {
   return (
@@ -59,12 +60,60 @@ function App() {
           <Router>
             <Routes>
               <Route path="/livechat" element={<LiveChat />} />
-              <Route path="/auth/login" element={<LoginForm />} />
-              <Route path="/auth/register" element={<RegisterForm />} />
-              <Route path="/auth/forgot-password" element={<ForgotPasswordForm />} />
-              <Route path="/auth/reset-password" element={<ResetPasswordForm />} />
-              <Route path="/auth/social-success" element={<SocialAuthSuccess />} />
-              <Route path="/auth/verify-email" element={<EmailVerificationForm />} />
+              <Route path="/auth/login" element={
+                <AuthSEO 
+                  title="Login to Your Account" 
+                  description="Securely login to your RTN Global account." 
+                  canonicalUrl="/auth/login"
+                >
+                  <LoginForm />
+                </AuthSEO>
+              } />
+              <Route path="/auth/register" element={
+                <AuthSEO 
+                  title="Create an Account" 
+                  description="Sign up for a new RTN Global account." 
+                  canonicalUrl="/auth/register"
+                >
+                  <RegisterForm />
+                </AuthSEO>
+              } />
+              <Route path="/auth/forgot-password" element={
+                <AuthSEO 
+                  title="Reset Password" 
+                  description="Reset your RTN Global account password." 
+                  canonicalUrl="/auth/forgot-password"
+                >
+                  <ForgotPasswordForm />
+                </AuthSEO>
+              } />
+              <Route path="/auth/reset-password" element={
+                <AuthSEO 
+                  title="Set New Password" 
+                  description="Set a new password for your RTN Global account." 
+                  canonicalUrl="/auth/reset-password"
+                >
+                  <ResetPasswordForm />
+                </AuthSEO>
+              } />
+              <Route path="/auth/social-success" element={
+                <AuthSEO 
+                  title="Social Login Successful" 
+                  description="Successfully logged in with social account." 
+                  canonicalUrl="/auth/social-success"
+                >
+                  <SocialAuthSuccess />
+                </AuthSEO>
+              } />
+              <Route path="/auth/verify-email" element={
+                <AuthSEO 
+                  title="Verify Your Email" 
+                  description="Verify your email address for your RTN Global account." 
+                  canonicalUrl="/auth/verify-email"
+                >
+                  <EmailVerificationForm />
+                </AuthSEO>
+              } />
               <Route path="/error/server-error" element={<ServerError />} />
               <Route path="/error/session-expired" element={<SessionExpired />} />
               <Route path="/*" element={

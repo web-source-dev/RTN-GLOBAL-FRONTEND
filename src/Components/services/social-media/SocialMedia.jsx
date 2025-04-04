@@ -13,7 +13,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import GroupIcon from '@mui/icons-material/Group';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
-import { Helmet } from 'react-helmet-async';
+import { SEO } from '../../SEO';
 
 const features = [
   {
@@ -76,13 +76,15 @@ const SocialMedia = () => {
 
   return (
     <Box component="main" id="social-media-marketing">
-      <Helmet>
-        <title>Social Media Marketing Services | RTN Global</title>
-        <meta name="description" content="Build and engage your community with strategic social media marketing. Discover our platform strategy, content creation, and community management services." />
-        <script type="application/ld+json">
-          {JSON.stringify(serviceSchema)}
-        </script>
-      </Helmet>
+      <SEO
+        title="Social Media Marketing Services | RTN Global"
+        description="Build and engage your community with strategic social media marketing. Discover our platform strategy, content creation, and community management services."
+        keywords="social media marketing, community management, content creation, social strategy, platform optimization, social media campaigns, audience engagement"
+        canonicalUrl="/services/social-media"
+        ogType="website"
+        ogImage="/images/social-media-services.jpg"
+        schema={serviceSchema}
+      />
       
       {/* Hero Section */}
       <Box

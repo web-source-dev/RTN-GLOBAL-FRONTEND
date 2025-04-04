@@ -133,6 +133,8 @@ const Footer = () => {
                 aria-label="facebook"
                 component="a"
                 href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={handleLinkClick}
               >
                 <FacebookIcon />
@@ -142,6 +144,8 @@ const Footer = () => {
                 aria-label="twitter"
                 component="a"
                 href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={handleLinkClick}
               >
                 <TwitterIcon />
@@ -151,6 +155,8 @@ const Footer = () => {
                 aria-label="linkedin"
                 component="a"
                 href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={handleLinkClick}
               >
                 <LinkedInIcon />
@@ -160,6 +166,8 @@ const Footer = () => {
                 aria-label="instagram"
                 component="a"
                 href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={handleLinkClick}
               >
                 <InstagramIcon />

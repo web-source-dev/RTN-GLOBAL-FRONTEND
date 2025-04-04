@@ -2,98 +2,132 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://rtnglobal.site/</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/services</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/case-studies</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/blog</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/careers</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/news</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/marketing-guide</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/digital-tools</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/roi-calculator</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/faq</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/support</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/services/digital-strategy</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/services/seo-optimization</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/services/content-marketing</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/services/social-media</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/services/ppc-management</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/services/email-marketing</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/contact</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/about</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/terms-of-service</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/privacy-policy</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/disclaimer</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/sitemap</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://rtnglobal.site/pricing</loc>
+    <lastmod>2023-04-04</lastmod>
     <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://rtnglobal.site/free-consultation</loc>
+    <lastmod>2023-04-04</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://rtnglobal.site/check-ticket</loc>
+    <lastmod>2023-04-04</lastmod>
+    <priority>0.4</priority>
   </url>
 </urlset>

@@ -29,9 +29,20 @@ const SEO = ({
   // Default keywords if none provided
   const metaKeywords = keywords || 'web development, Wix development, MERN stack, React Native, mobile apps, custom websites, web solutions, responsive design, professional web development';
 
-  // Build canonical URL with the site domain
+  // Build canonical URL with the site domain - improved to handle URL normalization
   const siteUrl = 'https://rtnglobal.site';
-  const canonical = canonicalUrl ? `${siteUrl}${canonicalUrl}` : siteUrl;
+  
+  // Properly format canonical URL
+  const getCanonicalUrl = () => {
+    if (canonicalUrl) {
+      // Ensure path starts with slash and doesn't have trailing slash (except for homepage)
+      const path = canonicalUrl.startsWith('/') ? canonicalUrl : `/${canonicalUrl}`;
+      return path === '/' ? `${siteUrl}/` : `${siteUrl}${path}`;
+    }
+    return siteUrl;
+  };
+  
+  const canonical = getCanonicalUrl();
 
   // Example implementation for optimized image component
   const OptimizedImage = ({ src, alt, width, height }) => {

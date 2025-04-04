@@ -13,7 +13,11 @@ Disallow: /payment/
 Disallow: /api/
 Disallow: /auth/
 Disallow: /error/
-Disallow: /*?*  # Block crawling of all URL parameters
+# More specific query parameter blocking (instead of blocking all URLs with parameters)
+Disallow: /*?token=
+Disallow: /*?session=
+Disallow: /*?auth=
+Disallow: /*?reset=
 
 # Allow Googlebot to access specific URLs that might be blocked for others
 User-agent: Googlebot
