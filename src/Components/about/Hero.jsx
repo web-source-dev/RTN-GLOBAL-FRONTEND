@@ -12,6 +12,7 @@ const Hero = () => {
 
   return (
     <Box
+    
       component="section"
       id="about-hero"
       aria-label="About RTN Global Hero Section"
