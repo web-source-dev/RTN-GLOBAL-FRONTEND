@@ -278,6 +278,7 @@ const BlogPost = () => {
                   <img
                     src={`${process.env.REACT_APP_API_URL}${blog.image}`}
                     alt={blog.title}
+                    loading="lazy"
                     style={{ 
                       width: '100%', 
                       maxHeight: '500px', 
@@ -791,6 +792,7 @@ const BlogPost = () => {
                       component="img"
                       src={`${process.env.REACT_APP_API_URL}${relatedBlog.image}`}
                       alt={relatedBlog.title}
+                      loading="lazy"
                       sx={{ 
                         width: '100%', 
                         height: 140, 

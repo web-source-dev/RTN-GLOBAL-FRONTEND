@@ -13,7 +13,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import GroupIcon from '@mui/icons-material/Group';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
-import { SEO } from '../../SEO';
+import SEO from '../common/SEO';
 
 const features = [
   {
